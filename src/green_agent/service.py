@@ -2,16 +2,28 @@
 
 import asyncio
 import logging
+import time
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 import json
 import uuid
 
-from ..a2a import A2AServer, AgentCard, Task, TaskStatus, Artifact, Part, PartType
+from ..a2a import (
+    A2AServer,
+    AgentCard,
+    Task,
+    TaskStatus,
+    Artifact,
+    Part,
+    PartType,
+)
+from ..a2a.client import A2AClient
+from ..a2a.protocol import MessageType
 from .scenario_manager import ScenarioManager
 from .environment_orchestrator import EnvironmentOrchestrator
 from .verification_engine import VerificationEngine
 from .ambiguity_layer import AmbiguityLayer
+from .reproduction_gate import ReproductionGate
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +41,10 @@ class GreenAgentService:
         host: str = "0.0.0.0",
         port: int = 8000,
         enable_ambiguity: bool = True,
-        enable_mutation: bool = True
+        enable_mutation: bool = True,
+        purple_agent_url: Optional[str] = None,
+        allow_mock_reproduction: bool = False,
+        purple_timeout_seconds: int = 3600
     ):
         self.name = name
         self.version = version
@@ -37,12 +52,19 @@ class GreenAgentService:
         self.port = port
         self.enable_ambiguity = enable_ambiguity
         self.enable_mutation = enable_mutation
+        self.purple_agent_url = purple_agent_url
+        self.purple_timeout_seconds = purple_timeout_seconds
         
         # Initialize components
         self.scenario_manager = ScenarioManager()
         self.environment_orchestrator = EnvironmentOrchestrator()
         self.verification_engine = VerificationEngine()
         self.ambiguity_layer = AmbiguityLayer() if enable_ambiguity else None
+        self.reproduction_gate = ReproductionGate(
+            strict_mode=True,
+            allow_mock_verification=allow_mock_reproduction
+        )
+        self.a2a_client = A2AClient(agent_id=self.name)
         
         # Track active assessments
         self.active_assessments: Dict[str, Dict[str, Any]] = {}
@@ -84,6 +106,9 @@ class GreenAgentService:
         assessment_id = str(uuid.uuid4())
         logger.info(f"Starting assessment {assessment_id} for task {task.id}")
         
+        environment = None
+        purple_task_id = None
+        
         try:
             # Store assessment context
             self.active_assessments[assessment_id] = {
@@ -124,38 +149,40 @@ class GreenAgentService:
                 raise RuntimeError("Failed to provision environment")
             
             logger.info(f"Provisioned environment: {environment['container_id']}")
+            # Attach environment to task resources for downstream gates
+            task.resources = task.resources or {}
+            task.resources["environment"] = environment
+            task.resources["scenario_id"] = scenario["instance_id"]
             
             # Apply code mutation if enabled
             if self.enable_mutation:
                 await self._apply_code_mutation(environment, scenario)
                 logger.info("Applied code mutation to environment")
             
-            # Create the actual task for the Purple Agent
-            purple_task = {
-                "issue_description": issue_description,
-                "repo_url": scenario["repo"],
-                "environment": {
-                    "container_id": environment["container_id"],
-                    "access_type": environment.get("access_type", "docker"),
-                    "connection_info": environment.get("connection_info")
-                },
-                "allowed_tools": ["file_read", "file_write", "terminal", "search"],
-                "time_limit": task.constraints.get("time_limit", 3600) if task.constraints else 3600,
-                "metadata": {
-                    "assessment_id": assessment_id,
-                    "scenario_id": scenario["instance_id"]
-                }
-            }
+            purple_url = (
+                task.metadata.get("purple_agent_url")
+                if task.metadata
+                else None
+            ) or self.purple_agent_url
+            if not purple_url:
+                raise ValueError("No Purple agent URL provided for task dispatch")
             
-            # Send task to Purple Agent and wait for response
-            # This would normally involve A2A client communication
-            # For now, we'll simulate the response
+            purple_task_id = await self._dispatch_task_to_purple(
+                purple_url=purple_url,
+                title=scenario["instance_id"],
+                description=issue_description,
+                task=task,
+                assessment_id=assessment_id,
+                scenario=scenario,
+            )
+            if not purple_task_id:
+                raise RuntimeError("Failed to create task on Purple agent")
             
-            # Wait for Purple Agent to submit artifact
-            purple_artifact = await self._wait_for_purple_artifact(task.id)
-            
-            if not purple_artifact:
-                raise TimeoutError("Purple Agent did not submit artifact in time")
+            purple_artifact = await self._wait_for_purple_artifact(
+                purple_url=purple_url,
+                purple_task_id=purple_task_id,
+                task=task,
+            )
             
             # Extract patch from artifact
             patch = self._extract_patch_from_artifact(purple_artifact)
@@ -169,9 +196,6 @@ class GreenAgentService:
             )
             
             logger.info(f"Verification result: {verification_result}")
-            
-            # Clean up environment
-            await self.environment_orchestrator.cleanup_environment(environment["container_id"])
             
             # Prepare result
             result = {
@@ -220,6 +244,13 @@ class GreenAgentService:
                 "error": str(e),
                 "artifacts": []
             }
+        
+        finally:
+            if environment:
+                try:
+                    await self.environment_orchestrator.cleanup_environment(environment["container_id"])
+                except Exception as cleanup_error:
+                    logger.warning(f"Cleanup failed for container {environment.get('container_id')}: {cleanup_error}")
     
     async def _apply_code_mutation(self, environment: Dict[str, Any], scenario: Dict[str, Any]):
         """Apply code mutation to prevent memorization"""
@@ -273,6 +304,91 @@ class GreenAgentService:
         
         # Combine all diff parts
         return "\n".join(part.content for part in patch_parts)
+    
+    def _extract_reproduction_script(self, artifact: Artifact) -> Optional[str]:
+        """Extract reproduction script content from artifact"""
+        for part in artifact.parts:
+            if part.type == PartType.CODE and part.metadata:
+                if part.metadata.get("purpose") == "reproduction":
+                    return part.content
+        return None
+    
+    async def _dispatch_task_to_purple(
+        self,
+        purple_url: str,
+        title: str,
+        description: str,
+        task: Task,
+        assessment_id: str,
+        scenario: Dict[str, Any],
+    ) -> Optional[str]:
+        """Send task to Purple agent via A2A and return task id"""
+        resources = {
+            "environment": task.resources.get("environment") if task.resources else None,
+            "scenario_id": scenario["instance_id"],
+            "repo_url": scenario["repo"],
+        }
+        constraints = task.constraints or {}
+        metadata = (task.metadata or {}).copy() if task.metadata else {}
+        metadata.update(
+            {
+                "assessment_id": assessment_id,
+                "scenario_id": scenario["instance_id"],
+                "green_agent": self.name,
+            }
+        )
+        
+        purple_task_id = await self.a2a_client.create_task(
+            server_url=purple_url,
+            title=title,
+            description=description,
+            resources=resources,
+            constraints=constraints,
+            metadata=metadata,
+        )
+        if purple_task_id:
+            logger.info(f"Created Purple task {purple_task_id} at {purple_url}")
+        return purple_task_id
+    
+    async def _wait_for_purple_artifact(
+        self,
+        purple_url: str,
+        purple_task_id: str,
+        task: Task,
+    ) -> Artifact:
+        """Poll Purple task for reproduction then patch artifact"""
+        processed: set = set()
+        start = time.time()
+        while time.time() - start < self.purple_timeout_seconds:
+            status = await self.a2a_client.get_task_status(purple_url, purple_task_id)
+            if not status:
+                raise RuntimeError("Failed to fetch Purple task status")
+            artifacts_data = status.get("artifacts") or []
+            for artifact_data in artifacts_data:
+                artifact_id = artifact_data.get("id")
+                if artifact_id in processed:
+                    continue
+                processed.add(artifact_id)
+                artifact = Artifact(**artifact_data)
+                artifact_type = (artifact.metadata or {}).get("type")
+                
+                if artifact_type == "reproduction_script":
+                    script = self._extract_reproduction_script(artifact)
+                    if not script:
+                        raise ValueError("Reproduction artifact missing script content")
+                    await self.reproduction_gate.submit_reproduction(task, script)
+                    continue
+                
+                is_patch = artifact_type == "patch_submission" or any(
+                    part.type == PartType.FILE_DIFF for part in artifact.parts
+                )
+                if is_patch:
+                    allowed = await self.reproduction_gate.check_patch_allowed(task)
+                    if not allowed["allowed"]:
+                        raise ValueError(f"Patch rejected: {allowed['reason']}")
+                    return artifact
+            await asyncio.sleep(2)
+        raise TimeoutError("Timed out waiting for Purple agent artifact")
     
     def _get_assessment_trajectory(self, assessment_id: str) -> List[Dict[str, Any]]:
         """Get the trajectory of an assessment for analysis"""

@@ -96,8 +96,8 @@ class PurpleAgentWrapper:
             # Send progress update
             await self._send_progress(task.id, "Generating patch", 0.7)
             
-            # Convert solver result to A2A artifact
-            artifact = self._create_artifact_from_result(solver_result)
+            # Convert solver result to ordered A2A artifacts (repro then patch)
+            artifacts = self._create_artifacts_from_result(solver_result)
             
             # Send final progress
             await self._send_progress(task.id, "Completed", 1.0)
@@ -105,7 +105,7 @@ class PurpleAgentWrapper:
             # Return result
             result = {
                 "success": solver_result.get("success", False),
-                "artifacts": [artifact],
+                "artifacts": artifacts,
                 "metrics": {
                     "execution_time": asyncio.get_event_loop().time() - self.active_tasks[task.id]["started_at"],
                     "tokens_used": solver_result.get("tokens_used", 0)
@@ -155,16 +155,34 @@ class PurpleAgentWrapper:
                 "patch": None
             }
     
-    def _create_artifact_from_result(self, solver_result: Dict[str, Any]) -> Artifact:
+    def _create_artifacts_from_result(self, solver_result: Dict[str, Any]) -> list:
         """
-        Convert solver result to A2A artifact.
+        Convert solver result to ordered A2A artifacts (reproduction then patch).
+        """
+        artifacts = []
         
-        Args:
-            solver_result: Result from the solver function
-            
-        Returns:
-            A2A Artifact
-        """
+        reproduction_script = solver_result.get("reproduction_script")
+        if reproduction_script:
+            repro_artifact = Artifact(
+                parts=[
+                    Part(
+                        type=PartType.CODE,
+                        content=reproduction_script,
+                        metadata={
+                            "purpose": "reproduction",
+                            "language": "python",
+                            "expected_failure": True,
+                        },
+                    )
+                ],
+                metadata={
+                    "type": "reproduction_script",
+                    "solver": self.agent_name,
+                    "version": self.agent_version,
+                },
+            )
+            artifacts.append(repro_artifact)
+        
         parts = []
         
         # Add patch if present
@@ -215,18 +233,20 @@ class PurpleAgentWrapper:
                     )
                 )
         
-        # Create artifact with metadata
-        artifact = Artifact(
-            parts=parts,
-            metadata={
-                "solver": self.agent_name,
-                "version": self.agent_version,
-                "success": solver_result.get("success", False),
-                "confidence": solver_result.get("confidence", 0.5)
-            }
-        )
+        if parts:
+            patch_artifact = Artifact(
+                parts=parts,
+                metadata={
+                    "type": "patch_submission",
+                    "solver": self.agent_name,
+                    "version": self.agent_version,
+                    "success": solver_result.get("success", False),
+                    "confidence": solver_result.get("confidence", 0.5)
+                }
+            )
+            artifacts.append(patch_artifact)
         
-        return artifact
+        return artifacts
     
     async def _send_progress(self, task_id: str, message: str, progress: float):
         """Send progress update for a task"""
@@ -286,6 +306,12 @@ index abc123..def456 100644
         
         return {
             "success": True,
+            "reproduction_script": """import pytest
+
+def test_repro():
+    # mock reproduction script that fails before fix
+    assert False, "Reproduction: failing as expected"
+""",
             "patch": patch,
             "analysis": f"Found and fixed the issue: {issue[:100]}...",
             "confidence": 0.85,

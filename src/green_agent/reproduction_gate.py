@@ -29,12 +29,14 @@ class ReproductionGate:
     following Test-Driven Development principles.
     """
     
-    def __init__(self, strict_mode: bool = True):
+    def __init__(self, strict_mode: bool = True, allow_mock_verification: bool = False):
         """
         Args:
             strict_mode: If True, completely blocks patches until reproduction verified
+            allow_mock_verification: If True, fall back to heuristic mock when no environment is available
         """
         self.strict_mode = strict_mode
+        self.allow_mock_verification = allow_mock_verification
         
         # Track reproduction status per task
         self.task_reproductions: Dict[str, Dict[str, Any]] = {}
@@ -177,8 +179,10 @@ class ReproductionGate:
         environment = task.resources.get("environment") if task.resources else None
         
         if not environment:
-            # Mock verification for testing
-            return await self._mock_verification(script, expected_error)
+            if self.allow_mock_verification:
+                # Mock verification for testing
+                return await self._mock_verification(script, expected_error)
+            raise ValueError("No environment available for reproduction verification")
         
         # Run script in unpatched environment
         from ..green_agent.environment_orchestrator import EnvironmentOrchestrator
