@@ -1,0 +1,49 @@
+[project]
+name = "swebench-a2a"
+version = "0.1.0"
+description = "SWEbench-A2A Framework: Dynamic agent evaluation system using A2A protocol"
+authors = [{name = "AAA Team"}]
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "httpx>=0.25.0",
+    "pydantic>=2.4.0",
+    "docker>=6.1.0",
+    "gitpython>=3.1.0",
+    "jsonrpc>=3.0.0",
+    "aiofiles>=23.2.0",
+    "asyncio>=3.4.3",
+    "redis>=5.0.0",
+    "celery>=5.3.0",
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.12.0",
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.10.0",
+    "ruff>=0.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest-cov>=4.1.0",
+    "mypy>=1.6.0",
+    "pre-commit>=3.5.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.black]
+line-length = 100
+target-version = ["py39"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true

@@ -1,0 +1,94 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+venv_new/
+venv_swebench/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Logs
+*.log
+logs/
+*.out
+*.err
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache
+cache/
+.cache/
+*.cache
+
+# Data (keep structure but not large files)
+data/swebench_lite/
+data/swebench_verified/
+data/swebench_full/
+data/*.parquet
+data/*.arrow
+*.json.gz
+
+# Docker
+.dockerignore
+
+# Environment
+.env
+.env.local
+*.env
+
+# Results
+results/
+outputs/
+benchmark_results_*.json
+claude_benchmark_results.json
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# OS
+Thumbs.db
+.DS_Store
+
+# API Keys (NEVER commit these)
+*api_key*
+*API_KEY*
+secrets/
+credentials/
+
+# HuggingFace cache
+.huggingface/
+~/.cache/huggingface/
+
+# Redis
+dump.rdb
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb

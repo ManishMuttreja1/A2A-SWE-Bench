@@ -1,0 +1,76 @@
+# Dockerfile for SWE-bench A2A Purple Agent (Example Solver)
+FROM python:3.11-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy source code
+COPY src/ ./src/
+COPY start_purple_agent.py .
+
+# Create start script for Purple Agent
+RUN echo '#!/usr/bin/env python3\n\
+"""Purple Agent starter for SWE-bench tasks"""\n\
+import asyncio\n\
+import os\n\
+from src.a2a.client import A2AClient\n\
+from src.purple_agent.controller import PurpleAgentController\n\
+\n\
+async def main():\n\
+    green_agent_url = os.getenv("GREEN_AGENT_URL", "http://green-agent:8000")\n\
+    \n\
+    client = A2AClient(\n\
+        agent_id="purple-agent-001",\n\
+        base_url=green_agent_url\n\
+    )\n\
+    \n\
+    controller = PurpleAgentController(client)\n\
+    \n\
+    print(f"Purple Agent connecting to {green_agent_url}")\n\
+    \n\
+    # Request and solve tasks\n\
+    while True:\n\
+        try:\n\
+            task = await client.request_task()\n\
+            print(f"Received task: {task.id}")\n\
+            \n\
+            result = await controller.solve_task(task)\n\
+            print(f"Task {task.id} completed: {result.status}")\n\
+            \n\
+        except Exception as e:\n\
+            print(f"Error: {e}")\n\
+            await asyncio.sleep(5)\n\
+\n\
+if __name__ == "__main__":\n\
+    asyncio.run(main())\n\
+' > start_purple_agent.py
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1
+ENV GREEN_AGENT_URL=http://green-agent:8000
+
+# Expose port (optional for Purple agents)
+EXPOSE 8001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import sys; sys.exit(0)"
+
+# Agent metadata
+LABEL agentbeats.type="purple"
+LABEL agentbeats.name="SWE-bench Example Solver"
+LABEL agentbeats.version="1.0.0"
+
+# Run the Purple Agent
+CMD ["python", "start_purple_agent.py"]

@@ -1,0 +1,90 @@
+---
+# Ingress for A2A Services
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: a2a-ingress
+  namespace: a2a-swe-bench
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/limit-rps: "50"
+spec:
+  tls:
+  - hosts:
+    - api.a2a-swe-bench.io
+    - grafana.a2a-swe-bench.io
+    - prometheus.a2a-swe-bench.io
+    secretName: tls-secret
+  rules:
+  - host: api.a2a-swe-bench.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: a2a-server-service
+            port:
+              number: 8080
+  - host: grafana.a2a-swe-bench.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana-service
+            port:
+              number: 3000
+  - host: prometheus.a2a-swe-bench.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus-service
+            port:
+              number: 9090
+---
+# Ingress for internal services (optional, for debugging)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: a2a-internal-ingress
+  namespace: a2a-swe-bench
+  annotations:
+    kubernetes.io/ingress.class: "nginx-internal"
+    nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+spec:
+  rules:
+  - host: internal.a2a-swe-bench.local
+    http:
+      paths:
+      - path: /synthesis
+        pathType: Prefix
+        backend:
+          service:
+            name: synthesis-engine-service
+            port:
+              number: 8081
+      - path: /green-agent
+        pathType: Prefix
+        backend:
+          service:
+            name: green-agent-service
+            port:
+              number: 8082
+      - path: /alertmanager
+        pathType: Prefix
+        backend:
+          service:
+            name: alertmanager-service
+            port:
+              number: 9093

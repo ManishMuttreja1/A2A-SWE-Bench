@@ -1,0 +1,165 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: a2a-config
+  namespace: a2a-swe-bench
+data:
+  # A2A Server Configuration
+  A2A_SERVER_HOST: "0.0.0.0"
+  A2A_SERVER_PORT: "8080"
+  A2A_PROTOCOL_VERSION: "0.1.0"
+  
+  # Database Configuration
+  DATABASE_HOST: "postgres-service"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: "a2a_swe_bench"
+  
+  # Redis Configuration
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  
+  # Monitoring Configuration
+  MONITORING_PORT: "9090"
+  METRICS_PATH: "/metrics"
+  
+  # Synthesis Engine Configuration
+  SYNTHESIS_CACHE_DIR: "/tmp/synthesis_cache"
+  SYNTHESIS_TTL_HOURS: "168"
+  
+  # Agent Configuration
+  MAX_AGENTS_PER_NODE: "10"
+  AGENT_TIMEOUT_SECONDS: "300"
+  
+  # Task Configuration
+  MAX_CONCURRENT_TASKS: "50"
+  TASK_TIMEOUT_SECONDS: "3600"
+  
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: a2a-swe-bench
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+    
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets:
+                - alertmanager:9093
+    
+    rule_files:
+      - '/etc/prometheus/rules/*.yml'
+    
+    scrape_configs:
+      - job_name: 'a2a-server'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - a2a-swe-bench
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            regex: a2a-server
+            action: keep
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: instance
+      
+      - job_name: 'synthesis-engine'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - a2a-swe-bench
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            regex: synthesis-engine
+            action: keep
+      
+      - job_name: 'green-agent'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - a2a-swe-bench
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            regex: green-agent
+            action: keep
+      
+      - job_name: 'kubernetes-pods'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: a2a-swe-bench
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus-service:9090
+        isDefault: true
+        editable: false
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: a2a-swe-bench
+data:
+  alertmanager.yml: |
+    global:
+      resolve_timeout: 5m
+    
+    route:
+      group_by: ['alertname', 'cluster', 'service']
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 12h
+      receiver: 'default'
+      routes:
+        - match:
+            severity: critical
+          receiver: pagerduty
+        - match:
+            severity: warning
+          receiver: slack
+    
+    receivers:
+      - name: 'default'
+      
+      - name: 'slack'
+        slack_configs:
+          - api_url: '${SLACK_WEBHOOK_URL}'
+            channel: '#a2a-alerts'
+            title: 'A2A Alert'
+      
+      - name: 'pagerduty'
+        pagerduty_configs:
+          - service_key: '${PAGERDUTY_SERVICE_KEY}'
+    
+    inhibit_rules:
+      - source_match:
+          severity: 'critical'
+        target_match:
+          severity: 'warning'
+        equal: ['alertname', 'cluster', 'service']

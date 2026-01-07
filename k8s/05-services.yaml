@@ -1,0 +1,89 @@
+---
+# A2A Server Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: a2a-server-service
+  namespace: a2a-swe-bench
+  labels:
+    app: a2a-server
+spec:
+  type: ClusterIP
+  selector:
+    app: a2a-server
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+    protocol: TCP
+---
+# Synthesis Engine Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: synthesis-engine-service
+  namespace: a2a-swe-bench
+  labels:
+    app: synthesis-engine
+spec:
+  type: ClusterIP
+  selector:
+    app: synthesis-engine
+  ports:
+  - name: http
+    port: 8081
+    targetPort: 8081
+    protocol: TCP
+  - name: metrics
+    port: 9091
+    targetPort: 9090
+    protocol: TCP
+---
+# Green Agent Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: green-agent-service
+  namespace: a2a-swe-bench
+  labels:
+    app: green-agent
+spec:
+  type: ClusterIP
+  selector:
+    app: green-agent
+  ports:
+  - name: http
+    port: 8082
+    targetPort: 8082
+    protocol: TCP
+  - name: metrics
+    port: 9092
+    targetPort: 9090
+    protocol: TCP
+---
+# External LoadBalancer Service for A2A Server
+apiVersion: v1
+kind: Service
+metadata:
+  name: a2a-server-external
+  namespace: a2a-swe-bench
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+spec:
+  type: LoadBalancer
+  selector:
+    app: a2a-server
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800

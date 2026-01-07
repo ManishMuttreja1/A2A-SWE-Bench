@@ -1,0 +1,65 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: a2a-swe-bench
+
+resources:
+  - 00-namespace.yaml
+  - 01-configmap.yaml
+  - 02-secrets.yaml
+  - 03-databases.yaml
+  - 04-deployments.yaml
+  - 05-services.yaml
+  - 06-monitoring.yaml
+  - 07-ingress.yaml
+  - 08-autoscaling.yaml
+  - 09-network-policies.yaml
+
+images:
+  - name: a2a-swe-bench/a2a-server
+    newTag: latest
+  - name: a2a-swe-bench/synthesis-engine
+    newTag: latest
+  - name: a2a-swe-bench/green-agent
+    newTag: latest
+  - name: a2a-swe-bench/trajectory-analyzer
+    newTag: latest
+
+replicas:
+  - name: a2a-server
+    count: 3
+  - name: synthesis-engine
+    count: 2
+  - name: green-agent
+    count: 2
+
+configMapGenerator:
+  - name: a2a-config-generated
+    literals:
+      - ENVIRONMENT=production
+      - LOG_LEVEL=info
+
+secretGenerator:
+  - name: generated-secrets
+    literals:
+      - API_KEY=will-be-replaced
+
+patchesStrategicMerge:
+  - |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: a2a-server
+      namespace: a2a-swe-bench
+    spec:
+      template:
+        metadata:
+          annotations:
+            version: "1.0.0"
+
+commonLabels:
+  environment: production
+  managed-by: kustomize
+
+commonAnnotations:
+  deployment-timestamp: "2024-01-01T00:00:00Z"

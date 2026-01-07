@@ -1,0 +1,289 @@
+---
+# A2A Server Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: a2a-server
+  namespace: a2a-swe-bench
+  labels:
+    app: a2a-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: a2a-server
+  template:
+    metadata:
+      labels:
+        app: a2a-server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      initContainers:
+      - name: wait-for-postgres
+        image: busybox:1.35
+        command: ['sh', '-c', 'until nc -z postgres-service 5432; do echo waiting for postgres; sleep 2; done']
+      - name: wait-for-redis
+        image: busybox:1.35
+        command: ['sh', '-c', 'until nc -z redis-service 6379; do echo waiting for redis; sleep 2; done']
+      containers:
+      - name: a2a-server
+        image: a2a-swe-bench/a2a-server:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: A2A_SERVER_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: a2a-config
+              key: A2A_SERVER_HOST
+        - name: A2A_SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: a2a-config
+              key: A2A_SERVER_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: DATABASE_URL
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: a2a-config
+              key: REDIS_HOST
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: REDIS_PASSWORD
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 9090
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - a2a-server
+              topologyKey: kubernetes.io/hostname
+---
+# Synthesis Engine Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synthesis-engine
+  namespace: a2a-swe-bench
+  labels:
+    app: synthesis-engine
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: synthesis-engine
+  template:
+    metadata:
+      labels:
+        app: synthesis-engine
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      containers:
+      - name: synthesis-engine
+        image: a2a-swe-bench/synthesis-engine:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+          name: http
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: SYNTHESIS_CACHE_DIR
+          valueFrom:
+            configMapKeyRef:
+              name: a2a-config
+              key: SYNTHESIS_CACHE_DIR
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: a2a-config
+              key: REDIS_HOST
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: REDIS_PASSWORD
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-api-keys
+              key: OPENAI_API_KEY
+        - name: ANTHROPIC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-api-keys
+              key: ANTHROPIC_API_KEY
+        volumeMounts:
+        - name: cache-volume
+          mountPath: /tmp/synthesis_cache
+        - name: docker-socket
+          mountPath: /var/run/docker.sock
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "4"
+        securityContext:
+          privileged: true  # Required for Docker-in-Docker
+      volumes:
+      - name: cache-volume
+        emptyDir:
+          sizeLimit: 10Gi
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
+---
+# Green Agent Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-agent
+  namespace: a2a-swe-bench
+  labels:
+    app: green-agent
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: green-agent
+  template:
+    metadata:
+      labels:
+        app: green-agent
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      containers:
+      - name: green-agent
+        image: a2a-swe-bench/green-agent:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8082
+          name: http
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: A2A_SERVER_URL
+          value: "http://a2a-server-service:8080"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: DATABASE_URL
+        - name: MAX_CONCURRENT_TASKS
+          valueFrom:
+            configMapKeyRef:
+              name: a2a-config
+              key: MAX_CONCURRENT_TASKS
+        - name: TASK_TIMEOUT_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              name: a2a-config
+              key: TASK_TIMEOUT_SECONDS
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 9090
+          initialDelaySeconds: 10
+          periodSeconds: 5
+---
+# Trajectory Analyzer Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trajectory-analyzer
+  namespace: a2a-swe-bench
+  labels:
+    app: trajectory-analyzer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trajectory-analyzer
+  template:
+    metadata:
+      labels:
+        app: trajectory-analyzer
+    spec:
+      containers:
+      - name: trajectory-analyzer
+        image: a2a-swe-bench/trajectory-analyzer:latest
+        imagePullPolicy: Always
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: DATABASE_URL
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: a2a-config
+              key: REDIS_HOST
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: REDIS_PASSWORD
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"

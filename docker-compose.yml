@@ -1,0 +1,123 @@
+version: '3.8'
+
+services:
+  # Green Agent Service (Assessor)
+  green-agent:
+    build: .
+    container_name: swe-bench-green-agent
+    ports:
+      - "8000:8000"
+    environment:
+      - AGENT_TYPE=green
+      - ENABLE_AMBIGUITY=true
+      - ENABLE_MUTATION=true
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: python main.py green --enable-ambiguity --enable-mutation --warm-pool
+    networks:
+      - a2a-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Purple Agent - Architect
+  purple-architect:
+    build: .
+    container_name: swe-bench-purple-architect
+    ports:
+      - "8001:8001"
+    environment:
+      - AGENT_TYPE=purple
+      - AGENT_ROLE=architect
+      - MODEL=gpt-4
+    command: python main.py purple --port 8001 --model architect
+    networks:
+      - a2a-network
+    depends_on:
+      - green-agent
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Purple Agent - Developer
+  purple-developer:
+    build: .
+    container_name: swe-bench-purple-developer
+    ports:
+      - "8002:8002"
+    environment:
+      - AGENT_TYPE=purple
+      - AGENT_ROLE=developer
+      - MODEL=claude-3
+    command: python main.py purple --port 8002 --model developer
+    networks:
+      - a2a-network
+    depends_on:
+      - green-agent
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Purple Agent - Reviewer
+  purple-reviewer:
+    build: .
+    container_name: swe-bench-purple-reviewer
+    ports:
+      - "8003:8003"
+    environment:
+      - AGENT_TYPE=purple
+      - AGENT_ROLE=reviewer
+      - MODEL=llama-3
+    command: python main.py purple --port 8003 --model reviewer
+    networks:
+      - a2a-network
+    depends_on:
+      - green-agent
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for task queue (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: swe-bench-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - a2a-network
+    volumes:
+      - redis-data:/data
+
+  # PostgreSQL for storing results (optional)
+  postgres:
+    image: postgres:15-alpine
+    container_name: swe-bench-postgres
+    environment:
+      - POSTGRES_DB=swebench
+      - POSTGRES_USER=swebench
+      - POSTGRES_PASSWORD=swebench123
+    ports:
+      - "5432:5432"
+    networks:
+      - a2a-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+networks:
+  a2a-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  postgres-data:
