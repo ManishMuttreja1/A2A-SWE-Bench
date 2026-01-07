@@ -18,43 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy source code
 COPY src/ ./src/
 COPY start_purple_agent.py .
-
-# Create start script for Purple Agent
-RUN echo '#!/usr/bin/env python3\n\
-"""Purple Agent starter for SWE-bench tasks"""\n\
-import asyncio\n\
-import os\n\
-from src.a2a.client import A2AClient\n\
-from src.purple_agent.controller import PurpleAgentController\n\
-\n\
-async def main():\n\
-    green_agent_url = os.getenv("GREEN_AGENT_URL", "http://green-agent:8000")\n\
-    \n\
-    client = A2AClient(\n\
-        agent_id="purple-agent-001",\n\
-        base_url=green_agent_url\n\
-    )\n\
-    \n\
-    controller = PurpleAgentController(client)\n\
-    \n\
-    print(f"Purple Agent connecting to {green_agent_url}")\n\
-    \n\
-    # Request and solve tasks\n\
-    while True:\n\
-        try:\n\
-            task = await client.request_task()\n\
-            print(f"Received task: {task.id}")\n\
-            \n\
-            result = await controller.solve_task(task)\n\
-            print(f"Task {task.id} completed: {result.status}")\n\
-            \n\
-        except Exception as e:\n\
-            print(f"Error: {e}")\n\
-            await asyncio.sleep(5)\n\
-\n\
-if __name__ == "__main__":\n\
-    asyncio.run(main())\n\
-' > start_purple_agent.py
+COPY claude_purple_agent.py .
 
 # Environment variables
 ENV PYTHONUNBUFFERED=1
