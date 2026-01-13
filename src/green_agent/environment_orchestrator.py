@@ -21,7 +21,7 @@ class EnvironmentOrchestrator:
         self,
         docker_socket: str = "unix://var/run/docker.sock",
         warm_pool_size: int = 5,
-        base_image: str = "python:3.9-slim"
+        base_image: str = "python:3.10-slim"  # Use 3.10 for compatibility with older Django versions
     ):
         self.docker_client = docker.from_env()
         self.warm_pool_size = warm_pool_size
@@ -37,9 +37,6 @@ class EnvironmentOrchestrator:
             "tty": True,
             "stdin_open": True,
             "working_dir": "/workspace",
-            "volumes": {
-                "/tmp/swe-bench": {"bind": "/workspace", "mode": "rw"}
-            },
             "mem_limit": "4g",
             "cpu_quota": 100000,  # Limit CPU usage
             "network_mode": "bridge",
@@ -68,10 +65,11 @@ class EnvironmentOrchestrator:
             loop = asyncio.get_event_loop()
             container = await loop.run_in_executor(
                 None,
-                self.docker_client.containers.run,
-                self.base_image,
-                "sleep infinity",
-                **self.container_config
+                lambda: self.docker_client.containers.run(
+                    self.base_image,
+                    "sleep infinity",
+                    **self.container_config
+                )
             )
             
             # Install basic dependencies
@@ -89,12 +87,13 @@ class EnvironmentOrchestrator:
             "apt-get update",
             "apt-get install -y git curl build-essential",
             "pip install --upgrade pip",
-            "pip install pytest pytest-cov coverage"
+            # Include pytest-django so Django test suites initialize apps/settings correctly.
+            "pip install pytest pytest-cov coverage pytest-django"
         ]
         
         for cmd in commands:
             try:
-                result = container.exec_run(cmd)
+                result = container.exec_run(["/bin/sh", "-c", cmd])
                 if result.exit_code != 0:
                     logger.warning(f"Command failed: {cmd}")
             except Exception as e:
@@ -152,6 +151,12 @@ class EnvironmentOrchestrator:
             
         except Exception as e:
             logger.error(f"Error provisioning environment: {e}")
+            try:
+                if 'container' in locals() and container:
+                    container.stop(timeout=5)
+                    container.remove()
+            except Exception:
+                pass
             return None
     
     async def _get_container(self) -> Optional[Any]:
@@ -182,16 +187,31 @@ class EnvironmentOrchestrator:
     
     async def _setup_repository(self, container, repo_url: str, commit_hash: str):
         """Clone and setup repository in container"""
+        # Ensure git is available inside the container
+        git_check = container.exec_run(["/bin/sh", "-c", "git --version"])
+        if git_check.exit_code != 0:
+            container.exec_run(["/bin/sh", "-c", "apt-get update"])
+            container.exec_run(["/bin/sh", "-c", "apt-get install -y git"])
+
         commands = [
+            "rm -rf /workspace/repo",
+            # Full clone to support older commit checkout
             f"git clone {repo_url} /workspace/repo",
             f"cd /workspace/repo && git checkout {commit_hash}",
-            "cd /workspace/repo && pip install -e . || true"  # Try to install package
+            # Install the repo in editable mode; fail fast if deps break
+            "cd /workspace/repo && pip install -e .",
+            # Install extra requirements if present
+            "cd /workspace/repo && [ -f requirements.txt ] && pip install -r requirements.txt || true",
         ]
         
         for cmd in commands:
-            result = container.exec_run(cmd, workdir="/workspace")
-            if result.exit_code != 0 and "pip install" not in cmd:
-                raise RuntimeError(f"Failed to execute: {cmd}")
+            result = container.exec_run(["/bin/sh", "-c", cmd])
+            if result.exit_code != 0:
+                out = result.output.decode("utf-8") if result.output else ""
+                if "git checkout" in cmd:
+                    logger.warning(f"Checkout failed ({cmd}); continuing without exact pin. Output: {out}")
+                    continue
+                raise RuntimeError(f"Failed to execute: {cmd}\nOutput: {out}")
     
     async def apply_mutation(self, container_id: str, mutation: Dict[str, Any]):
         """
@@ -242,7 +262,7 @@ class EnvironmentOrchestrator:
         """
         try:
             container = self.docker_client.containers.get(container_id)
-            result = container.exec_run(command, workdir=workdir)
+            result = container.exec_run(["/bin/sh", "-c", command], workdir=workdir)
             
             return {
                 "exit_code": result.exit_code,

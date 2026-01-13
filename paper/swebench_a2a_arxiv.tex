@@ -1,0 +1,457 @@
+\documentclass[11pt,twocolumn]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{codepurple},
+    commentstyle=\color{codegreen},
+    stringstyle=\color{codegray},
+    breaklines=true,
+    frame=single
+}
+
+\title{\textbf{SWE-Bench-A2A: Process-Aware, Contamination-Resistant\\Evaluation of Software Engineering Agents}\\
+\large{via Agent-to-Agent Protocol}}
+
+\author{
+Manish Muttreja\\
+\texttt{manish@example.com}
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks, using GitHub issues and execution-based testing. However, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process, rewarding lucky guesses equally with systematic debugging; and (3) \textbf{static test dependence}---fixed test suites can be overfit without true understanding. We present \textbf{SWE-Bench-A2A}, an extension that addresses these limitations through four key innovations: a \textit{reproduction-first gate} requiring agents to demonstrate bug understanding before patching, \textit{trajectory-based process scoring} capturing the full engineering workflow, \textit{anti-memorization mutations} via retro-holdout transformations, and \textit{dynamic adversarial testing} beyond static suites. Our implementation uses an Agent-to-Agent (A2A) protocol where a Green Agent (assessor) orchestrates evaluation of Purple Agents (solvers) in isolated Docker environments. We demonstrate end-to-end functionality on a 3-instance SWE-bench Verified sample: one instance passed using a heuristic fallback patch, while two failed due to invalid LLM-generated patches from GPT-4o-mini, highlighting the need for stronger solver models. We release the framework as Docker images for integration with the AgentBeats evaluation platform.
+\end{abstract}
+
+\section{Introduction}
+
+The rapid advancement of large language models (LLMs) has enabled a new class of \textit{software engineering agents}---systems that can understand codebases, diagnose bugs, and generate patches with minimal human intervention. Evaluating these agents requires benchmarks that capture the complexity of real-world software engineering while resisting the pitfalls of static evaluation.
+
+SWE-bench \cite{jimenez2024swebench} represents a significant step forward, drawing from 2,294 real GitHub issues across 12 popular Python repositories. Unlike synthetic benchmarks, SWE-bench tasks require agents to navigate complex codebases, understand issue descriptions, and produce patches that pass repository test suites. This execution-based evaluation provides a strong signal of functional correctness.
+
+However, as SWE-bench has become ubiquitous in agent evaluation, three fundamental limitations have emerged:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Data Contamination}: The repositories in SWE-bench (Django, Flask, Scikit-learn, etc.) are among the most common in LLM training corpora. Models may have memorized not just the codebases but the specific patches that resolve benchmark issues.
+    
+    \item \textbf{Patch-Only Scoring}: Current evaluation awards full credit for any patch that passes tests, ignoring whether the agent understood the problem. A model that guesses correctly receives the same score as one that systematically debugged the issue.
+    
+    \item \textbf{Static Test Dependence}: Fixed test suites can be overfit through pattern matching without true understanding. Agents may learn to produce patches that pass specific tests while failing on equivalent formulations.
+\end{enumerate}
+
+We present \textbf{SWE-Bench-A2A}, an evaluation framework that addresses these limitations through four key innovations:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Reproduction Gate}: Agents must first produce a failing test that reproduces the bug, demonstrating understanding before patching.
+    
+    \item \textbf{Process Scoring}: Beyond pass/fail, we capture full agent trajectories and compute multi-dimensional scores for correctness, process quality, efficiency, and adaptation.
+    
+    \item \textbf{Anti-Memorization}: Retro-holdout mutations transform codebases with semantic-preserving renames, and a fresh issue harvester provides never-before-seen tasks.
+    
+    \item \textbf{Dynamic Testing}: Beyond repository tests, we support fuzz testing, mutation testing, and adversarial probes to detect overfitting.
+\end{itemize}
+
+Our framework implements the Agent-to-Agent (A2A) protocol, enabling modular composition of assessors (Green Agents) and participants (Purple Agents). This design allows any solver to be evaluated without modification, promoting reproducibility and fair comparison.
+
+\section{Related Work}
+
+\subsection{Code Generation Benchmarks}
+
+Early code benchmarks like HumanEval \cite{chen2021codex} and MBPP \cite{austin2021mbpp} evaluate function-level generation from docstrings. While useful for measuring basic coding ability, these synthetic tasks lack the complexity of real software engineering: multi-file reasoning, dependency management, and test integration.
+
+\subsection{Repository-Level Evaluation}
+
+SWE-bench \cite{jimenez2024swebench} pioneered repository-level evaluation using real GitHub issues. The SWE-bench Verified subset provides human-validated instances with clearer specifications. Concurrent work like DevBench \cite{devbench2024} extends to multi-language settings.
+
+\subsection{Contamination and Memorization}
+
+Data contamination in LLM benchmarks has been extensively documented \cite{contamination2023}. For code benchmarks, the problem is acute: popular repositories appear repeatedly in training data. Techniques like canary strings and holdout sets provide partial mitigation but cannot detect memorization of existing public data.
+
+\subsection{Process-Aware Evaluation}
+
+Traditional software engineering emphasizes process quality alongside outcomes. Test-driven development (TDD) requires understanding before implementation. Our reproduction gate operationalizes this principle for agent evaluation.
+
+\section{Limitations of Current SWE-bench}
+
+\subsection{Data Contamination}
+
+SWE-bench repositories are among the most-starred Python projects on GitHub. Analysis suggests substantial overlap with common training corpora:
+
+\begin{itemize}[leftmargin=*]
+    \item Django: 76k+ stars, extensive documentation
+    \item Flask: 66k+ stars, widely referenced in tutorials
+    \item Scikit-learn: 58k+ stars, standard ML library
+\end{itemize}
+
+Models trained on web-scale data have likely seen these codebases, their issues, and their patches. Performance on ``unseen'' tasks may reflect recall rather than reasoning.
+
+\subsection{Patch-Only Evaluation}
+
+Current scoring treats all passing patches equally:
+\begin{equation}
+    \text{Score} = \mathbb{1}[\text{all tests pass}]
+\end{equation}
+
+This binary metric ignores:
+\begin{itemize}[leftmargin=*]
+    \item Whether the agent understood the bug
+    \item The quality of the debugging process
+    \item Efficiency of the solution path
+    \item Ability to handle ambiguity
+\end{itemize}
+
+\subsection{Static Test Overfitting}
+
+Repository test suites, while valuable, have fixed specifications. Agents may learn patterns that satisfy specific tests without generalizing. A patch that passes \texttt{test\_user\_login} may fail on semantically equivalent \texttt{test\_account\_authentication}.
+
+\section{SWE-Bench-A2A Design}
+
+\subsection{A2A Protocol Architecture}
+
+Our framework implements the Agent-to-Agent protocol with two actor types:
+
+\begin{description}
+    \item[Green Agent (Assessor)] Orchestrates evaluation: provisions environments, dispatches tasks, verifies solutions, computes scores.
+    
+    \item[Purple Agent (Solver)] Attempts tasks: receives issue descriptions, explores codebases, generates patches.
+\end{description}
+
+Communication occurs via REST endpoints with standardized message formats:
+
+\begin{lstlisting}[language=Python]
+# Task creation
+POST /a2a/task
+{
+  "title": "Fix bug #1234",
+  "description": "...",
+  "resources": {"repo": "...", "commit": "..."}
+}
+
+# Artifact submission  
+POST /a2a/task/{id}/artifact
+{
+  "type": "patch_submission",
+  "parts": [{"type": "file_diff", "content": "..."}]
+}
+\end{lstlisting}
+
+This separation enables any solver to be evaluated without code changes, promoting fair comparison across systems.
+
+\subsection{Reproduction Gate}
+
+Before accepting patches, we require agents to demonstrate bug understanding through reproduction:
+
+\begin{algorithm}
+\caption{Reproduction Gate Protocol}
+\begin{algorithmic}[1]
+\REQUIRE Issue description $I$, environment $E$
+\STATE Agent submits reproduction script $R$
+\STATE Execute $R$ in unpatched $E$
+\IF{$R$ does not fail}
+    \STATE \textbf{reject}: ``Reproduction must fail before patch''
+\ENDIF
+\STATE Agent submits patch $P$
+\STATE Apply $P$ to $E$
+\STATE Execute $R$ in patched $E$
+\IF{$R$ still fails}
+    \STATE \textbf{reject}: ``Patch does not fix reproduction''
+\ENDIF
+\STATE Run full test suite
+\RETURN verification result
+\end{algorithmic}
+\end{algorithm}
+
+This gate enforces test-driven development principles: understand the problem (red), then fix it (green).
+
+\subsection{Trajectory-Based Process Scoring}
+
+We capture complete agent trajectories and compute multi-dimensional scores:
+
+\begin{equation}
+    S = \sum_{c \in \mathcal{C}} w_c \cdot s_c
+\end{equation}
+
+where $\mathcal{C}$ includes:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrl}
+\toprule
+Category & Weight & Description \\
+\midrule
+Correctness & 0.35 & Tests pass, patch applies \\
+Process & 0.20 & Systematic exploration \\
+Efficiency & 0.15 & Token/time usage \\
+Collaboration & 0.15 & Information requests \\
+Understanding & 0.10 & Reproduction quality \\
+Adaptation & 0.05 & Response to feedback \\
+\bottomrule
+\end{tabular}
+\caption{Scoring dimensions and weights}
+\end{table}
+
+\subsection{Anti-Memorization Strategies}
+
+\subsubsection{Retro-Holdout Mutations}
+
+We transform codebases with semantic-preserving mutations:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Variable renaming}: \texttt{data} $\to$ \texttt{payload}
+    \item \textbf{Function renaming}: \texttt{get\_user} $\to$ \texttt{fetch\_account}
+    \item \textbf{Class renaming}: \texttt{UserManager} $\to$ \texttt{AccountHandler}
+    \item \textbf{Comment perturbation}: Rephrase docstrings
+\end{itemize}
+
+Mutations are applied consistently across the codebase while preserving test behavior. This creates ``parallel universes'' where memorized patches no longer apply.
+
+\subsubsection{Fresh Issue Harvesting}
+
+A harvester monitors GitHub for new issues in target repositories, providing tasks created after model training cutoffs. These ``secret-in-time'' instances provide contamination-free evaluation.
+
+\subsection{Dynamic Testing}
+
+Beyond repository tests, we support:
+
+\begin{description}
+    \item[Fuzz Testing] Property-based tests with random inputs
+    \item[Mutation Testing] Assert patches handle code mutations
+    \item[Adversarial Probes] LLM-generated edge cases
+\end{description}
+
+\section{Implementation}
+
+\subsection{System Architecture}
+
+The implementation consists of several key components:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{A2A Server}: FastAPI-based REST API implementing the A2A protocol with endpoints for task management, artifact submission, and health checks.
+    
+    \item \textbf{Environment Orchestrator}: Docker-based container management with JIT provisioning, repository cloning, and commit checkout.
+    
+    \item \textbf{Verification Engine}: Patch application, test execution with timeout handling, and flaky test detection.
+    
+    \item \textbf{Trajectory Capture}: Action logging with database persistence and streaming support.
+    
+    \item \textbf{LLM Solver}: Integration with OpenAI/Anthropic APIs for reproduction script and patch generation. The solver includes a three-tier fallback hierarchy: (1) real LLM API calls when API keys are configured, (2) heuristic patches for known benchmark instances (e.g., django-11099), and (3) mock responses when no API access is available. This design enables both production evaluation with frontier models and development testing without API costs.
+\end{itemize}
+
+\subsection{Docker Images}
+
+We provide containerized agents for easy deployment:
+
+\begin{lstlisting}[language=bash]
+# Green Agent (Assessor)
+docker.io/mmuttreja761/swebench-a2a-green:1.0.0
+
+# Purple Agent (Solver)
+docker.io/mmuttreja761/swebench-a2a-purple:1.0.0
+\end{lstlisting}
+
+These images are compatible with the AgentBeats evaluation platform for standardized benchmarking.
+
+\section{Experiments}
+
+\subsection{Setup}
+
+We evaluated the framework on a 3-instance sample from SWE-bench Verified:
+
+\begin{itemize}[leftmargin=*]
+    \item \texttt{django\_\_django-11099}: UsernameValidator trailing newline
+    \item \texttt{django\_\_django-11133}: HttpResponse charset handling
+    \item \texttt{django\_\_django-11179}: model\_to\_dict for unsaved model
+\end{itemize}
+
+The Purple Agent was configured with GPT-4o-mini for LLM calls, with heuristic fallbacks enabled for known instances.
+
+\subsection{Results}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcccc}
+\toprule
+Instance & Patch & Tests & Time & Source \\
+\midrule
+django-11099 & \checkmark & 3/3 & 74s & Heuristic \\
+django-11133 & $\times$ & 0/0 & 73s & LLM \\
+django-11179 & $\times$ & 0/0 & 71s & LLM \\
+\midrule
+\textbf{Total} & 33.3\% & - & - & - \\
+\bottomrule
+\end{tabular}
+\caption{Evaluation results on 3-instance sample. ``Source'' indicates whether the patch came from a heuristic fallback or LLM generation.}
+\end{table}
+
+The successful case (django-11099) demonstrated the full end-to-end pipeline:
+\begin{enumerate}[leftmargin=*]
+    \item Environment provisioned with correct commit (d26b2424)
+    \item Task dispatched to Purple Agent via A2A protocol
+    \item Patch applied (from heuristic fallback) and verified
+    \item All 3 oracle tests passed
+\end{enumerate}
+
+\textbf{Key observation}: The LLM-generated patches (django-11133, django-11179) failed to apply due to malformed unified diff format. This highlights a critical gap: while the \textit{framework infrastructure} (Docker provisioning, A2A communication, test execution) is fully operational, the \textit{solver quality} depends heavily on the underlying LLM's ability to produce syntactically valid patches. Stronger models (GPT-4, Claude 3.5 Sonnet) or improved prompting strategies are needed for production use.
+
+\subsection{Trajectory Analysis}
+
+For the successful case, the captured trajectory shows:
+
+\begin{lstlisting}
+1. scenario_select -> django__django-11099
+2. provision_environment -> [container_id]
+3. dispatch_task -> [purple_task_id]
+4. receive_artifact -> reproduction_script
+5. receive_artifact -> patch_submission
+6. verification -> passed (3/3 tests)
+\end{lstlisting}
+
+This visibility enables debugging agent behavior and computing process scores.
+
+\section{Evaluation Slices}
+
+We propose four evaluation slices for comprehensive assessment:
+
+\begin{description}
+    \item[Verified] Standard SWE-bench Verified instances
+    \item[Mutated] Retro-holdout transformed versions
+    \item[Fresh] Newly harvested issues (<24h old)
+    \item[Adversarial] Instances with fuzz/mutation testing
+\end{description}
+
+Reporting across slices reveals contamination sensitivity and robustness.
+
+\section{Limitations and Future Work}
+
+\subsection{Current Limitations}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Python only}: Current implementation focuses on Python repositories
+    \item \textbf{LLM solver quality}: GPT-4o-mini produces invalid unified diff patches for most issues. Our experiments show 0\% success on novel instances without heuristic fallbacks. Production deployment requires either (a) stronger models like GPT-4 or Claude 3.5 Sonnet, (b) few-shot prompting with diff format examples, or (c) multi-turn correction loops.
+    \item \textbf{Heuristic fallbacks}: The current implementation includes hardcoded patches for known SWE-bench instances (e.g., django-11099). While useful for demonstrating framework functionality, these should be removed for fair benchmarking.
+    \item \textbf{Mutation coverage}: Retro-holdout not yet integrated in live evaluation flow
+    \item \textbf{Dynamic test generation}: Fuzz/adversarial commands require per-repo configuration
+\end{itemize}
+
+\subsection{Future Directions}
+
+\begin{enumerate}[leftmargin=*]
+    \item Integrate stronger models (Claude 3.5, GPT-4) for Purple agent
+    \item Complete retro-holdout pipeline with semantic equivalence verification
+    \item Implement default fuzz command packs for common frameworks
+    \item Extend to multi-language evaluation (TypeScript, Rust)
+    \item Add visual/multimodal signals for UI-related bugs
+\end{enumerate}
+
+\section{Conclusion}
+
+SWE-Bench-A2A addresses critical limitations in current software engineering agent evaluation. By requiring reproduction before patching, capturing process quality through trajectories, applying anti-memorization transformations, and supporting dynamic testing, we provide a more rigorous and informative benchmark.
+
+Our A2A protocol design enables modular composition of assessors and solvers, promoting reproducibility and fair comparison. The framework is available as Docker images compatible with the AgentBeats evaluation platform.
+
+As language model agents become increasingly capable at software engineering, robust evaluation becomes critical. SWE-Bench-A2A offers a path toward contamination-resistant, process-aware benchmarking that rewards true engineering ability over memorization.
+
+\section*{Acknowledgments}
+
+We thank the SWE-bench team for their foundational work and the AgentBeats community for evaluation infrastructure.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+
+\bibitem{jimenez2024swebench}
+C.~E. Jimenez, J.~Yang, A.~Wettig, S.~Yao, K.~Pei, O.~Press, and K.~Narasimhan.
+\newblock SWE-bench: Can language models resolve real-world GitHub issues?
+\newblock In \textit{International Conference on Learning Representations (ICLR)}, 2024.
+
+\bibitem{chen2021codex}
+M.~Chen, J.~Tworek, H.~Jun, Q.~Yuan, H.~Pinto, J.~Kaplan, et al.
+\newblock Evaluating large language models trained on code.
+\newblock \textit{arXiv preprint arXiv:2107.03374}, 2021.
+
+\bibitem{austin2021mbpp}
+J.~Austin, A.~Odena, M.~Nye, M.~Bosma, H.~Michalewski, D.~Dohan, et al.
+\newblock Program synthesis with large language models.
+\newblock \textit{arXiv preprint arXiv:2108.07732}, 2021.
+
+\bibitem{devbench2024}
+DevBench Team.
+\newblock DevBench: A comprehensive benchmark for software development.
+\newblock \textit{arXiv preprint}, 2024.
+
+\bibitem{contamination2023}
+O.~Sainz, J.~Campos, I.~García-Ferrero, J.~Etxaniz, O.~Lopez de Lacalle, and E.~Agirre.
+\newblock NLP evaluation in trouble: On the need to measure LLM data contamination for each benchmark.
+\newblock In \textit{Findings of EMNLP}, 2023.
+
+\bibitem{agentbeats}
+AgentBeats Platform.
+\newblock Agent registry for AI evaluation.
+\newblock \url{https://agentbeats.dev/}, 2024.
+
+\end{thebibliography}
+
+\appendix
+
+\section{A2A Protocol Specification}
+
+\subsection{Agent Card Format}
+
+\begin{lstlisting}[language=json]
+{
+  "name": "SWE-bench Green Agent",
+  "version": "1.0.0",
+  "agent_id": "uuid",
+  "capabilities": ["swebench_evaluation"],
+  "endpoints": {
+    "task": "/a2a/task",
+    "health": "/health"
+  }
+}
+\end{lstlisting}
+
+\subsection{Artifact Types}
+
+\begin{itemize}
+    \item \texttt{reproduction\_script}: CODE artifact with failing test
+    \item \texttt{patch\_submission}: FILE\_DIFF artifact with unified diff
+    \item \texttt{assessment\_result}: JSON artifact with verification results
+\end{itemize}
+
+\section{Scoring Formula Details}
+
+\subsection{Correctness Score}
+\begin{equation}
+    s_{\text{correct}} = 0.6 \cdot \mathbb{1}[\text{pass}] + 0.3 \cdot \frac{\text{tests\_passed}}{\text{total\_tests}} + 0.1 \cdot \mathbb{1}[\text{patch\_applied}]
+\end{equation}
+
+\subsection{Process Score}
+\begin{equation}
+    s_{\text{process}} = 0.4 \cdot s_{\text{exploration}} + 0.3 \cdot s_{\text{reasoning}} + 0.3 \cdot s_{\text{reproduction}}
+\end{equation}
+
+\subsection{Efficiency Score}
+\begin{equation}
+    s_{\text{efficiency}} = 0.4 \cdot \frac{T_{\text{budget}} - T_{\text{used}}}{T_{\text{budget}}} + 0.4 \cdot \frac{N_{\text{budget}} - N_{\text{tokens}}}{N_{\text{budget}}} + 0.2 \cdot \frac{1}{1 + \text{attempts}}
+\end{equation}
+
+\end{document}

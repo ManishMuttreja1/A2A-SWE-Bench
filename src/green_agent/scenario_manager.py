@@ -8,6 +8,8 @@ from pathlib import Path
 import aiofiles
 import asyncio
 
+from ..swebench.dataset_loader import DatasetLoader
+
 logger = logging.getLogger(__name__)
 
 
@@ -17,11 +19,13 @@ class ScenarioManager:
     Handles loading, selection, and metadata management.
     """
     
-    def __init__(self, scenarios_path: Optional[Path] = None):
+    def __init__(self, scenarios_path: Optional[Path] = None, dataset_config: str = "verified"):
         self.scenarios_path = scenarios_path or Path("data/swe-bench-instances.json")
         self.scenarios: List[Dict[str, Any]] = []
         self.scenario_index: Dict[str, Dict[str, Any]] = {}
         self._loaded = False
+        self.dataset_config = dataset_config
+        self.dataset_loader = DatasetLoader()
     
     async def load_scenarios(self):
         """Load scenarios from file"""
@@ -29,32 +33,32 @@ class ScenarioManager:
             return
         
         try:
-            if self.scenarios_path.exists():
+            # Prefer real SWE-bench dataset (verified by default)
+            instances = await self.dataset_loader.load_dataset(self.dataset_config)
+            if instances:
+                self.scenarios = [self._instance_to_scenario(i) for i in instances]
+            elif self.scenarios_path.exists():
                 async with aiofiles.open(self.scenarios_path, 'r') as f:
                     content = await f.read()
                     data = json.loads(content)
                     
-                    # Handle both list and dict formats
                     if isinstance(data, list):
                         self.scenarios = data
                     elif isinstance(data, dict):
                         self.scenarios = data.get("instances", [])
-                    
-                    # Build index
-                    for scenario in self.scenarios:
-                        instance_id = scenario.get("instance_id")
-                        if instance_id:
-                            self.scenario_index[instance_id] = scenario
-                    
-                    self._loaded = True
-                    logger.info(f"Loaded {len(self.scenarios)} scenarios")
             else:
-                # Create sample scenarios for testing
                 await self._create_sample_scenarios()
+
+            for scenario in self.scenarios:
+                instance_id = scenario.get("instance_id")
+                if instance_id:
+                    self.scenario_index[instance_id] = scenario
+
+            self._loaded = True
+            logger.info(f"Loaded {len(self.scenarios)} scenarios (config={self.dataset_config})")
                 
         except Exception as e:
             logger.error(f"Error loading scenarios: {e}")
-            # Fall back to sample scenarios
             await self._create_sample_scenarios()
     
     async def _create_sample_scenarios(self):
@@ -95,6 +99,38 @@ class ScenarioManager:
         
         self._loaded = True
         logger.info(f"Created {len(self.scenarios)} sample scenarios")
+
+    def _instance_to_scenario(self, instance: Dict[str, Any]) -> Dict[str, Any]:
+        """Convert a SWE-bench instance into the scenario shape expected by Green."""
+        fail_to_pass = instance.get("FAIL_TO_PASS", []) or []
+        if isinstance(fail_to_pass, str):
+            try:
+                import json as _json
+                fail_to_pass = _json.loads(fail_to_pass)
+            except Exception:
+                fail_to_pass = []
+        oracle_tests = instance.get("oracle_tests") or instance.get("FAIL_TO_PASS", [])
+        if isinstance(oracle_tests, str):
+            try:
+                import json as _json
+                oracle_tests = _json.loads(oracle_tests)
+            except Exception:
+                oracle_tests = []
+        # Build test commands: one pytest invocation per fail-to-pass test
+        test_cmds = [f"pytest {t}" for t in fail_to_pass] if isinstance(fail_to_pass, list) and fail_to_pass else ["pytest"]
+        repo_name = instance.get("repo", "")
+        repo_url = f"https://github.com/{repo_name}.git" if repo_name else ""
+        return {
+            "instance_id": instance.get("instance_id"),
+            "repo": repo_name,
+            "repo_url": repo_url,
+            "base_commit": instance.get("base_commit"),
+            "problem_statement": instance.get("problem_statement"),
+            "test_commands": test_cmds,
+            "oracle_tests": oracle_tests if isinstance(oracle_tests, list) else [],
+            "mutation_targets": [],
+            "difficulty": instance.get("version", "unknown"),
+        }
     
     async def get_scenario(self, scenario_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """

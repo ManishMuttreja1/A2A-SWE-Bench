@@ -19,6 +19,8 @@ from ..a2a import (
 )
 from ..a2a.client import A2AClient
 from ..a2a.protocol import MessageType
+from ..trajectory.capture import TrajectoryCapture
+from ..scoring.advanced_metrics import AdvancedMetrics
 from .scenario_manager import ScenarioManager
 from .environment_orchestrator import EnvironmentOrchestrator
 from .verification_engine import VerificationEngine
@@ -44,7 +46,8 @@ class GreenAgentService:
         enable_mutation: bool = True,
         purple_agent_url: Optional[str] = None,
         allow_mock_reproduction: bool = False,
-        purple_timeout_seconds: int = 3600
+        purple_timeout_seconds: int = 3600,
+        dataset_config: str = "verified",
     ):
         self.name = name
         self.version = version
@@ -56,7 +59,7 @@ class GreenAgentService:
         self.purple_timeout_seconds = purple_timeout_seconds
         
         # Initialize components
-        self.scenario_manager = ScenarioManager()
+        self.scenario_manager = ScenarioManager(dataset_config=dataset_config)
         self.environment_orchestrator = EnvironmentOrchestrator()
         self.verification_engine = VerificationEngine()
         self.ambiguity_layer = AmbiguityLayer() if enable_ambiguity else None
@@ -65,6 +68,8 @@ class GreenAgentService:
             allow_mock_verification=allow_mock_reproduction
         )
         self.a2a_client = A2AClient(agent_id=self.name)
+        self.trajectory_capture = TrajectoryCapture(enable_streaming=False)
+        self.metrics = AdvancedMetrics()
         
         # Track active assessments
         self.active_assessments: Dict[str, Dict[str, Any]] = {}
@@ -108,6 +113,7 @@ class GreenAgentService:
         
         environment = None
         purple_task_id = None
+        action_logger = self.trajectory_capture.create_logger(assessment_id)
         
         try:
             # Store assessment context
@@ -128,6 +134,11 @@ class GreenAgentService:
                 raise ValueError(f"Scenario {scenario_id} not found")
             
             logger.info(f"Selected scenario: {scenario['instance_id']}")
+            await action_logger.log_action(
+                "scenario_select",
+                action_target=scenario.get("instance_id"),
+                action_output="selected"
+            )
             
             # Apply ambiguity injection if enabled
             issue_description = scenario["problem_statement"]
@@ -137,10 +148,16 @@ class GreenAgentService:
                     level=task.constraints.get("ambiguity_level", "medium") if task.constraints else "medium"
                 )
                 logger.info("Applied ambiguity injection to issue description")
+                await action_logger.log_action(
+                    "ambiguity_injection",
+                    action_target=scenario.get("instance_id"),
+                    action_output="applied"
+                )
             
             # Provision environment
+            repo_url = scenario.get("repo_url") or f"https://github.com/{scenario.get('repo')}.git"
             environment = await self.environment_orchestrator.provision_environment(
-                repo_url=scenario["repo"],
+                repo_url=repo_url,
                 commit_hash=scenario["base_commit"],
                 instance_id=scenario["instance_id"]
             )
@@ -149,6 +166,11 @@ class GreenAgentService:
                 raise RuntimeError("Failed to provision environment")
             
             logger.info(f"Provisioned environment: {environment['container_id']}")
+            await action_logger.log_action(
+                "provision_environment",
+                action_target=environment.get("container_id"),
+                action_output="ready"
+            )
             # Attach environment to task resources for downstream gates
             task.resources = task.resources or {}
             task.resources["environment"] = environment
@@ -158,6 +180,11 @@ class GreenAgentService:
             if self.enable_mutation:
                 await self._apply_code_mutation(environment, scenario)
                 logger.info("Applied code mutation to environment")
+                await action_logger.log_action(
+                    "mutation",
+                    action_target=scenario.get("instance_id"),
+                    action_output="applied"
+                )
             
             purple_url = (
                 task.metadata.get("purple_agent_url")
@@ -177,11 +204,23 @@ class GreenAgentService:
             )
             if not purple_task_id:
                 raise RuntimeError("Failed to create task on Purple agent")
+            await action_logger.log_action(
+                "dispatch_task",
+                action_target=purple_task_id,
+                action_output="sent",
+                metadata={"purple_url": purple_url}
+            )
             
             purple_artifact = await self._wait_for_purple_artifact(
                 purple_url=purple_url,
                 purple_task_id=purple_task_id,
                 task=task,
+            )
+            await action_logger.log_action(
+                "receive_artifact",
+                action_target=purple_task_id,
+                action_output="received",
+                metadata={"artifact_type": (purple_artifact.metadata or {}).get("type")}
             )
             
             # Extract patch from artifact
@@ -192,10 +231,52 @@ class GreenAgentService:
                 environment=environment,
                 patch=patch,
                 test_commands=scenario.get("test_commands", []),
-                oracle_tests=scenario.get("oracle_tests", [])
+                oracle_tests=scenario.get("oracle_tests", []),
+                timeout_seconds=task.constraints.get("test_timeout_seconds", 600) if task.constraints else 600,
+                flaky_retries=task.constraints.get("flaky_retries", 0) if task.constraints else 0,
+                fuzz_commands=scenario.get("fuzz_commands", []),
+                adversarial_commands=scenario.get("adversarial_commands", []),
             )
             
             logger.info(f"Verification result: {verification_result}")
+            await action_logger.log_action(
+                "verification",
+                action_target=scenario.get("instance_id"),
+                action_output="completed",
+                success=verification_result.get("passed", False),
+                metadata={
+                    "tests_passed": verification_result.get("tests_passed", 0),
+                    "tests_failed": verification_result.get("tests_failed", 0),
+                }
+            )
+
+            # Collect trajectory
+            trajectory = []
+            try:
+                trajectory = await self.trajectory_capture.get_task_trajectory(assessment_id)
+            except Exception as e:
+                logger.warning(f"Failed to fetch trajectory from store: {e}")
+                trajectory = getattr(action_logger, "action_stack", [])
+
+            # Compute advanced metrics
+            score = None
+            try:
+                score = await self.metrics.calculate_comprehensive_score(
+                    task_id=task.id,
+                    task_result={
+                        "passed": verification_result.get("passed", False),
+                        "tests_passed": verification_result.get("tests_passed", 0),
+                        "tests_failed": verification_result.get("tests_failed", 0),
+                        "execution_time": verification_result.get("execution_time", 0),
+                        "difficulty": scenario.get("difficulty", "medium"),
+                    },
+                    trajectory=trajectory or [],
+                    dialogue_metrics=None,
+                    reproduction_metrics=None,
+                    review_metrics=None,
+                )
+            except Exception as e:
+                logger.warning(f"Failed to compute advanced metrics: {e}")
             
             # Prepare result
             result = {
@@ -215,7 +296,8 @@ class GreenAgentService:
                                     "assessment_id": assessment_id,
                                     "scenario_id": scenario["instance_id"],
                                     "verification_result": verification_result,
-                                    "trajectory": self._get_assessment_trajectory(assessment_id)
+                                    "trajectory": trajectory,
+                                    "score": score
                                 }
                             )
                         ],
@@ -246,6 +328,11 @@ class GreenAgentService:
             }
         
         finally:
+            if action_logger:
+                try:
+                    self.trajectory_capture.remove_logger(assessment_id)
+                except Exception as log_cleanup_error:
+                    logger.warning(f"Failed to remove action logger for {assessment_id}: {log_cleanup_error}")
             if environment:
                 try:
                     await self.environment_orchestrator.cleanup_environment(environment["container_id"])
@@ -274,23 +361,6 @@ class GreenAgentService:
                 environment["container_id"],
                 mutation
             )
-    
-    async def _wait_for_purple_artifact(self, task_id: str, timeout: int = 3600) -> Optional[Artifact]:
-        """Wait for Purple Agent to submit an artifact"""
-        # In a real implementation, this would monitor the task's artifact submissions
-        # For now, we'll simulate waiting
-        await asyncio.sleep(1)  # Simulate processing time
-        
-        # Return a simulated artifact
-        return Artifact(
-            parts=[
-                Part(
-                    type=PartType.FILE_DIFF,
-                    content="diff --git a/test.py b/test.py\n...",
-                    metadata={"file_path": "test.py"}
-                )
-            ]
-        )
     
     def _extract_patch_from_artifact(self, artifact: Artifact) -> str:
         """Extract patch content from artifact"""
@@ -326,7 +396,10 @@ class GreenAgentService:
         resources = {
             "environment": task.resources.get("environment") if task.resources else None,
             "scenario_id": scenario["instance_id"],
-            "repo_url": scenario["repo"],
+            "repo_url": scenario.get("repo_url") or scenario.get("repo"),
+            "base_commit": scenario.get("base_commit"),
+            "test_commands": scenario.get("test_commands"),
+            "oracle_tests": scenario.get("oracle_tests"),
         }
         constraints = task.constraints or {}
         metadata = (task.metadata or {}).copy() if task.metadata else {}
@@ -409,7 +482,7 @@ class GreenAgentService:
             }
         ]
     
-    def run(self):
+    async def run(self):
         """Run the Green Agent Service"""
         logger.info(f"Starting {self.name} on {self.host}:{self.port}")
-        self.server.run()
+        await self.server.run_async()

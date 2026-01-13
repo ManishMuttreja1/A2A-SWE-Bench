@@ -123,7 +123,7 @@ class MultiAgentTeam:
             final_artifact = A2AProtocol.create_artifact(
                 parts=[
                     Part(
-                        type=PartType.FILE_DIFF,
+                        type=PartType.FILE_DIFF.value,
                         content=combined_patch,
                         metadata={"type": "final_patch"}
                     )

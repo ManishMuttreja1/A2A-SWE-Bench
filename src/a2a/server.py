@@ -64,14 +64,39 @@ class A2AServer:
                 raise HTTPException(status_code=404, detail="Task not found")
             
             task = self.tasks[task_id]
-            return {
+            def _part_to_safe_dict(part):
+                content = part.content
+                if isinstance(content, (str, int, float, bool)) or content is None:
+                    safe_content = content
+                else:
+                    # Avoid recursive/non-serializable structures by stringifying
+                    safe_content = repr(content)
+                return {
+                    # Always emit enum value (e.g., "code") instead of repr (e.g., "PartType.CODE")
+                    "type": part.type.value if hasattr(part.type, "value") else str(part.type),
+                    "content": safe_content,
+                    "metadata": part.metadata,
+                    "encoding": part.encoding,
+                }
+
+            def _artifact_to_safe_dict(artifact):
+                return {
+                    "id": artifact.id,
+                    "type": artifact.type,
+                    "created_at": artifact.created_at.isoformat(),
+                    "metadata": artifact.metadata,
+                    "parts": [_part_to_safe_dict(p) for p in artifact.parts],
+                }
+
+            response_data = {
                 "task_id": task.id,
                 "status": task.status,
                 "created_at": task.created_at.isoformat(),
                 "updated_at": task.updated_at.isoformat() if task.updated_at else None,
                 "completed_at": task.completed_at.isoformat() if task.completed_at else None,
-                "artifacts": [a.dict() for a in task.artifacts]
+                "artifacts": [_artifact_to_safe_dict(a) for a in task.artifacts],
             }
+            return JSONResponse(content=response_data)
         
         @self.app.post("/a2a/task/{task_id}/update")
         async def update_task(task_id: str, update: TaskUpdate):
@@ -241,3 +266,10 @@ class A2AServer:
         """Run the A2A server"""
         import uvicorn
         uvicorn.run(self.app, host=self.host, port=self.port)
+
+    async def run_async(self):
+        """Run the A2A server inside an existing event loop"""
+        import uvicorn
+        config = uvicorn.Config(self.app, host=self.host, port=self.port, loop="asyncio")
+        server = uvicorn.Server(config)
+        await server.serve()

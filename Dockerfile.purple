@@ -1,4 +1,4 @@
-# Dockerfile for SWE-bench A2A Purple Agent (Example Solver)
+# Dockerfile for SWE-bench A2A Purple Agent (Solver)
 FROM python:3.11-slim
 
 # Install system dependencies
@@ -11,30 +11,30 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy requirements
+# Copy requirements first for better caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
 COPY src/ ./src/
-COPY start_purple_agent.py .
-COPY claude_purple_agent.py .
+COPY main.py .
 
 # Environment variables
 ENV PYTHONUNBUFFERED=1
-ENV GREEN_AGENT_URL=http://green-agent:8000
+ENV PYTHONPATH=/app
 
-# Expose port (optional for Purple agents)
+# Expose A2A port
 EXPOSE 8001
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import sys; sys.exit(0)"
+    CMD curl -f http://localhost:8001/health || exit 1
 
 # Agent metadata
+LABEL org.opencontainers.image.title="SWE-bench A2A Purple Agent"
+LABEL org.opencontainers.image.description="Purple Agent (Solver) for SWE-bench A2A evaluation"
+LABEL org.opencontainers.image.version="1.0.0"
 LABEL agentbeats.type="purple"
-LABEL agentbeats.name="SWE-bench Example Solver"
-LABEL agentbeats.version="1.0.0"
 
 # Run the Purple Agent
-CMD ["python", "start_purple_agent.py"]
+CMD ["python", "main.py", "purple", "--port", "8001", "--model", "gpt-4o-mini"]

@@ -7,7 +7,7 @@ import logging
 from pathlib import Path
 
 from src.green_agent import GreenAgentService
-from src.purple_agent import PurpleAgentWrapper, SimpleSolver, MultiAgentTeam
+from src.purple_agent import PurpleAgentWrapper, SimpleSolver, LLMSolver, MultiAgentTeam
 
 logging.basicConfig(
     level=logging.INFO,
@@ -26,7 +26,9 @@ async def run_green_agent(args):
         host=args.host,
         port=args.port,
         enable_ambiguity=args.enable_ambiguity,
-        enable_mutation=args.enable_mutation
+        enable_mutation=args.enable_mutation,
+        purple_agent_url=args.purple_url,
+        dataset_config=args.dataset_config,
     )
     
     # Initialize warm pool if using Docker
@@ -37,15 +39,18 @@ async def run_green_agent(args):
     await green_agent.scenario_manager.load_scenarios()
     
     # Run the service
-    green_agent.run()
+    await green_agent.run()
 
 
 async def run_purple_agent(args):
     """Run a Purple Agent"""
     logger.info("Starting Purple Agent...")
     
-    # Create a simple solver
-    solver = SimpleSolver(model_name=args.model)
+    # Select solver
+    if args.model == "simple-solver":
+        solver = SimpleSolver(model_name=args.model)
+    else:
+        solver = LLMSolver(model_name=args.model)
     
     # Wrap it as a Purple Agent
     purple_agent = PurpleAgentWrapper(
@@ -58,7 +63,7 @@ async def run_purple_agent(args):
     )
     
     # Run the agent
-    purple_agent.run()
+    await purple_agent.run()
 
 
 async def run_multi_agent_team(args):
@@ -148,6 +153,8 @@ def main():
     green_parser.add_argument("--enable-ambiguity", action="store_true", help="Enable ambiguity injection")
     green_parser.add_argument("--enable-mutation", action="store_true", help="Enable code mutation")
     green_parser.add_argument("--warm-pool", action="store_true", help="Initialize warm container pool")
+    green_parser.add_argument("--purple-url", default=None, help="Purple agent base URL (e.g., http://localhost:8001)")
+    green_parser.add_argument("--dataset-config", default="verified", help="SWE-bench dataset config (verified|lite|full|oracle)")
     
     # Purple Agent command
     purple_parser = subparsers.add_parser("purple", help="Run Purple Agent")

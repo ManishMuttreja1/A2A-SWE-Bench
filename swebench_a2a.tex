@@ -1,0 +1,86 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{times}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+\title{SWE-Bench Improvements with Agent2Agent Protocol}
+\author{Manish Muttreja}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+SWE-bench provides real GitHub issues and tests, but is vulnerable to contamination, static test overfitting, and patch-only scoring. We propose SWEbench-A2A, adding (1) reproduction-first gating, (2) trajectory-based process scoring, (3) anti-memorization via mutation and fresh harvested issues, and (4) dynamic/adversarial testing. A partially implemented reference system includes Green--Purple A2A services, reproduction gating, Docker orchestration, and scoring scaffolds; dynamic testing and robust mutation remain to be completed. We outline the design, current status, and a roadmap to deliver a contamination-resistant, process-aware, adversarially hardened benchmark.
+\end{abstract}
+
+\section*{Summary}
+SWE-bench has become one of the most widely used, universal benchmarks for end-to-end software engineering with language models: it couples 2,294 real GitHub issues across 12 popular Python repositories with execution-based scoring, forcing models to produce patches that satisfy real tests and often span multiple files and functions \cite{swebench_iclr2024}. This realism---issues, codebases, and repository tests---makes SWE-bench a durable yardstick for long-context reasoning, tool use, and integration-heavy fixes. However, as highlighted in the accompanying limitations analysis, the public benchmark still lacks contamination resistance (models memorize repos and patches), relies on static tests that can be overfit, and scores only final patches rather than the engineering process. Our proposal addresses these deficits with process-aware scoring, anti-memorization strategies, and dynamic/adversarial testing.
+
+
+\section{Introduction}
+Benchmarks for code LMs face contamination and patch-only evaluation. Prior work (SWE-bench \cite{swebench_iclr2024}) shows low pass rates but is susceptible to memorization. We target a process-aware, contamination-resistant extension that retains SWE-bench realism while closing contamination and static-test gaps.
+
+\section{Related Work}
+SWE-bench \cite{swebench_iclr2024} evaluates patches via repo tests. The companion critique (``SWE-Bench Limitations and Improvements'') highlights memorization, solution leakage, static tests, and lack of interaction.
+
+\section{Limitations of SWE-bench}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Contamination}: models recall repos/patches; performance drops on unseen/private sets.
+\item \textbf{Patch-only scoring}: no credit for process, ambiguity handling, or collaboration.
+\item \textbf{Static tests}: plausible-but-incorrect patches can pass; no fuzzing or adversarial checks.
+\item \textbf{Single modality/language}: Python-only, text-only; no visual or multimodal signals.
+\end{itemize}
+
+\section{SWEbench-A2A Design}
+\begin{itemize}[leftmargin=*]
+\item \textbf{A2A protocol}: Green (assessor) and Purple (solver) services exchange tasks/artifacts.
+\item \textbf{Reproduction-first}: reproduction script must fail on the unpatched environment before patches are accepted.
+\item \textbf{Trajectory + scoring}: action logging and multi-factor metrics (correctness, process, efficiency, collaboration, understanding, adaptation).
+\item \textbf{Anti-memorization}: retro-holdout mutations and fresh harvested issues (<24h) to reduce training overlap.
+\item \textbf{Dynamic/adversarial testing}: fuzz commands, mutation testing, and red-team probes after patch application.
+\end{itemize}
+
+\section{Current Implementation Status}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Implemented}: Green--Purple dispatch; reproduction gate; Docker env provisioning; patch apply + test run; trajectory scaffolding; advanced metrics scaffold; Purple emits ordered artifacts (repro then patch); LLM solver hook (OpenAI/Anthropic) with fallbacks; verification supports timeouts, flaky retries, optional fuzz/adversarial command lists.
+\item \textbf{Missing}: default fuzz/adversarial generators; live retro-holdout integration with semantic checks; harvester wired into scenario selection; persistence of trajectories/scores to DB/leaderboard; visual/multimodal signals.
+\end{itemize}
+
+\section{Dynamic Test Generation Plan}
+\begin{itemize}[leftmargin=*]
+\item Provide per-repo fuzz/property commands; run post-patch with timeouts and flaky detection.
+\item Mutation testing: flip branches/assertions to catch overfitting.
+\item Red-team generation: LLM-crafted adversarial inputs; fail if any adversarial check fails.
+\end{itemize}
+
+\section{Evaluation Protocol}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Slices}: Verified (baseline), Mutated (retro-holdout), Fresh (<24h), Adversarial (fuzz/mutation/red-team).
+\item \textbf{Metrics}: Pass@1; process score; fuzz/adversarial pass rate; flake rate; contamination score; cost/time.
+\item \textbf{Models}: Claude 3.5, GPT-4.x via LLM solver; Simple baseline.
+\end{itemize}
+
+\section{Roadmap}
+\begin{enumerate}[leftmargin=*]
+\item Wire trajectory persistence and scoring emission in final artifacts.
+\item Enable retro-holdout in live flow with semantic equivalence guard.
+\item Integrate harvester for fresh scenarios; add ``secret-in-time'' flag.
+\item Ship default fuzz/adversarial command packs; add red-team generator.
+\item Add resource limits and optional no-Docker mode for smoke tests.
+\item Persist results/leaderboard with minimal auth.
+\end{enumerate}
+
+\section{Conclusion}
+SWEbench-A2A moves beyond patch-only, contamination-prone evaluation by enforcing process visibility, freshness, and adversarial robustness. Completing dynamic testing and mutation integration will yield a stronger measure of agentic software engineering.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+\bibitem{swebench_iclr2024} C.~E. Jimenez et al. SWE-bench: Can language models resolve real-world GitHub issues? \textit{ICLR}, 2024.
+\end{thebibliography}
+
+\end{document}
+

@@ -1,4 +1,4 @@
-# Dockerfile for SWE-bench A2A Green Agent (Evaluator)
+# Dockerfile for SWE-bench A2A Green Agent (Evaluator/Orchestrator)
 FROM python:3.11-slim
 
 # Install system dependencies
@@ -17,38 +17,30 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
 COPY src/ ./src/
+COPY main.py .
 COPY data/ ./data/
-COPY start_green_agent.py .
-COPY download_dataset.py .
 
-# Download SWE-bench dataset during build (optional, can be done at runtime)
-# RUN python download_dataset.py || echo "Dataset download failed, will retry at runtime"
-
-# Create directory for runtime data
-RUN mkdir -p /app/data /app/logs /app/cache
+# Create directories for runtime data
+RUN mkdir -p /app/data/swebench_cache /app/logs
 
 # Environment variables
 ENV PYTHONUNBUFFERED=1
-ENV PORT=8000
-ENV DOCKER_ENABLED=false
-ENV ENABLE_DIALOGUE=true
-ENV ENABLE_REPRODUCTION=true
-ENV ENABLE_REVIEW=true
-ENV ENABLE_MUTATIONS=true
-ENV SWEBENCH_DATASET=verified
+ENV PYTHONPATH=/app
+ENV PURPLE_AGENT_URL=http://purple-agent:8001
 
 # Expose A2A port
-EXPOSE 8000
+EXPOSE 8002
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:8002/health || exit 1
 
-# Agent card endpoint
-LABEL agentbeats.card="/.well-known/agent-card.json"
+# Agent metadata
+LABEL org.opencontainers.image.title="SWE-bench A2A Green Agent"
+LABEL org.opencontainers.image.description="Green Agent (Evaluator) for SWE-bench A2A evaluation"
+LABEL org.opencontainers.image.version="1.0.0"
 LABEL agentbeats.type="green"
-LABEL agentbeats.name="SWE-bench A2A Evaluator"
-LABEL agentbeats.version="1.0.0"
+LABEL agentbeats.card="/.well-known/agent-card.json"
 
-# Run the Green Agent server
-CMD ["python", "start_green_agent.py"]
+# Run the Green Agent
+CMD ["python", "main.py", "green", "--port", "8002", "--purple-url", "http://purple-agent:8001", "--dataset-config", "verified"]

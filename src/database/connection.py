@@ -24,19 +24,24 @@ class DatabaseConnection:
             database_url: SQLAlchemy database URL
         """
         if database_url is None:
-            # Get from environment or use default
+            # Prefer env override; default to local SQLite for ease of dev
             database_url = os.getenv(
                 "DATABASE_URL",
-                "postgresql://swebench:swebench123@localhost:5432/swebench"
+                "sqlite:///./swebench.db"
             )
         
         self.database_url = database_url
         
+        engine_kwargs = {
+            "poolclass": NullPool,
+            "echo": False,
+        }
+        if database_url.startswith("sqlite"):
+            engine_kwargs["connect_args"] = {"check_same_thread": False}
         # Create engine
         self.engine = create_engine(
             database_url,
-            poolclass=NullPool,  # Disable connection pooling for async compatibility
-            echo=False,  # Set to True for SQL debugging
+            **engine_kwargs,
         )
         
         # Create session factory
