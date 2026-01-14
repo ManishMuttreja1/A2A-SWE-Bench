@@ -193,8 +193,7 @@ PATCH:
                     {"role": "system", "content": "You are an expert bug fixer. Generate minimal, focused patches."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.1,
-                max_tokens=2048
+                temperature=0.1
             )
             
             content = response.choices[0].message.content
@@ -236,7 +235,7 @@ PATCH:
         return '\n'.join(lines) if lines else content
 
 
-async def run_a2a_test(num_tasks: int = 5):
+async def run_a2a_test(num_tasks: int = 5, model: str = "gpt-4o"):
     """Run the A2A test"""
     
     print("""
@@ -254,10 +253,10 @@ async def run_a2a_test(num_tasks: int = 5):
     instances = sorted(instances, key=lambda x: len(x.get('patch', '')))[:num_tasks]
     
     print(f"📚 Testing on {len(instances)} SWE-bench tasks")
-    print(f"🤖 Purple Agent: GPT-4o")
+    print(f"🤖 Purple Agent Model: {model}")
     print()
     
-    agent = GPT4oPurpleAgent()
+    agent = GPT4oPurpleAgent(model=model)
     results = []
     
     for i, instance in enumerate(instances, 1):
@@ -367,6 +366,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--tasks", type=int, default=5, help="Number of tasks")
+    parser.add_argument("--model", type=str, default="gpt-4o", help="OpenAI model name (e.g., gpt-4o, gpt-4.1, gpt-5.1)")
     args = parser.parse_args()
     
-    asyncio.run(run_a2a_test(args.tasks))
+    asyncio.run(run_a2a_test(args.tasks, args.model))
