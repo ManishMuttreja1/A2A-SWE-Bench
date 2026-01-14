@@ -1,0 +1,132 @@
+{
+  "timestamp": "20260114_134634",
+  "model": "gpt-4o",
+  "num_tasks": 5,
+  "stats": {
+    "tokens": 4794,
+    "cost": 0.031029999999999995,
+    "tasks": 5
+  },
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1_score": 0.6666666666666666,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "expected_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.28342,
+      "patch": "--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -50,6 +50,8 @@ class PythonCodePrinter(CodePrinter):\n     _known_functions = {\n         'Abs': 'abs',\n         'Min': 'min',\n+        'Max': 'max',\n     }\n \n     def _print_Mod(self, expr):"
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/sets/contains.py"
+        ],
+        "expected_files": [
+          "sympy/sets/contains.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 5.224742,
+      "patch": "--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -1,5 +1,6 @@\n from sympy.core import S\n from sympy.core.relational import Relational\n+from sympy.sets.conditionset import ConditionSet\n from sympy.logic.boolalg import Boolean\n \n \n@@ -50,6 +51,10 @@ def as_set(self):\n         if self.lhs.is_Symbol:\n             return self.rhs\n         else:\n-            raise NotImplementedError(\"as_set is not implemented for non-symbols\")\n+            return ConditionSet(self.lhs, self)\n+\n+    def _e"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "expected_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.288204,
+      "patch": "--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -10,6 +10,7 @@ def _get_deps_info():\n     deps = {\n         \"pip\": None,\n         \"setuptools\": None,\n+        \"joblib\": None,\n         \"numpy\": None,\n         \"scipy\": None,\n         \"Cython\": None,\n@@ -46,6 +47,7 @@ def _get_deps_info():\n     try:\n         import pip\n         deps['pip'] = pip.__version__\n+        import joblib\n+        deps['joblib'] = joblib.__version__\n     except ImportError:\n         pass"
+    },
+    {
+      "instance_id": "django__django-16082",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "expected_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.638086,
+      "patch": "--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -692,6 +692,10 @@ class CombinedExpression(Expression):\n             return output_field\n         if self.connector in {Combinable.ADD, Combinable.SUB, Combinable.MUL, Combinable.DIV}:\n             return _resolve_combined_type(self.lhs.output_field, self.rhs.output_field)\n+        if self.connector == Combinable.MOD:\n+            if isinstance(self.lhs.output_field, DecimalField) or isinstance(self.rhs.output_field, "
+    },
+    {
+      "instance_id": "django__django-13406",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.2222222222222222,
+        "recall": 1.0,
+        "f1_score": 0.3636363636363636,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/dmodels/query.py"
+        ],
+        "expected_files": [
+          "django/dmodels/query.py"
+        ],
+        "gen_additions": 9,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 9.446183,
+      "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -210,6 +210,12 @@ class QuerySet:\n     @query.setter\n     def query(self, value):\n+        if value.values_select:\n+            self._iterable_class = ValuesIterable\n+        elif value.values_list:\n+            if value.flat:\n+                self._iterable_class = FlatValuesListIterable\n+            elif value.named:\n+                self._iterable_class = NamedValuesListIterable\n+            else:\n+                self._iterab"
+    }
+  ]
+}

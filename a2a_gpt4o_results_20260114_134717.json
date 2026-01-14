@@ -1,0 +1,253 @@
+{
+  "timestamp": "20260114_134717",
+  "model": "gpt-4o",
+  "num_tasks": 10,
+  "stats": {
+    "tokens": 9752,
+    "cost": 0.06268,
+    "tasks": 10
+  },
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "expected_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.801022,
+      "patch": "--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -50,6 +50,8 @@\n     'Abs': 'abs',\n     'Min': 'min',\n     'Max': 'max',\n+    # other known functions...\n }\n \n class PythonCodePrinter(CodePrinter):"
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/sets/contains.py"
+        ],
+        "expected_files": [
+          "sympy/sets/contains.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.038013,
+      "patch": "--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -72,6 +72,11 @@ class Contains(Boolean):\n         return self.arg == other\n \n     def as_set(self):\n+        if self.arg.is_Symbol and self.rel_op.is_set:\n+            return self.rel_op\n+        elif self == S.false:\n+            return S.EmptySet\n+        return ConditionSet(self.arg, self)\n         raise NotImplementedError(\"as_set is not implemented for Contains\")\n \n     def _eval_simplify(self, **kwargs):"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "expected_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.376526,
+      "patch": "--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -10,6 +10,7 @@ def _get_deps_info():\n     deps = [\n         \"pip\",\n         \"setuptools\",\n+        \"joblib\",\n         \"sklearn\",\n         \"numpy\",\n         \"scipy\","
+    },
+    {
+      "instance_id": "django__django-16082",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "expected_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.884655,
+      "patch": "--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -682,6 +682,10 @@ class CombinedExpression(Expression):\n             return output_field\n         if isinstance(self.connector, (Combinable.ADD, Combinable.SUB, Combinable.MUL, Combinable.DIV)):\n             return _resolve_combined_type(self.lhs.output_field, self.rhs.output_field)\n+        if self.connector == Combinable.MOD:\n+            if isinstance(self.lhs.output_field, DecimalField) or isinstance(self.rhs.outp"
+    },
+    {
+      "instance_id": "django__django-13406",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.2222222222222222,
+        "recall": 1.0,
+        "f1_score": 0.3636363636363636,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/dmodels/query.py"
+        ],
+        "expected_files": [
+          "django/dmodels/query.py"
+        ],
+        "gen_additions": 9,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.287296,
+      "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -210,6 +210,12 @@ class QuerySet:\n     @query.setter\n     def query(self, value):\n         self._query = value\n+        if value.values_select:\n+            self._iterable_class = ValuesIterable\n+        elif value.values_list:\n+            if value.flat:\n+                self._iterable_class = FlatValuesListIterable\n+            elif value.named:\n+                self._iterable_class = NamedValuesListIterable\n+            else:\n"
+    },
+    {
+      "instance_id": "django__django-16429",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/utils/timesince.py"
+        ],
+        "expected_files": [
+          "django/utils/timesince.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.547445,
+      "patch": "--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -93,7 +93,7 @@ def timesince(d, now=None, reversed=False, time_strings=None, depth=2):\n     # Convert datetime.date to datetime.datetime for comparison.\n     if not isinstance(d, datetime.datetime):\n         d = datetime.datetime(d.year, d.month, d.day)\n-    if now is None:\n+    if now is None or isinstance(now, datetime.date):\n         now = datetime.datetime.now()\n     # If d is in the future, return 0 minutes.\n     if d > now:"
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.573047,
+      "patch": "--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -590,6 +590,10 @@ def __rmul__(self, other):\n         if not isinstance(other, Expr) or other.is_Number:\n             return self.mul(other)\n \n+        if isinstance(other, Symbol):\n+            return self.mul(other)\n+\n+        return other * self.as_expr()\n \n     def __divmod__(self, other):\n         from sympy.polys.polyclasses import DMP"
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.8,
+        "generated_files": [
+          "sympy/core/symbol.py"
+        ],
+        "expected_files": [
+          "sympy/core/symbol.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.977201,
+      "patch": "--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -256,7 +256,7 @@ def symbols(names, **args):\n     result = []\n     for name in names:\n         if isinstance(name, str):\n-            result.append(_symbol(name, **args))\n+            result.extend(_symbol(name, **args))\n         else:\n             result.append(symbols(name, **args))\n     return tuple(result)"
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/tests/test_polytools.py",
+          "sympy/polys/factortools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/factortools.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 2,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.534114,
+      "patch": "--- a/sympy/polys/factortools.py\n+++ b/sympy/polys/factortools.py\n@@ -1150,7 +1150,7 @@ def _factor(f, gens, args, method):\n \n     if method is not None:\n         if method == 'complex':\n-            extension = True\n+            extension = extension or True\n         elif method == 'real':\n             extension = False\n \n--- a/sympy/polys/tests/test_polytools.py\n+++ b/sympy/polys/tests/test_polytools.py\n@@ -3249,7 +3249,6 @@ def test_poly_matching_consistency():\n     assert Poly(x, x) * I == P"
+    },
+    {
+      "instance_id": "django__django-14534",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/forms/boundfield.py"
+        ],
+        "expected_files": [
+          "django/forms/boundfield.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.610246,
+      "patch": "--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -101,7 +101,7 @@ class BoundWidget:\n     ...\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs'].get('id')"
+    }
+  ]
+}
