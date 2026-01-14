@@ -1,0 +1,81 @@
+{
+  "timestamp": "2026-01-13T14:39:25.878644",
+  "summary": {
+    "total_instances": 10,
+    "passed": 0,
+    "failed": 0,
+    "errors": 10,
+    "timeouts": 0,
+    "pass_rate": 0.0,
+    "average_time": 35.22204642295837
+  },
+  "detailed_results": [
+    {
+      "instance_id": "django__django-16429",
+      "status": "error",
+      "error": "",
+      "elapsed_time": 35.25135779380798
+    },
+    {
+      "instance_id": "django__django-14915",
+      "status": "error",
+      "error": "",
+      "elapsed_time": 35.07172417640686
+    },
+    {
+      "instance_id": "django__django-15863",
+      "status": "error",
+      "error": "",
+      "elapsed_time": 35.24125695228577
+    },
+    {
+      "instance_id": "django__django-11880",
+      "status": "error",
+      "error": "",
+      "elapsed_time": 35.23656177520752
+    },
+    {
+      "instance_id": "django__django-12209",
+      "status": "error",
+      "error": "",
+      "elapsed_time": 35.05752086639404
+    },
+    {
+      "instance_id": "django__django-15098",
+      "status": "error",
+      "error": "",
+      "elapsed_time": 35.28219389915466
+    },
+    {
+      "instance_id": "django__django-11119",
+      "status": "error",
+      "error": "",
+      "elapsed_time": 35.27743697166443
+    },
+    {
+      "instance_id": "django__django-15569",
+      "status": "error",
+      "error": "",
+      "elapsed_time": 35.272778034210205
+    },
+    {
+      "instance_id": "django__django-14534",
+      "status": "error",
+      "error": "",
+      "elapsed_time": 35.267289876937866
+    },
+    {
+      "instance_id": "django__django-13516",
+      "status": "error",
+      "error": "",
+      "elapsed_time": 35.262343883514404
+    }
+  ],
+  "by_repo": {
+    "django/django": {
+      "passed": 0,
+      "failed": 10,
+      "total": 10
+    }
+  }
+}

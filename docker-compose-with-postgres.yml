@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: swebench-postgres
+    environment:
+      POSTGRES_DB: swebench
+      POSTGRES_USER: swebench
+      POSTGRES_PASSWORD: swebench_secure_pass_2024
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - swebench-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U swebench"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: swebench-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - swebench-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  purple-agent:
+    image: mmuttreja761/swebench-a2a-purple:1.0.0
+    container_name: swebench-purple-agent
+    build:
+      context: .
+      dockerfile: Dockerfile.purple
+    environment:
+      - AGENT_TYPE=purple
+      - GREEN_AGENT_URL=http://green-agent:8002
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - LLM_PROVIDER=${LLM_PROVIDER:-anthropic}
+      - DATABASE_URL=postgresql://swebench:swebench_secure_pass_2024@postgres:5432/swebench
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - swebench-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  green-agent:
+    image: mmuttreja761/swebench-a2a-green:1.0.0
+    container_name: swebench-green-agent
+    build:
+      context: .
+      dockerfile: Dockerfile.green
+    environment:
+      - AGENT_TYPE=green
+      - PURPLE_AGENT_URL=http://purple-agent:8001
+      - DATABASE_URL=postgresql://swebench:swebench_secure_pass_2024@postgres:5432/swebench
+      - REDIS_URL=redis://redis:6379
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    ports:
+      - "8002:8002"
+    depends_on:
+      purple-agent:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - swebench-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/swebench_cache:/app/data/swebench_cache:ro
+
+networks:
+  swebench-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  swebench-data:
