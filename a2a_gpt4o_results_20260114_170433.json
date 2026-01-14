@@ -1,0 +1,496 @@
+{
+  "timestamp": "20260114_170433",
+  "model": "gpt-4o",
+  "num_tasks": 20,
+  "stats": {
+    "tokens": 20141,
+    "cost": 0.14949499999999996,
+    "tasks": 20
+  },
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "expected_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.444228,
+      "patch": "--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -74,6 +74,8 @@ class PythonCodePrinter(Printer):\n     _known_functions = {\n         'Abs': 'abs',\n         'Max': 'max',\n+        'Min': 'min',\n+        'Max': 'max',\n         'acos': 'acos',\n         'acosh': 'acosh',\n         'asin': 'asin',"
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/sets/contains.py",
+          "sympy/logic/boolalg.py"
+        ],
+        "expected_files": [
+          "sympy/sets/contains.py"
+        ],
+        "gen_additions": 26,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 1
+      },
+      "elapsed": 9.723867,
+      "patch": "--- a/sympy/logic/boolalg.py\n+++ b/sympy/logic/boolalg.py\n@@ -19,6 +19,7 @@\n from sympy.core.sympify import _sympify\n from sympy.core.relational import (Relational, Eq, Ne, Lt, Le, Gt, Ge)\n from sympy.core.operations import LatticeOp\n+from sympy.sets.conditionset import ConditionSet\n \n \n class Boolean(AtomicExpr):\n@@ -120,6 +121,18 @@ class Boolean(AtomicExpr):\n     def _eval_as_set(self):\n         raise NotImplementedError()\n \n+    def as_set(self):\n+        \"\"\"\n+        Return a Set of those v"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "expected_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.151069,
+      "patch": "--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -16,6 +16,7 @@ from .. import __version__ as sklearn_version\n def get_deps_info():\n     deps_info = {\n         'pip': _get_pip_version(),\n+        'joblib': _get_module_version('joblib'),\n         'setuptools': _get_module_version('setuptools'),\n         'sklearn': sklearn_version,\n         'numpy': _get_module_version('numpy'),"
+    },
+    {
+      "instance_id": "django__django-16082",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "expected_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.650532,
+      "patch": "--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -487,7 +487,7 @@ class Expression(BaseExpression, Combinable):\n             return output_field\n \n         if isinstance(self, (CombinedExpression,)):\n-            if self.connector in {self.ADD, self.SUB, self.MUL, self.DIV}:\n+            if self.connector in {self.ADD, self.SUB, self.MUL, self.DIV, self.MOD}:\n                 return _resolve_combined_type(\n                     self.lhs._output_field_or_none,\n       "
+    },
+    {
+      "instance_id": "django__django-13406",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.1111111111111111,
+        "recall": 0.5,
+        "f1_score": 0.1818181818181818,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "django/dmodels/query.py"
+        ],
+        "expected_files": [
+          "django/dmodels/query.py"
+        ],
+        "gen_additions": 8,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.706028,
+      "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -16,6 +16,7 @@\n from django.db.models.constants import LOOKUP_SEP\n from django.db.models.deletion import Collector\n from django.db.models.expressions import Case, Expression, F, Value, When\n+from django.db.models.query_utils import Q\n from django.db.models.sql import Query\n from django.db.models.sql.constants import CURSOR, GET_ITERATOR_CHUNK_SIZE\n from django.db.models.sql.datastructures import EmptyResultSet\n@@ -210,8 +211,18 @"
+    },
+    {
+      "instance_id": "django__django-16429",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/utils/timesince.py"
+        ],
+        "expected_files": [
+          "django/utils/timesince.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 1,
+        "gen_deletions": 2,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.112644,
+      "patch": "--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -90,7 +90,12 @@ def timesince(d, now=None, *, depth=2):\n     # Convert datetime.date to datetime.datetime for comparison.\n     if not isinstance(d, datetime.datetime):\n         d = datetime.datetime(d.year, d.month, d.day)\n-    if not isinstance(now, datetime.datetime):\n+    if not isinstance(now, datetime.datetime):\n         now = datetime.datetime(now.year, now.month, now.day)\n+\n+    # Ensure pivot used for month/year calculati"
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "gen_additions": 12,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 5.675875,
+      "patch": "--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -18,6 +18,7 @@\n from sympy.core.compatibility import as_int, iterable, ordered\n from sympy.core.expr import Expr\n from sympy.core.numbers import Rational\n+from sympy.core.singleton import S\n from sympy.core.sympify import CantSympify, sympify\n from sympy.core.symbol import Dummy, Symbol\n from sympy.functions.elementary.miscellaneous import sqrt\n@@ -642,6 +643,18 @@ def __rmul__(self, other):\n         if not isinstance(other, Expr):"
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/core/symbol.py"
+        ],
+        "expected_files": [
+          "sympy/core/symbol.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.345109,
+      "patch": "--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -2420,7 +2420,7 @@ def symbols(names, **args):\n     if isinstance(names, (list, tuple, set)):\n         if len(names) == 1:\n             names = names.pop()\n-        else:\n+        elif not isinstance(names, tuple):\n             return [symbols(name, **args) for name in names]\n \n     seq = None"
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/factortools.py",
+          "sympy/polys/tests/test_polytools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/factortools.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 1,
+        "gen_deletions": 3,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.639016,
+      "patch": "--- a/sympy/polys/factortools.py\n+++ b/sympy/polys/factortools.py\n@@ -1147,7 +1147,7 @@ def _trial_division(f, factors, gens, K):\n \n     for factor in factors:\n         if not factor:\n-            continue\n+            break\n \n         g = dup_from_sympy(factor, gens, K)\n         q, r = dup_div(f, g, K)\n--- a/sympy/polys/tests/test_polytools.py\n+++ b/sympy/polys/tests/test_polytools.py\n@@ -58,7 +58,7 @@\n from sympy.core.basic import _aresame\n from sympy.core.compatibility import iterable\n from s"
+    },
+    {
+      "instance_id": "django__django-14534",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.2,
+        "recall": 0.5,
+        "f1_score": 0.28571428571428575,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "django/forms/boundfield.py"
+        ],
+        "expected_files": [
+          "django/forms/boundfield.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.268235,
+      "patch": "--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -132,7 +132,10 @@ class BoundWidget:\n         return format_html(self.template_name, **context)\n \n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        attrs = self.data.get('attrs') or {}\n+        if 'id' in attrs:\n+            return attrs['id']\n+        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n \n     @property\n     def choice_label(self):"
+    },
+    {
+      "instance_id": "psf__requests-1921",
+      "repo": "psf/requests",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.125,
+        "recall": 0.5,
+        "f1_score": 0.2,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "requests/sessions.py"
+        ],
+        "expected_files": [
+          "requests/sessions.py"
+        ],
+        "gen_additions": 8,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.381305,
+      "patch": "--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -35,6 +35,13 @@ def merge_setting(request_setting, session_setting, dict_class=OrderedDict):\n     if session_setting is None:\n         return request_setting\n \n+    # Filter out keys explicitly set to None in the session settings.\n+    # This allows users to \"unset\" default headers on a Session by\n+    # assigning None, matching the documented per-request behaviour.\n+    if isinstance(session_setting, dict_class):\n+        session_setting "
+    },
+    {
+      "instance_id": "pallets__flask-5014",
+      "repo": "pallets/flask",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.6666666666666666,
+        "recall": 0.6666666666666666,
+        "f1_score": 0.6666666666666666,
+        "fuzzy_recall": 0.6666666666666666,
+        "generated_files": [
+          "src/flask/blueprints.py"
+        ],
+        "expected_files": [
+          "src/flask/blueprints.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 3,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.093796,
+      "patch": "--- a/src/flask/blueprints.py\n+++ b/src/flask/blueprints.py\n@@ -77,6 +77,9 @@ class Blueprint(scaffold.Scaffold):\n     def __init__(\n         self, name, import_name, static_folder=None, static_url_path=None,\n         template_folder=None, url_prefix=None, subdomain=None, url_defaults=None,\n         root_path=None, cli_group=_sentinel\n     ):\n+        if not name:\n+            raise ValueError(\"The name of a Blueprint must be non-empty.\")\n+\n         _sentinel = object()\n         self.name = name"
+    },
+    {
+      "instance_id": "django__django-14089",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.6666666666666666,
+        "recall": 0.6666666666666666,
+        "f1_score": 0.6666666666666666,
+        "fuzzy_recall": 0.6666666666666666,
+        "generated_files": [
+          "django/utils/datastructures.py"
+        ],
+        "expected_files": [
+          "django/utils/datastructures.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 3,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.055905,
+      "patch": "--- a/django/utils/datastructures.py\n+++ b/django/utils/datastructures.py\n@@ -18,6 +18,9 @@ class OrderedSet:\n     def __contains__(self, item):\n         return item in self._dict\n \n+    def __reversed__(self):\n+        return reversed(list(self._dict.keys()))\n+\n     def add(self, item):\n         self._dict[item] = None"
+    },
+    {
+      "instance_id": "sympy__sympy-15875",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/core/add.py"
+        ],
+        "expected_files": [
+          "sympy/core/add.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.319908,
+      "patch": "--- a/sympy/core/add.py\n+++ b/sympy/core/add.py\n@@ -532,7 +532,7 @@ def _eval_is_zero(self):\n         if not self.is_commutative:\n             return\n         if self.is_number:\n-            return False\n+            return\n         if self.is_Mul:\n             return self._eval_is_zero()\n         if self.is_Pow:"
+    },
+    {
+      "instance_id": "django__django-16333",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.4,
+        "recall": 1.0,
+        "f1_score": 0.5714285714285715,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/contriauth/forms.py"
+        ],
+        "expected_files": [
+          "django/contriauth/forms.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.411794,
+      "patch": "--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -150,7 +150,10 @@ class UserCreationForm(forms.ModelForm):\n         user = super().save(commit=False)\n         user.set_password(self.cleaned_data[\"password1\"])\n         if commit:\n-            user.save()\n+            user.save()\n+            # Ensure many-to-many data is saved, matching ModelForm.save().\n+            if hasattr(self, \"save_m2m\"):\n+                self.save_m2m()\n         return user"
+    },
+    {
+      "instance_id": "django__django-12419",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1_score": 0.5,
+        "fuzzy_recall": 0.9,
+        "generated_files": [
+          "django/conf/global_settings.py"
+        ],
+        "expected_files": [
+          "django/conf/global_settings.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.445137,
+      "patch": "--- a/django/conf/global_settings.py\n+++ b/django/conf/global_settings.py\n@@ -417,7 +417,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = False\n SECURE_HSTS_PRELOAD = False\n SECURE_CONTENT_TYPE_NOSNIFF = False\n SECURE_BROWSER_XSS_FILTER = False\n-SECURE_REFERRER_POLICY = None\n+SECURE_REFERRER_POLICY = \"same-origin\"\n SECURE_SSL_REDIRECT = False\n SECURE_REDIRECT_EXEMPT = []\n SECURE_PROXY_SSL_HEADER = None"
+    },
+    {
+      "instance_id": "django__django-15098",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "tests/i18n/tests.py",
+          "django/utils/translation/trans_real.py",
+          "django/conf/urls/i18n.py"
+        ],
+        "expected_files": [
+          "django/utils/translation/trans_real.py"
+        ],
+        "gen_additions": 48,
+        "exp_additions": 1,
+        "gen_deletions": 18,
+        "exp_deletions": 1
+      },
+      "elapsed": 16.211988,
+      "patch": "--- a/django/utils/translation/trans_real.py\n+++ b/django/utils/translation/trans_real.py\n@@ -63,7 +63,7 @@ language_code_re = _lazy_re_compile(\n     r'^[a-z]{2,3}'\n     r'(?:-[a-z]{2,3})?'\n     r'(?:-[A-Z]{2})?$'\n-)\n+)\n \n def to_language(locale):\n     \"\"\"Turn a locale name (en_US) into a language name (en-us).\"\"\"\n@@ -482,15 +482,26 @@ def get_language_from_path(path):\n     \"\"\"\n     Return the language code if there is a valid language code found in the\n     `path`.\n+\n+    This function supports"
+    },
+    {
+      "instance_id": "sympy__sympy-14711",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.2857142857142857,
+        "recall": 1.0,
+        "f1_score": 0.4444444444444445,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sympy/physics/vector/vector.py"
+        ],
+        "expected_files": [
+          "sympy/physics/vector/vector.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 2,
+        "gen_deletions": 2,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.427202,
+      "patch": "--- a/sympy/physics/vector/vector.py\n+++ b/sympy/physics/vector/vector.py\n@@ -57,8 +57,11 @@ class Vector(Basic):\n \n     def __add__(self, other):\n         \"\"\"The add operator for Vector. \"\"\"\n-        #if other == 0: return self\n-        other = _check_vector(other)\n+        # Allow addition with 0 (both Python int 0 and SymPy Integer(0))\n+        if other == 0:\n+            return self\n+\n+        other = _check_vector(other)\n         return Vector(self.args + other.args)\n \n     def __sub__(self"
+    },
+    {
+      "instance_id": "sympy__sympy-17139",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/simplify/fu.py"
+        ],
+        "expected_files": [
+          "sympy/simplify/fu.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.864221,
+      "patch": "--- a/sympy/simplify/fu.py\n+++ b/sympy/simplify/fu.py\n@@ -501,7 +501,8 @@ def _TR56(rv, f, g, h, max=4, pow=pow):\n         if not (isinstance(rv, Pow) and rv.base.func is f):\n             return rv\n         if rv.exp.is_integer:\n-            if (rv.exp < 0) == True:\n+            # only compare exponents that are known to be real\n+            if rv.exp.is_real and (rv.exp < 0) == True:\n                 return 1/pow(rv.base, -rv.exp)\n             if rv.exp.is_even:\n                 return pow(h(g("
+    },
+    {
+      "instance_id": "django__django-14915",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/forms/models.py"
+        ],
+        "expected_files": [
+          "django/forms/models.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 3,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.580268,
+      "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -116,6 +116,9 @@ class ModelChoiceIteratorValue:\n     def __str__(self):\n         return str(self.value)\n \n+    def __hash__(self):\n+        return hash(self.value)\n+\n \n class ModelChoiceIterator:\n     def __init__(self, field):"
+    }
+  ]
+}

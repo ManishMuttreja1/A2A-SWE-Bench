@@ -1,0 +1,72 @@
+{
+  "timestamp": "20260114_162638",
+  "model": "gpt-4o",
+  "num_tasks": 10,
+  "stats": {
+    "tokens": 0,
+    "cost": 0.0,
+    "tasks": 0
+  },
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "repo": "sympy/sympy",
+      "success": false,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'"
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "repo": "sympy/sympy",
+      "success": false,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "repo": "scikit-learn/scikit-learn",
+      "success": false,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'"
+    },
+    {
+      "instance_id": "django__django-16082",
+      "repo": "django/django",
+      "success": false,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'"
+    },
+    {
+      "instance_id": "django__django-13406",
+      "repo": "django/django",
+      "success": false,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'"
+    },
+    {
+      "instance_id": "django__django-16429",
+      "repo": "django/django",
+      "success": false,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'"
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "repo": "sympy/sympy",
+      "success": false,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'"
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "repo": "sympy/sympy",
+      "success": false,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'"
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "repo": "sympy/sympy",
+      "success": false,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'"
+    },
+    {
+      "instance_id": "django__django-14534",
+      "repo": "django/django",
+      "success": false,
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'"
+    }
+  ]
+}
