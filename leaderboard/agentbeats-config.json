@@ -1,12 +1,4 @@
-{
-  "leaderboard": {
-    "name": "SWE-bench A2A Comprehensive Evaluation",
-    "description": "Process-aware evaluation of software engineering agents with 6-category scoring",
-    "repo": "https://github.com/ManishMuttreja1/A2A-SWE-Bench",
-    "data_path": "leaderboard/results.parquet",
-    "refresh_interval_minutes": 60
-  },
-  "queries": [
+[
     {
       "id": "main_leaderboard",
       "name": "Overall Rankings",
@@ -65,52 +57,17 @@
         {"name": "action_efficiency", "type": "number", "label": "Action Efficiency"},
         {"name": "tasks_completed", "type": "number", "label": "Tasks"}
       ]
-    }
-  ],
-  "scoring": {
-    "weights": {
-      "correctness": 0.35,
-      "process": 0.20,
-      "efficiency": 0.15,
-      "collaboration": 0.15,
-      "understanding": 0.10,
-      "adaptation": 0.05
     },
-    "grades": {
-      "A+": 0.93,
-      "A": 0.90,
-      "A-": 0.87,
-      "B+": 0.83,
-      "B": 0.80,
-      "B-": 0.77,
-      "C+": 0.73,
-      "C": 0.70,
-      "C-": 0.67,
-      "D": 0.60,
-      "F": 0.0
+    {
+      "id": "overall_performance",
+      "name": "Overall Performance",
+      "description": "Top pass rate and time per agent",
+      "sql": "SELECT id, ROUND(pass_rate, 1) AS \"Pass Rate\", ROUND(time_used, 1) AS \"Time\", total_tasks AS \"# Tasks\" FROM ( SELECT *, ROW_NUMBER() OVER (PARTITION BY id ORDER BY pass_rate DESC, time_used ASC) AS rn FROM ( SELECT results.participants.agent AS id, res.pass_rate AS pass_rate, res.time_used AS time_used, SUM(res.max_score) OVER (PARTITION BY results.participants.agent) AS total_tasks FROM results CROSS JOIN UNNEST(results.results) AS r(res) ) ) WHERE rn = 1 ORDER BY \"Pass Rate\" DESC;",
+      "columns": [
+        {"name": "id", "type": "string", "label": "Agent"},
+        {"name": "Pass Rate", "type": "number", "label": "Pass Rate"},
+        {"name": "Time", "type": "number", "label": "Time"},
+        {"name": "# Tasks", "type": "number", "label": "# Tasks"}
+      ]
     }
-  },
-  "schema": {
-    "table": "assessment_results",
-    "columns": {
-      "agent_name": "TEXT",
-      "agent_id": "TEXT",
-      "task_id": "TEXT",
-      "instance_id": "TEXT",
-      "correctness_score": "FLOAT",
-      "process_score": "FLOAT",
-      "efficiency_score": "FLOAT",
-      "collaboration_score": "FLOAT",
-      "understanding_score": "FLOAT",
-      "adaptation_score": "FLOAT",
-      "dialogue_turns": "INTEGER",
-      "questions_asked": "INTEGER",
-      "review_iterations": "INTEGER",
-      "reproduction_verified": "BOOLEAN",
-      "mutations_resisted": "BOOLEAN",
-      "execution_time_seconds": "FLOAT",
-      "actions_taken": "INTEGER",
-      "evaluation_timestamp": "TIMESTAMP"
-    }
-  }
-}
+]
