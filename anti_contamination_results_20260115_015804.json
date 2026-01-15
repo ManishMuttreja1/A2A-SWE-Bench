@@ -1,0 +1,247 @@
+{
+  "verified": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "generated_patch": "--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -1,6 +1,6 @@\n \"\"\"\n Python code printer\n \n \"\"\"\n \n from __future__ import annotations\n \n@@ -240,6 +240,12 @@ class PythonCodePrinter(AbstractPythonCodePrinter):\n     def _print_Abs(self, expr):\n         return \"abs(%s)\" % self._print(expr.args[0])\n \n+    def _print_Min(self, expr):\n+        return \"min({})\".format(\", \".join(self._print(arg) for arg in expr.args))\n+\n+    def _print_Max(self, expr):\n+        return \"max({})\".format(\", \".join(self._print(arg) for arg in expr.args))\n+\n     def _print_floor(self, expr):\n         return \"math.floor(%s)\" % self._print(expr.args[0])\n \n     def _print_ceiling(self, expr):\n         return \"math.ceil(%s)\" % self._print(expr.args[0])",
+      "expected_patch": "diff --git a/sympy/printing/pycode.py b/sympy/printing/pycode.py\n--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -18,6 +18,8 @@\n \n _known_functions = {\n     'Abs': 'abs',\n+    'Min': 'min',\n+    'Max': 'max',\n }\n _known_functions_math = {\n     'acos': 'acos',\n",
+      "tokens": 480,
+      "success": true,
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "generated_patch": "--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -1,6 +1,7 @@\n from __future__ import annotations\n \n from sympy.core.basic import Basic\n+from sympy.core.relational import Relational\n from sympy.core.cache import cacheit\n from sympy.core.logic import fuzzy_bool\n from sympy.core.relational import Eq\n@@ -49,6 +50,12 @@ class Contains(Basic):\n     def __new__(cls, x, s, **assumptions):\n         return Basic.__new__(cls, x, s, **assumptions)\n \n+    def as_set(self):\n+        \"\"\"\n+        Contains is a Boolean (Relational), not a Set.\n+        \"\"\"\n+        raise TypeError(\"Contains is not a set\")\n+\n     @property\n     def element(self):\n         return self.args[0]",
+      "expected_patch": "diff --git a/sympy/sets/contains.py b/sympy/sets/contains.py\n--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -45,4 +45,4 @@ def binary_symbols(self):\n             isinstance(i, (Eq, Ne))])\n \n     def as_set(self):\n-        raise NotImplementedError()\n+        return self.args[1]\n",
+      "tokens": 499,
+      "success": true,
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "generated_patch": "--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -1,6 +1,7 @@\n \"\"\"Utility methods to print system info for debugging\"\"\"\n \n import platform\n+import joblib\n \n from .. import __version__\n \n@@ -10,6 +11,7 @@ def show_versions():\n     deps = [\n         \"numpy\",\n         \"scipy\",\n+        \"joblib\",\n         \"Cython\",\n         \"pandas\",\n         \"matplotlib\",\n@@ -21,6 +23,7 @@ def show_versions():\n     print(\"Python:\", platform.python_version())\n     print(\"scikit-learn:\", __version__)\n     print(\"numpy:\", numpy.__version__)\n     print(\"scipy:\", scipy.__version__)\n+    print(\"joblib:\", joblib.__version__)\n     print(\"Cython:\", Cython.__version__)\n     print(\"pandas:\", pandas.__version__)\n     print(\"matplotlib:\", matplotlib.__version__)\n     print(\"joblib:\", joblib.__version__)",
+      "expected_patch": "diff --git a/sklearn/utils/_show_versions.py b/sklearn/utils/_show_versions.py\n--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -48,6 +48,7 @@ def _get_deps_info():\n         \"Cython\",\n         \"pandas\",\n         \"matplotlib\",\n+        \"joblib\",\n     ]\n \n     def get_version(module):\n",
+      "tokens": 346,
+      "success": true,
+      "similarity": 1.0
+    },
+    {
+      "instance_id": "django__django-16082",
+      "generated_patch": "--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -1,6 +1,7 @@\n from __future__ import annotations\n \n import copy\n+import operator\n import datetime\n import functools\n import inspect\n@@ -1,6 +1,7 @@\n from django.db.models.fields import (\n     AutoField,\n     BigAutoField,\n+    DecimalField,\n     DurationField,\n     Field,\n     FloatField,\n@@ -1,6 +1,7 @@\n from django.db.models.lookups import Lookup\n from django.db.models.query_utils import Q\n from django.db.models.sql import query\n+from django.db.models.functions.math import Mod\n from django.utils.deconstruct import deconstructible\n from django.utils.functional import cached_property\n from django.utils.hashable import make_hashable\n@@ -1,6 +1,7 @@\n from django.utils.translation import gettext_lazy as _\n \n from .constants import LOOKUP_SEP\n+from .fields.mixins import NumericOutputFieldMixin\n from .fields.related import ForeignObjectRel\n from .fields.related_lookups import RelatedExact\n from .fields.reverse_related import ForeignObjectRel\n@@ -1,6 +1,7 @@\n from .query_utils import DeferredAttribute, FilteredRelation, Q\n from .utils import (\n     resolve_callables,\n+    resolve_expression,\n )\n \n@@ -1,6 +1,7 @@\n class CombinedExpression(SQLiteNumericMixin, Expression):\n     def __init__(self, lhs, connector, rhs, output_field=None):\n         super().__init__(output_field=output_field)\n         self.connector = connector\n@@ -1,6 +1,7 @@\n     def _resolve_output_field(self):\n         # We avoid using super() here because we want to use the\n         # _resolve_combined_type() helper.\n         lhs_type = self.lhs.output_field.__class__\n         rhs_type = self.rhs.output_field.__class__\n+        if self.connector == \"%%\":\n+            return Mod(self.lhs, self.rhs).output_field\n         combined_type = _resolve_combined_type(self.connector, lhs_type, rhs_type)\n         if combined_type is None:\n             raise FieldError(\n                 \"Cannot infer type of %s expression involving these types: %s, %s. \"\n                 \"You must set output_field.\" % (self.connector, lhs_type, rhs_type)\n             )\n         return combined_type()",
+      "expected_patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -533,6 +533,7 @@ def __hash__(self):\n             Combinable.SUB,\n             Combinable.MUL,\n             Combinable.DIV,\n+            Combinable.MOD,\n         )\n     },\n     # Bitwise operators.\n",
+      "tokens": 660,
+      "success": true,
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "django__django-13406",
+      "generated_patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1,6 +1,7 @@\n import copy\n import difflib\n import functools\n+import pickle\n import itertools\n import operator\n import sys\n@@ -326,6 +327,7 @@ class Query(BaseExpression):\n         self._filtered_relations = {}\n         self._annotation_select_cache = None\n         self._extra_select_cache = None\n+        self.values_select = ()\n \n     @property\n     def filtered_relations(self):\n@@ -438,6 +440,7 @@ class Query(BaseExpression):\n         obj._annotation_select_cache = None\n         obj._extra_select_cache = None\n+        obj.values_select = self.values_select\n         return obj\n \n     def chain(self, klass=None):\n@@ -520,6 +523,7 @@ class Query(BaseExpression):\n         obj._annotation_select_cache = None\n         obj._extra_select_cache = None\n+        obj.values_select = self.values_select\n         return obj\n \n     def __getstate__(self):\n@@ -528,6 +532,7 @@ class Query(BaseExpression):\n         obj = self.clone()\n         obj._annotation_select_cache = None\n         obj._extra_select_cache = None\n+        obj.values_select = self.values_select\n         return obj.__dict__\n \n     def __setstate__(self, state):\n@@ -535,6 +540,7 @@ class Query(BaseExpression):\n         self.__dict__.update(state)\n         self._annotation_select_cache = None\n         self._extra_select_cache = None\n+        self.values_select = state.get('values_select', ())\n \n     def __deepcopy__(self, memo):\n         obj = self.clone()\n@@ -542,6 +548,7 @@ class Query(BaseExpression):\n         obj._annotation_select_cache = None\n         obj._extra_select_cache = None\n+        obj.values_select = self.values_select\n         return obj\n \n     def __repr__(self):\n         return '<%s: %s>' % (self.__class__.__name__, self)\n@@ -2320,6 +2327,7 @@ class Query(BaseExpression):\n         self.select = ()\n         self.default_cols = False\n         self.select_related = False\n+        self.values_select = tuple(fields)\n         self.clear_deferred_loading()\n         self.clear_select_fields()\n         self.add_fields(fields, True)\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1,6 +1,7 @@\n import copy\n import datetime\n import operator\n+import pickle\n import warnings\n from collections import Counter, OrderedDict\n from functools import partial\n@@ -1678,6 +1679,18 @@ class QuerySet:\n     def _clone(self):\n         c = self.__class__(model=self.model, query=self.query.chain(), using=self._db, hints=self._hints)\n         c._sticky_filter = self._sticky_filter\n+        # If the Query was reconstructed (e.g. via pickling) and contains a\n+        # values()/values_list() selection, ensure the iterable class matches.\n+        values_select = getattr(c.query, 'values_select', ())\n+        if values_select:\n+            if c._fields is None:\n+                c._fields = tuple(values_select)\n+            if c._iterable_class is ModelIterable:\n+                c._iterable_class = ValuesIterable\n         c._for_write = self._for_write\n         c._prefetch_related_lookups = self._prefetch_related_lookups[:]\n         c._known_related_objects = self._known_related_objects\n         c._iterable_class = self._iterable_class\n         c._fields = self._fields\n         return c",
+      "expected_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -210,6 +210,8 @@ def query(self):\n \n     @query.setter\n     def query(self, value):\n+        if value.values_select:\n+            self._iterable_class = ValuesIterable\n         self._query = value\n \n     def as_manager(cls):\n",
+      "tokens": 1670,
+      "success": true,
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "django__django-16429",
+      "generated_patch": "--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -90,11 +90,11 @@\n     if d.tzinfo is None:\n         pivot = datetime.datetime(d.year, d.month, 1)\n     else:\n-        pivot = datetime.datetime(d.year, d.month, 1, 0, 0)\n+        pivot = datetime.datetime(d.year, d.month, 1, 0, 0, tzinfo=d.tzinfo)\n \n     if now.tzinfo is None:\n         pivot_now = datetime.datetime(now.year, now.month, 1)\n     else:\n-        pivot_now = datetime.datetime(now.year, now.month, 1, 0, 0)\n+        pivot_now = datetime.datetime(now.year, now.month, 1, 0, 0, tzinfo=now.tzinfo)",
+      "expected_patch": "diff --git a/django/utils/timesince.py b/django/utils/timesince.py\n--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -97,6 +97,7 @@ def timesince(d, now=None, reversed=False, time_strings=None, depth=2):\n             d.hour,\n             d.minute,\n             d.second,\n+            tzinfo=d.tzinfo,\n         )\n     else:\n         pivot = d\n",
+      "tokens": 542,
+      "success": true,
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "generated_patch": "--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -1,6 +1,7 @@\n \"\"\"User-friendly public interface to polynomial functions. \"\"\"\n \n from __future__ import print_function, division\n+from sympy.core.sympify import _sympify\n \n from sympy.core import S, Add, Mul, Pow, Expr, Basic\n from sympy.core.compatibility import iterable, is_sequence\n@@ -1430,6 +1431,14 @@ class Poly(Basic):\n     def __mul__(f, g):\n         return f.mul(g)\n \n+    def __rmul__(f, g):\n+        g = _sympify(g)\n+        try:\n+            return f.mul(g)\n+        except Exception:\n+            return NotImplemented\n+\n     def __pow__(f, n):\n         return f.pow(n)\n \n@@ -1450,6 +1459,14 @@ class Poly(Basic):\n     def __neg__(f):\n         return f.neg()\n \n+    def __radd__(f, g):\n+        g = _sympify(g)\n+        try:\n+            return f.add(g)\n+        except Exception:\n+            return NotImplemented\n+\n     def __sub__(f, g):\n         return f.sub(g)\n \n@@ -1458,6 +1475,14 @@ class Poly(Basic):\n     def __rsub__(f, g):\n         return (-f).add(g)\n \n+    def __rsub__(f, g):\n+        g = _sympify(g)\n+        try:\n+            return (-f).add(g)\n+        except Exception:\n+            return NotImplemented\n+\n     def __div__(f, g):\n         return f.div(g)\n \n@@ -1466,6 +1491,14 @@ class Poly(Basic):\n     def __rdiv__(f, g):\n         return f.rdiv(g)\n \n+    def __rtruediv__(f, g):\n+        g = _sympify(g)\n+        try:\n+            return f.rdiv(g)\n+        except Exception:\n+            return NotImplemented\n+\n     def __mod__(f, g):\n         return f.rem(g)\n \n@@ -1474,6 +1507,14 @@ class Poly(Basic):\n     def __rmod__(f, g):\n         return f.rrem(g)\n \n+    def __rmod__(f, g):\n+        g = _sympify(g)\n+        try:\n+            return f.rrem(g)\n+        except Exception:\n+            return NotImplemented\n+\n     def __floordiv__(f, g):\n         return f.quo(g)\n \n@@ -1482,6 +1523,14 @@ class Poly(Basic):\n     def __rfloordiv__(f, g):\n         return f.rquo(g)\n \n+    def __rmul__(f, g):\n+        g = _sympify(g)\n+        try:\n+            return f.mul(g)\n+        except Exception:\n+            return NotImplemented\n+\n     def __divmod__(f, g):\n         return f.div(g)\n \n@@ -1490,6 +1539,14 @@ class Poly(Basic):\n     def __rdivmod__(f, g):\n         return f.rdiv(g)\n \n+    def __rpow__(f, g):\n+        g = _sympify(g)\n+        try:\n+            return f.rpow(g)\n+        except Exception:\n+            return NotImplemented\n+\n     def __eq__(f, g):\n         return f.eq(g)\n \n@@ -1498,6 +1555,14 @@ class Poly(Basic):\n     def __ne__(f, g):\n         return not f.eq(g)\n \n+    def __radd__(f, g):\n+        g = _sympify(g)\n+        try:\n+            return f.add(g)\n+        except Exception:\n+            return NotImplemented\n+\n     def __lt__(f, g):\n         return f.lt(g)\n \n@@ -1506,6 +1571,14 @@ class Poly(Basic):\n     def __le__(f, g):\n         return f.le(g)\n \n+    def __rsub__(f, g):\n+        g = _sympify(g)\n+        try:\n+            return (-f).add(g)\n+        except Exception:\n+            return NotImplemented\n+\n     def __gt__(f, g):\n         return f.gt(g)\n \n@@ -1514,6 +1587,14 @@ class Poly(Basic):\n     def __ge__(f, g):\n         return f.ge(g)\n \n+    def __rtruediv__(f, g):\n+        g = _sympify(g)\n+        try:\n+            return f.rdiv(g)\n+        except Exception:\n+            return NotImplemented\n+\n     def __hash__(f):\n         return Basic.__hash__(f)",
+      "expected_patch": "diff --git a/sympy/polys/polytools.py b/sympy/polys/polytools.py\n--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -106,6 +106,7 @@ class Poly(Expr):\n \n     is_commutative = True\n     is_Poly = True\n+    _op_priority = 10.001\n \n     def __new__(cls, rep, *gens, **args):\n         \"\"\"Create a new polynomial instance out of something useful. \"\"\"\n",
+      "tokens": 1300,
+      "success": true,
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "generated_patch": "--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -740,7 +740,7 @@ def symbols(names, **args):\n     if isinstance(names, (list, tuple, set)):\n         result = []\n         for name in names:\n-            result.append(symbols(name, **args))\n+            result.append(symbols(name, **args))\n         return type(names)(result)\n \n     # split on commas\n@@ -748,7 +748,7 @@ def symbols(names, **args):\n     if not isinstance(names, str):\n         raise TypeError(\"names should be a string, list, tuple, or set\")\n \n-    names = names.strip()\n+    names = names.strip()\n     if not names:\n         return ()\n \n@@ -756,6 +756,14 @@ def symbols(names, **args):\n     if ',' in names:\n         return tuple(symbols(n, **args) for n in names.split(','))\n \n+    # If a single string is wrapped in parentheses, strip them and retry.\n+    # This allows e.g. symbols(('q:2', 'u:2'), cls=Function) to work as expected\n+    # when the outer container is used only for unpacking.\n+    if names.startswith('(') and names.endswith(')'):\n+        return symbols(names[1:-1], **args)\n+\n     # split on whitespace\n     if ' ' in names:\n         return tuple(symbols(n, **args) for n in names.split())",
+      "expected_patch": "diff --git a/sympy/core/symbol.py b/sympy/core/symbol.py\n--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -791,7 +791,7 @@ def literal(s):\n         return tuple(result)\n     else:\n         for name in names:\n-            result.append(symbols(name, **args))\n+            result.append(symbols(name, cls=cls, **args))\n \n         return type(names)(result)\n \n",
+      "tokens": 586,
+      "success": true,
+      "similarity": 0.5
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "generated_patch": "--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -1,6 +1,7 @@\n \"\"\"User-friendly public interface to polynomial functions. \"\"\"\n \n from __future__ import annotations\n+from sympy.core.symbol import Symbol\n \n from sympy.core import (S, Add, Mul, Pow, Expr, sympify, Basic, Dummy,\n     Tuple, Lambda, Function, Derivative, expand_mul, expand_power_base,\n@@ -6640,6 +6641,12 @@ def factor(f, *gens, **args):\n     if not isinstance(f, Expr):\n         raise PolynomialError(\"factor() argument must be an expression\")\n \n+    # If extension is requested, do not treat non-generator symbols as\n+    # coefficients. This avoids dropping factors like (y - 1) when factoring\n+    # an expression in multiple symbols without explicit gens.\n+    if args.get('extension', False) and not gens:\n+        gens = tuple(sorted([s for s in f.free_symbols if isinstance(s, Symbol)], key=lambda s: s.sort_key()))\n+\n     options.allowed_flags(args, ['frac', 'gaussian', 'extension', 'modulus',\n         'domain', 'gens', 'method', 'polys', 'deep', 'include', 'multiple',\n         'visual', 'evaluate'])\n@@ -6650,7 +6657,7 @@ def factor(f, *gens, **args):\n     if args.get('polys', False):\n         return _poly_factor(f, *gens, **args)\n \n-    return _generic_factor(f, gens, args)\n+    return _generic_factor(f, gens, args)\n \n def _generic_factor(f, gens, args):\n     \"\"\"Helper function for :func:`~.factor`.",
+      "expected_patch": "diff --git a/sympy/polys/factortools.py b/sympy/polys/factortools.py\n--- a/sympy/polys/factortools.py\n+++ b/sympy/polys/factortools.py\n@@ -1147,7 +1147,7 @@ def dmp_ext_factor(f, u, K):\n         return lc, []\n \n     f, F = dmp_sqf_part(f, u, K), f\n-    s, g, r = dmp_sqf_norm(f, u, K)\n+    s, g, r = dmp_sqf_norm(F, u, K)\n \n     factors = dmp_factor_list_include(r, u, K.dom)\n \n",
+      "tokens": 857,
+      "success": true,
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "django__django-14534",
+      "generated_patch": "--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -353,8 +353,8 @@ class BoundWidget:\n \tdef __str__(self):\n \t\treturn self.tag(wrap_label=True)\n \n \tdef id_for_label(self):\n-\t\treturn 'id_%s_%s' % (self.data['name'], self.data['index'])\n+\t\treturn self.data['attrs'].get('id')\n \n \tdef choice_label(self):\n \t\treturn self.data['label']",
+      "expected_patch": "diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -277,7 +277,7 @@ def template_name(self):\n \n     @property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs'].get('id')\n \n     @property\n     def choice_label(self):\n",
+      "tokens": 570,
+      "success": true,
+      "similarity": 1.0
+    }
+  ],
+  "mutated": [
+    {
+      "instance_id": "sympy__sympy-22914_mutated_ce746113",
+      "generated_patch": "--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -1,6 +1,6 @@\n \"\"\"\n Python code printer\n \n \"\"\"\n \n from __future__ import annotations\n \n@@ -1,200 +1,212 @@\n from sympy.core import S\n from sympy.core.function import Function\n from sympy.core.numbers import Integer\n from sympy.core.power import Pow\n from sympy.core.relational import Relational\n from sympy.core.symbol import Symbol\n from sympy.printing.codeprinter import CodePrinter\n from sympy.printing.precedence import precedence\n from sympy.printing.str import StrPrinter\n \n \n class PythonCodePrinter(CodePrinter):\n     printmethod = \"_pycode\"\n     language = \"Python\"\n \n@@ -350,6 +362,18 @@ class PythonCodePrinter(CodePrinter):\n     def _print_Abs(self, expr):\n         return \"abs(%s)\" % self._print(expr.args[0])\n \n+    def _print_Min(self, expr):\n+        return \"min({})\".format(\", \".join(self._print(arg) for arg in expr.args))\n+\n+    def _print_Max(self, expr):\n+        return \"max({})\".format(\", \".join(self._print(arg) for arg in expr.args))\n+\n     def _print_floor(self, expr):\n         return \"math.floor(%s)\" % self._print(expr.args[0])\n \n     def _print_ceiling(self, expr):\n         return \"math.ceil(%s)\" % self._print(expr.args[0])\n \n     def _print_factorial(self, expr):\n         return \"math.factorial(%s)\" % self._print(expr.args[0])",
+      "expected_patch": "diff --git a/sympy/printing/pycode.py b/sympy/printing/pycode.py\n--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -18,6 +18,8 @@\n \n _known_functions = {\n     'Abs': 'abs',\n+    'Min': 'min',\n+    'Max': 'max',\n }\n _known_functions_math = {\n     'acos': 'acos',\n",
+      "tokens": 622,
+      "success": true,
+      "original_instance_id": "sympy__sympy-22914",
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "sympy__sympy-23950_mutated_c9c88008",
+      "generated_patch": "--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -1,6 +1,7 @@\n from sympy.core.basic import Basic\n from sympy.core.relational import Relational\n from sympy.core.sympify import _sympify\n+from sympy.sets.sets import Set\n \n \n class Contains(Relational):\n@@ -47,6 +48,13 @@ class Contains(Relational):\n     def __new__(cls, x, s, **assumptions):\n         x = _sympify(x)\n         s = _sympify(s)\n+        if not isinstance(s, Set):\n+            raise TypeError(\n+                \"Contains expects a Set as second argument, got %s\" %\n+                type(s).__name__\n+            )\n         return Relational.__new__(cls, x, s, **assumptions)\n \n     @property\n@@ -66,6 +74,9 @@ class Contains(Relational):\n     def as_set(self):\n-        return self\n+        from sympy.sets.conditionset import ConditionSet\n+        x, s = self.args\n+        return ConditionSet(x, self, s)",
+      "expected_patch": "diff --git a/sympy/sets/contains.py b/sympy/sets/contains.py\n--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -45,4 +45,4 @@ def binary_symbols(self):\n             isinstance(i, (Eq, Ne))])\n \n     def as_set(self):\n-        raise NotImplementedError()\n+        return self.args[1]\n",
+      "tokens": 561,
+      "success": true,
+      "original_instance_id": "sympy__sympy-23950",
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141_mutated_36c121dd",
+      "generated_patch": "--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -1,6 +1,7 @@\n \"\"\"Utility methods to display system info for debugging.\n \n Adapted from pandas.\n \"\"\"\n \n import platform\n import sys\n \n import numpy\n import scipy\n \n from .. import __version__\n+import joblib\n \n \n def _get_sys_info():\n     \"\"\"System information.\n@@ -45,6 +46,7 @@ def _get_deps_info():\n     \"\"\"Overview of the installed version of main dependencies.\n \n     Returns\n     -------\n     deps_info: dict\n         version information on relevant Python libraries\n     \"\"\"\n     deps = [\n         \"pip\",\n         \"setuptools\",\n         \"sklearn\",\n         \"numpy\",\n         \"scipy\",\n+        \"joblib\",\n         \"Cython\",\n         \"pandas\",\n         \"matplotlib\",\n     ]\n \n     deps_info = {}\n     for modname in deps:\n         try:\n             if modname == \"sklearn\":\n                 deps_info[modname] = __version__\n             else:\n                 mod = __import__(modname)\n                 deps_info[modname] = mod.__version__\n         except Exception:\n             deps_info[modname] = None\n \n     return deps_info",
+      "expected_patch": "diff --git a/sklearn/utils/_show_versions.py b/sklearn/utils/_show_versions.py\n--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -48,6 +48,7 @@ def _fetch_deps_info():\n         \"Cython\",\n         \"pandas\",\n         \"matplotlib\",\n+        \"joblib\",\n     ]\n \n     def fetch_version(module):\n",
+      "tokens": 396,
+      "success": true,
+      "original_instance_id": "scikit-learn__scikit-learn-14141",
+      "similarity": 1.0
+    },
+    {
+      "instance_id": "django__django-16082_mutated_1ab61ec1",
+      "generated_patch": "--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -1,6 +1,7 @@\n from __future__ import annotations\n \n import copy\n+import operator\n import datetime\n import functools\n import inspect\n@@ -1,6 +1,7 @@\n from django.db.models.fields import (\n     AutoField,\n     BigAutoField,\n+    DecimalField,\n     DurationField,\n     Field,\n     FloatField,\n@@ -1,6 +1,7 @@\n from django.db.models.lookups import Lookup\n from django.db.models.query_utils import Q\n from django.db.models.sql.constants import (\n+    MOD,\n     GET_ITERATOR_CHUNK_SIZE,\n     INNER,\n     LOUTER,\n@@ -1,6 +1,7 @@\n from django.utils.functional import cached_property\n from django.utils.hashable import make_hashable\n from django.utils.inspect import func_accepts_kwargs\n+from django.utils.translation import gettext_lazy as _\n \n \n class Combinable:\n@@ -1,6 +1,7 @@\n class CombinedExpression(SQLiteNumericMixin, Expression):\n     def __init__(self, lhs, connector, rhs, output_field=None):\n         super().__init__(output_field=output_field)\n         self.connector = connector\n         self.lhs = lhs\n         self.rhs = rhs\n@@ -741,6 +744,30 @@ class CombinedExpression(SQLiteNumericMixin, Expression):\n     def get_source_expressions(self):\n         return [self.lhs, self.rhs]\n \n+    def _resolve_output_field(self):\n+        # Special-case MOD: when combining Decimal and Integer, resolve to\n+        # Decimal like other numeric operators.\n+        if self.connector == MOD:\n+            lhs = self.lhs._output_field_or_none\n+            rhs = self.rhs._output_field_or_none\n+            if isinstance(lhs, DecimalField) and isinstance(rhs, IntegerField):\n+                return lhs\n+            if isinstance(rhs, DecimalField) and isinstance(lhs, IntegerField):\n+                return rhs\n+        return super()._resolve_output_field()\n+\n \n class DurationExpression(CombinedExpression):\n     def __init__(self, lhs, connector, rhs, output_field=None):\n         super().__init__(lhs, connector, rhs, output_field=output_field)\n \n--- a/django/db/models/sql/constants.py\n+++ b/django/db/models/sql/constants.py\n@@ -1,6 +1,7 @@\n # SQL join types.\n INNER = \"INNER JOIN\"\n LOUTER = \"LEFT OUTER JOIN\"\n ROUTER = \"RIGHT OUTER JOIN\"\n \n+# Arithmetic operators.\n MOD = \"%%\"\n \n # How many results to fetch at once in QuerySet.iterator().\n GET_ITERATOR_CHUNK_SIZE = 2000",
+      "expected_patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -533,6 +533,7 @@ def __hash__(self):\n             Combinable.SUB,\n             Combinable.MUL,\n             Combinable.DIV,\n+            Combinable.MOD,\n         )\n     },\n     # Bitwise operators.\n",
+      "tokens": 727,
+      "success": true,
+      "original_instance_id": "django__django-16082",
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "django__django-13406_mutated_79c4fb4d",
+      "generated_patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1,6 +1,7 @@\n import copy\n import operator\n import warnings\n+from django.db.models.sql.constants import MULTI\n \n from django.conf import settings\n from django.core import exceptions\n@@ -1710,6 +1711,16 @@\n     def query(self):\n         if self._query is None:\n             self._query = self.model._meta.default_manager.query.clone()\n+        # If a Query object is assigned directly (e.g. unpickled and then\n+        # assigned to queryset.query), ensure the queryset's iterable class\n+        # matches the query's selected fields. Otherwise, values()/values_list()\n+        # queries may be evaluated using the default ModelIterable, producing\n+        # broken model instances.\n+        if getattr(self._query, 'values_select', ()) or getattr(self._query, 'annotation_select', ()) or getattr(self._query, 'select', ()) == ():\n+            if getattr(self._query, 'values_select', ()):\n+                self._iterable_class = ValuesIterable\n+            elif getattr(self._query, 'select', ()) == () and getattr(self._query, 'annotation_select', ()):\n+                self._iterable_class = ValuesIterable\n         return self._query\n \n     @query.setter\n@@ -1717,7 +1728,20 @@\n         # The query setter is used by the pickling machinery.\n         if value is None:\n             raise ValueError(\"QuerySet.query cannot be set to None.\")\n-        self._query = value\n+        self._query = value\n+        # Keep the iterable class in sync with the assigned Query.\n+        if getattr(value, 'values_select', ()):\n+            self._iterable_class = ValuesIterable\n+        elif getattr(value, 'select', ()) == () and getattr(value, 'annotation_select', ()):\n+            # Queries that only select annotations (e.g. annotate() without\n+            # selecting model fields) should be treated like values() queries.\n+            self._iterable_class = ValuesIterable\n+        elif getattr(value, 'select', None) == (MULTI,):\n+            self._iterable_class = ValuesListIterable\n+        else:\n+            self._iterable_class = ModelIterable\n \n     def _clone(self):\n         \"\"\"\n",
+      "expected_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -210,6 +210,8 @@ def query(self):\n \n     @query.setter\n     def query(self, content):\n+        if content.values_select:\n+            self._iterable_class = ValuesIterable\n         self._query = content\n \n     def as_manager(cls):\n",
+      "tokens": 1384,
+      "success": true,
+      "original_instance_id": "django__django-13406",
+      "similarity": 0.5
+    },
+    {
+      "instance_id": "django__django-16429_mutated_a2eca98f",
+      "generated_patch": "--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -90,11 +90,12 @@\n     if isinstance(d, datetime.date) and not isinstance(d, datetime.datetime):\n         d = datetime.datetime(d.year, d.month, d.day)\n     if isinstance(now, datetime.date) and not isinstance(now, datetime.datetime):\n         now = datetime.datetime(now.year, now.month, now.day)\n \n     # Convert datetime.date to datetime.datetime for comparison.\n     if not isinstance(d, datetime.datetime):\n         d = datetime.datetime(d.year, d.month, d.day)\n     if not isinstance(now, datetime.datetime):\n         now = datetime.datetime(now.year, now.month, now.day)\n \n     if d > now:\n         d, now = now, d\n@@ -93,8 +94,8 @@\n     # Get years and months.\n     if d.month == 12:\n-        pivot = datetime.datetime(d.year + 1, 1, 1)\n+        pivot = datetime.datetime(d.year + 1, 1, 1, 0, 0, 0, 0, d.tzinfo)\n     else:\n-        pivot = datetime.datetime(d.year, d.month + 1, 1)\n+        pivot = datetime.datetime(d.year, d.month + 1, 1, 0, 0, 0, 0, d.tzinfo)\n     if pivot <= now:\n         months = (now.year - d.year) * 12 + now.month - d.month\n         if now.day < d.day:\n             months -= 1",
+      "expected_patch": "diff --git a/django/utils/timesince.py b/django/utils/timesince.py\n--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -97,6 +97,7 @@ def timesince(d, now=None, reversed=False, time_strings=None, depth=2):\n             d.hour,\n             d.minute,\n             d.second,\n+            tzinfo=d.tzinfo,\n         )\n     else:\n         pivot = d\n",
+      "tokens": 695,
+      "success": true,
+      "original_instance_id": "django__django-16429",
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "sympy__sympy-13757_mutated_dbabac49",
+      "generated_patch": "--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -1,6 +1,7 @@\n \"\"\"User-friendly public interface to polynomial functions. \"\"\"\n \n from __future__ import print_function, division\n+from sympy.core.expr import Expr\n \n from sympy.core import (S, Add, Mul, Pow, sympify, Basic, Tuple,\n     Dummy, Symbol, Derivative, Function, Lambda, expand, Expr)\n@@ -2400,6 +2401,14 @@ class Poly(Basic):\n     def __mul__(f, g):\n         \"\"\"Multiply two polynomials. \"\"\"\n         return f.mul(g)\n+\n+    def __rmul__(f, g):\n+        \"\"\"Right-multiply by an expression.\n+\n+        Ensures that Expr * Poly evaluates consistently with Poly * Expr.\n+        \"\"\"\n+        if isinstance(g, Expr):\n+            return f.mul(g)\n+        return NotImplemented\n \n     def __pow__(f, n):\n         \"\"\"Raise ``f`` to a non-negative power ``n``. \"\"\"\n         return f.pow(n)",
+      "expected_patch": "diff --git a/sympy/polys/polytools.py b/sympy/polys/polytools.py\n--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -106,6 +106,7 @@ class Poly(Expr):\n \n     is_commutative = True\n     is_Poly = True\n+    _op_priority = 10.001\n \n     def __new__(cls, rep, *gens, **args):\n         \"\"\"Create a new polynomial instance out of something useful. \"\"\"\n",
+      "tokens": 480,
+      "success": true,
+      "original_instance_id": "sympy__sympy-13757",
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "sympy__sympy-23534_mutated_bade8464",
+      "generated_patch": "--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -1,6 +1,7 @@\n from __future__ import annotations\n \n from collections.abc import Iterable\n+from sympy.core.containers import Tuple\n from itertools import product\n from typing import Any\n \n@@ -736,6 +737,10 @@ def symbols(names, **args):\n     if isinstance(names, str):\n         return _symbols(names, args)\n \n+    # Allow nested iterable input (e.g. symbols(('x:2','y:2'), ...))\n+    if isinstance(names, Tuple):\n+        names = tuple(names)\n     if not isinstance(names, Iterable):\n         raise TypeError(\"names must be a string or iterable\")\n \n@@ -744,7 +749,11 @@ def symbols(names, **args):\n     # if names is a list/tuple of strings, call symbols on each element\n     # and return a tuple of the results\n     if isinstance(names, (list, tuple)):\n-        return tuple(symbols(n, **args) for n in names)\n+        res = tuple(symbols(n, **args) for n in names)\n+        # Flatten one level if the input was a single iterable of names\n+        if len(res) == 1 and isinstance(res[0], tuple):\n+            return res[0]\n+        return res\n \n     raise TypeError(\"names must be a string or iterable of strings\")",
+      "expected_patch": "diff --git a/sympy/core/symbol.py b/sympy/core/symbol.py\n--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -791,7 +791,7 @@ def literal(s):\n         return tuple(result)\n     else:\n         for name in names:\n-            result.append(symbols(name, **args))\n+            result.append(symbols(name, cls=cls, **args))\n \n         return type(names)(result)\n \n",
+      "tokens": 573,
+      "success": true,
+      "original_instance_id": "sympy__sympy-23534",
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "sympy__sympy-19040_mutated_d00d16e4",
+      "generated_patch": "--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -1,6 +1,7 @@\n \"\"\"User-friendly public interface to polynomial functions. \"\"\"\n \n from __future__ import annotations\n+from sympy.core.symbol import Symbol\n \n from sympy.core import (Add, Basic, Expr, Mul, Pow, S, Symbol as _Symbol,\n     Tuple, sympify)\n@@ -6640,6 +6641,12 @@ def factor(f, *gens, **args):\n     if not isinstance(f, Basic):\n         f = sympify(f)\n \n+    # If extension is requested, ensure all free symbols are treated as gens.\n+    # Otherwise, factorization can incorrectly drop factors involving symbols\n+    # not listed in gens (e.g. factor((x-1)*(y-1), x, extension=[I]) -> x-1).\n+    if args.get('extension', False) and not gens:\n+        gens = tuple(sorted(f.free_symbols, key=lambda s: s.sort_key()))\n+\n     if not gens:\n         gens = _sort_gens(f)\n \n@@ -6650,7 +6657,7 @@ def factor(f, *gens, **args):\n     if not gens:\n         return f\n \n-    return _factor(f, gens, args)\n+    return _factor(f, gens, args)\n \n def _factor(f, gens, args):\n     \"\"\"Helper function for :func:`~.factor`. \"\"\"",
+      "expected_patch": "diff --git a/sympy/polys/factortools.py b/sympy/polys/factortools.py\n--- a/sympy/polys/factortools.py\n+++ b/sympy/polys/factortools.py\n@@ -1147,7 +1147,7 @@ def dmp_ext_factor(f, u, K):\n         return lc, []\n \n     f, F = dmp_sqf_part(f, u, K), f\n-    s, g, r = dmp_sqf_norm(f, u, K)\n+    s, g, r = dmp_sqf_norm(F, u, K)\n \n     factors = dmp_factor_list_include(r, u, K.dom)\n \n",
+      "tokens": 795,
+      "success": true,
+      "original_instance_id": "sympy__sympy-19040",
+      "similarity": 0.0
+    },
+    {
+      "instance_id": "django__django-14534_mutated_ea42ce5d",
+      "generated_patch": "--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -349,8 +349,11 @@ class BoundWidget:\n \tdef __str__(self):\n \t\treturn self.tag(wrap_label=True)\n \n \tdef id_for_label(self):\n-\t\treturn 'id_%s_%s' % (self.data['name'], self.data['index'])\n+\t\tattrs = self.data.get(\"attrs\") or {}\n+\t\tid_ = attrs.get(\"id\")\n+\t\tif id_:\n+\t\t\treturn id_\n+\t\treturn \"id_%s_%s\" % (self.data[\"name\"], self.data[\"index\"])\n \n \tdef choice_label(self):\n \t\treturn self.data['label']",
+      "expected_patch": "diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -277,7 +277,7 @@ def template_name(self):\n \n     @property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.payload['name'], self.payload['index'])\n+        return self.payload['attrs'].get('id')\n \n     @property\n     def choice_label(self):\n",
+      "tokens": 614,
+      "success": true,
+      "original_instance_id": "django__django-14534",
+      "similarity": 0.5
+    }
+  ],
+  "timestamp": "20260115_015804",
+  "model": "gpt-5.2",
+  "summary": {
+    "verified_avg": 0.25,
+    "mutated_avg": 0.2,
+    "performance_drop": 0.04999999999999999,
+    "avg_contamination": 0.15,
+    "high_contamination_count": 2,
+    "per_instance": [
+      {
+        "instance": "sympy__sympy-22914",
+        "verified_score": 0.0,
+        "mutated_score": 0.0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-23950",
+        "verified_score": 0.0,
+        "mutated_score": 0.0,
+        "contamination": 0
+      },
+      {
+        "instance": "scikit-learn__scikit-learn-14141",
+        "verified_score": 1.0,
+        "mutated_score": 1.0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16082",
+        "verified_score": 0.0,
+        "mutated_score": 0.0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-13406",
+        "verified_score": 0.0,
+        "mutated_score": 0.5,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16429",
+        "verified_score": 0.0,
+        "mutated_score": 0.0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-13757",
+        "verified_score": 0.0,
+        "mutated_score": 0.0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-23534",
+        "verified_score": 0.5,
+        "mutated_score": 0.0,
+        "contamination": 1.0
+      },
+      {
+        "instance": "sympy__sympy-19040",
+        "verified_score": 0.0,
+        "mutated_score": 0.0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14534",
+        "verified_score": 1.0,
+        "mutated_score": 0.5,
+        "contamination": 0.5
+      }
+    ]
+  }
+}

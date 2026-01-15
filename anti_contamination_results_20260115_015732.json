@@ -1,0 +1,207 @@
+{
+  "verified": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16082",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13406",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16429",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14534",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "similarity": 0
+    }
+  ],
+  "mutated": [
+    {
+      "instance_id": "sympy__sympy-22914_mutated_9f591c8f",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "original_instance_id": "sympy__sympy-22914",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23950_mutated_f6c28140",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "original_instance_id": "sympy__sympy-23950",
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141_mutated_88613cd3",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "original_instance_id": "scikit-learn__scikit-learn-14141",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16082_mutated_7db7bc85",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "original_instance_id": "django__django-16082",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13406_mutated_fb15fdaa",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "original_instance_id": "django__django-13406",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16429_mutated_503b06bd",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "original_instance_id": "django__django-16429",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-13757_mutated_bdfdc936",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "original_instance_id": "sympy__sympy-13757",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23534_mutated_99210a1f",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "original_instance_id": "sympy__sympy-23534",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-19040_mutated_526e7cd7",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "original_instance_id": "sympy__sympy-19040",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14534_mutated_76e3cdc2",
+      "error": "AsyncCompletions.create() got an unexpected keyword argument 'max_completion_tokens'",
+      "success": false,
+      "original_instance_id": "django__django-14534",
+      "similarity": 0
+    }
+  ],
+  "timestamp": "20260115_015732",
+  "model": "gpt-5.2",
+  "summary": {
+    "verified_avg": 0.0,
+    "mutated_avg": 0.0,
+    "performance_drop": 0.0,
+    "avg_contamination": 0.0,
+    "high_contamination_count": 0,
+    "per_instance": [
+      {
+        "instance": "sympy__sympy-22914",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-23950",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "scikit-learn__scikit-learn-14141",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16082",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-13406",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16429",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-13757",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-23534",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-19040",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14534",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      }
+    ]
+  }
+}

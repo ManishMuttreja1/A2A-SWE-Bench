@@ -1,0 +1,207 @@
+{
+  "verified": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16082",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13406",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16429",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14534",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "similarity": 0
+    }
+  ],
+  "mutated": [
+    {
+      "instance_id": "sympy__sympy-22914_mutated_00520458",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-22914",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23950_mutated_4e57a9f4",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-23950",
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141_mutated_1167109e",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "original_instance_id": "scikit-learn__scikit-learn-14141",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16082_mutated_06e03b7d",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "original_instance_id": "django__django-16082",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13406_mutated_9e7d100c",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "original_instance_id": "django__django-13406",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16429_mutated_51ea454e",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "original_instance_id": "django__django-16429",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-13757_mutated_cc21eb9f",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-13757",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23534_mutated_5483d716",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-23534",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-19040_mutated_252e404a",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-19040",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14534_mutated_13c2f028",
+      "error": "Error code: 400 - {'error': {'message': \"Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead.\", 'type': 'invalid_request_error', 'param': 'max_tokens', 'code': 'unsupported_parameter'}}",
+      "success": false,
+      "original_instance_id": "django__django-14534",
+      "similarity": 0
+    }
+  ],
+  "timestamp": "20260115_015704",
+  "model": "gpt-5.2",
+  "summary": {
+    "verified_avg": 0.0,
+    "mutated_avg": 0.0,
+    "performance_drop": 0.0,
+    "avg_contamination": 0.0,
+    "high_contamination_count": 0,
+    "per_instance": [
+      {
+        "instance": "sympy__sympy-22914",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-23950",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "scikit-learn__scikit-learn-14141",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16082",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-13406",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16429",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-13757",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-23534",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-19040",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14534",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      }
+    ]
+  }
+}
