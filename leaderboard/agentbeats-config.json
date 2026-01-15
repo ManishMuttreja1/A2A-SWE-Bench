@@ -81,5 +81,43 @@
         {"name": "Accuracy", "type": "number", "label": "Accuracy"}
       ],
       "default": true
+    },
+    {
+      "id": "llm_only_rankings",
+      "name": "LLM-Only Rankings (Anti-Contamination)",
+      "description": "Rankings filtered to LLM-only runs (no heuristics)",
+      "sql": "SELECT agent_name, ROUND(AVG(CASE WHEN run_mode = 'llm_only' THEN correctness_score ELSE NULL END) * 100, 1) AS llm_only_score, COUNT(CASE WHEN run_mode = 'llm_only' THEN 1 END) AS llm_only_tasks, ROUND(AVG(CASE WHEN run_mode = 'heuristic_assisted' THEN correctness_score ELSE NULL END) * 100, 1) AS heuristic_score, COUNT(CASE WHEN run_mode = 'heuristic_assisted' THEN 1 END) AS heuristic_tasks FROM assessment_results GROUP BY agent_name ORDER BY llm_only_score DESC",
+      "columns": [
+        {"name": "agent_name", "type": "string", "label": "Agent"},
+        {"name": "llm_only_score", "type": "number", "label": "LLM-Only Score"},
+        {"name": "llm_only_tasks", "type": "number", "label": "LLM Tasks"},
+        {"name": "heuristic_score", "type": "number", "label": "Heuristic Score"},
+        {"name": "heuristic_tasks", "type": "number", "label": "Heuristic Tasks"}
+      ]
+    },
+    {
+      "id": "by_evaluation_slice",
+      "name": "Performance by Evaluation Slice",
+      "description": "Score breakdown by evaluation slice (verified, mutated, fresh)",
+      "sql": "SELECT agent_name, evaluation_slice, ROUND(AVG(correctness_score) * 100, 1) AS avg_score, COUNT(*) AS task_count, ROUND(AVG(CASE WHEN correctness_score >= 0.7 THEN 1.0 ELSE 0.0 END) * 100, 1) AS pass_rate FROM assessment_results GROUP BY agent_name, evaluation_slice ORDER BY agent_name, evaluation_slice",
+      "columns": [
+        {"name": "agent_name", "type": "string", "label": "Agent"},
+        {"name": "evaluation_slice", "type": "string", "label": "Slice"},
+        {"name": "avg_score", "type": "number", "label": "Avg Score"},
+        {"name": "task_count", "type": "number", "label": "Tasks"},
+        {"name": "pass_rate", "type": "number", "label": "Pass Rate %"}
+      ]
+    },
+    {
+      "id": "contamination_analysis",
+      "name": "Contamination Analysis",
+      "description": "Compare verified vs mutated performance to detect memorization",
+      "sql": "SELECT agent_name, ROUND(AVG(CASE WHEN evaluation_slice = 'verified' THEN correctness_score ELSE NULL END) * 100, 1) AS verified_score, ROUND(AVG(CASE WHEN evaluation_slice = 'mutated' THEN correctness_score ELSE NULL END) * 100, 1) AS mutated_score, ROUND((AVG(CASE WHEN evaluation_slice = 'verified' THEN correctness_score ELSE NULL END) - AVG(CASE WHEN evaluation_slice = 'mutated' THEN correctness_score ELSE NULL END)) / NULLIF(AVG(CASE WHEN evaluation_slice = 'verified' THEN correctness_score ELSE NULL END), 0) * 100, 1) AS contamination_pct FROM assessment_results WHERE evaluation_slice IN ('verified', 'mutated') GROUP BY agent_name HAVING COUNT(CASE WHEN evaluation_slice = 'verified' THEN 1 END) > 0 AND COUNT(CASE WHEN evaluation_slice = 'mutated' THEN 1 END) > 0 ORDER BY contamination_pct DESC",
+      "columns": [
+        {"name": "agent_name", "type": "string", "label": "Agent"},
+        {"name": "verified_score", "type": "number", "label": "Verified Score"},
+        {"name": "mutated_score", "type": "number", "label": "Mutated Score"},
+        {"name": "contamination_pct", "type": "number", "label": "Contamination %"}
+      ]
     }
 ]

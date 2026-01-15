@@ -27,6 +27,18 @@ from .verification_engine import VerificationEngine
 from .ambiguity_layer import AmbiguityLayer
 from .reproduction_gate import ReproductionGate
 
+# Anti-contamination imports
+try:
+    from ..anti_contamination import (
+        AntiContaminationConfig,
+        AntiContaminationPipeline,
+        EvaluationSlice,
+        RunMode,
+    )
+    ANTI_CONTAMINATION_AVAILABLE = True
+except ImportError:
+    ANTI_CONTAMINATION_AVAILABLE = False
+
 logger = logging.getLogger(__name__)
 
 
@@ -48,6 +60,11 @@ class GreenAgentService:
         allow_mock_reproduction: bool = False,
         purple_timeout_seconds: int = 3600,
         dataset_config: str = "verified",
+        # Anti-contamination settings
+        allow_heuristics: bool = False,
+        evaluation_slice: Optional[str] = None,
+        mutation_level: str = "medium",
+        mutation_seed: Optional[int] = None,
     ):
         self.name = name
         self.version = version
@@ -57,6 +74,8 @@ class GreenAgentService:
         self.enable_mutation = enable_mutation
         self.purple_agent_url = purple_agent_url
         self.purple_timeout_seconds = purple_timeout_seconds
+        self.allow_heuristics = allow_heuristics
+        self.default_evaluation_slice = evaluation_slice
         
         # Initialize components
         self.scenario_manager = ScenarioManager(dataset_config=dataset_config)
@@ -70,6 +89,18 @@ class GreenAgentService:
         self.a2a_client = A2AClient(agent_id=self.name)
         self.trajectory_capture = TrajectoryCapture(enable_streaming=False)
         self.metrics = AdvancedMetrics()
+        
+        # Initialize anti-contamination pipeline
+        self.anti_contamination = None
+        if ANTI_CONTAMINATION_AVAILABLE:
+            ac_config = AntiContaminationConfig(
+                enable_mutations=enable_mutation,
+                mutation_level=mutation_level,
+                mutation_seed=mutation_seed,
+                allow_heuristics=allow_heuristics,
+            )
+            self.anti_contamination = AntiContaminationPipeline(config=ac_config)
+            logger.info(f"Anti-contamination pipeline initialized: heuristics={allow_heuristics}")
         
         # Track active assessments
         self.active_assessments: Dict[str, Dict[str, Any]] = {}
@@ -176,10 +207,30 @@ class GreenAgentService:
             task.resources["environment"] = environment
             task.resources["scenario_id"] = scenario["instance_id"]
             
-            # Apply code mutation if enabled
-            if self.enable_mutation:
+            # Apply anti-contamination pipeline if available
+            ac_metadata = None
+            if self.anti_contamination and ANTI_CONTAMINATION_AVAILABLE:
+                from pathlib import Path
+                repo_path = Path(environment.get("repo_path", "/tmp/repo"))
+                prepared_scenario, ac_task_metadata = await self.anti_contamination.prepare_task(
+                    instance=scenario,
+                    repo_path=repo_path,
+                    evaluation_slice=EvaluationSlice(self.default_evaluation_slice) if self.default_evaluation_slice else None,
+                    force_heuristics=self.allow_heuristics,
+                )
+                scenario = prepared_scenario
+                ac_metadata = ac_task_metadata.to_dict()
+                
+                await action_logger.log_action(
+                    "anti_contamination",
+                    action_target=scenario.get("instance_id"),
+                    action_output="applied",
+                    metadata=ac_metadata
+                )
+            elif self.enable_mutation:
+                # Fallback to legacy mutation if pipeline not available
                 await self._apply_code_mutation(environment, scenario)
-                logger.info("Applied code mutation to environment")
+                logger.info("Applied code mutation to environment (legacy)")
                 await action_logger.log_action(
                     "mutation",
                     action_target=scenario.get("instance_id"),
@@ -201,6 +252,7 @@ class GreenAgentService:
                 task=task,
                 assessment_id=assessment_id,
                 scenario=scenario,
+                task_metadata=ac_metadata,
             )
             if not purple_task_id:
                 raise RuntimeError("Failed to create task on Purple agent")
@@ -287,6 +339,13 @@ class GreenAgentService:
                     "execution_time": verification_result.get("execution_time", 0),
                     "token_usage": verification_result.get("token_usage", 0)
                 },
+                # Anti-contamination provenance
+                "metadata": ac_metadata or {
+                    "evaluation_slice": "verified",
+                    "run_mode": "llm_only" if not self.allow_heuristics else "heuristic_assisted",
+                    "heuristics_allowed": self.allow_heuristics,
+                    "mutation_applied": False,
+                },
                 "artifacts": [
                     Artifact(
                         parts=[
@@ -297,7 +356,8 @@ class GreenAgentService:
                                     "scenario_id": scenario["instance_id"],
                                     "verification_result": verification_result,
                                     "trajectory": trajectory,
-                                    "score": score
+                                    "score": score,
+                                    "anti_contamination": ac_metadata,
                                 }
                             )
                         ],
@@ -391,6 +451,7 @@ class GreenAgentService:
         task: Task,
         assessment_id: str,
         scenario: Dict[str, Any],
+        task_metadata: Optional[Dict[str, Any]] = None,
     ) -> Optional[str]:
         """Send task to Purple agent via A2A and return task id"""
         resources = {
@@ -408,8 +469,13 @@ class GreenAgentService:
                 "assessment_id": assessment_id,
                 "scenario_id": scenario["instance_id"],
                 "green_agent": self.name,
+                # Anti-contamination metadata
+                "heuristics_allowed": self.allow_heuristics,
             }
         )
+        # Add anti-contamination provenance if available
+        if task_metadata:
+            metadata["anti_contamination"] = task_metadata
         
         purple_task_id = await self.a2a_client.create_task(
             server_url=purple_url,
