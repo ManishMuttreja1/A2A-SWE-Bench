@@ -446,34 +446,34 @@ Cost per Task & \$0.013 & \textbf{\$0.011} \\
     \item \textbf{Cost efficiency improves}: \$0.011--0.013 per task at scale vs \$0.006 in earlier runs reflects more complex tasks in the full distribution.
 \end{enumerate}
 
-\subsection{Experiment 5: Anti-Contamination Testing (10 instances)}
+\subsection{Experiment 5: Anti-Contamination Testing (100 instances)}
 
 Purpose: validate the retro-holdout mutation framework by comparing model performance on verified vs mutated instances. Performance drops indicate potential memorization.
 
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lr}
+\begin{tabular}{lrr}
 \toprule
-Metric & Value \\
+Metric & GPT-4.1 & GPT-5.2 \\
 \midrule
-Verified Avg Similarity & 25.0\% \\
-Mutated Avg Similarity & 20.0\% \\
-Performance Drop & 5.0\% \\
-Avg Contamination Score & 15.0\% \\
-High Contamination ($>$30\%) & 2/10 \\
+Verified Avg Similarity & 20.2\% & 21.6\% \\
+Mutated Avg Similarity & 17.2\% & 22.3\% \\
+Performance Drop & 2.9\% & -0.8\% \\
+Avg Contamination Score & 6.5\% & \textbf{5.8\%} \\
+High Contamination ($>$30\%) & 7/100 & 7/100 \\
 \bottomrule
 \end{tabular}
-\caption{Anti-contamination pilot: GPT-5.2 on verified vs mutated tasks.}
+\caption{Anti-contamination at scale: GPT-4.1 shows higher contamination than GPT-5.2.}
 \end{table}
 
-\textbf{Contamination detected}: Two instances showed significant performance drops after mutation:
+\textbf{Key findings}:
 \begin{itemize}[leftmargin=*]
-    \item \texttt{sympy-23534}: 50\%$\to$0\% (100\% contamination)
-    \item \texttt{django-14534}: 100\%$\to$50\% (50\% contamination)
+    \item \textbf{GPT-4.1 shows more contamination}: 2.9\% performance drop on mutated instances vs GPT-5.2's slight improvement (-0.8\%).
+    \item \textbf{Both models have similar high-contamination count}: 7/100 instances with $>$30\% contamination.
+    \item \textbf{GPT-5.2 more robust to mutations}: Actually improved slightly on mutated instances, suggesting less reliance on memorization.
+    \item \textbf{Specific contamination}: \texttt{sklearn-14141} showed 100\% contamination for GPT-4.1 (100\%$\to$0\%) but 0\% for GPT-5.2.
 \end{itemize}
-
-\texttt{sklearn-14141} showed \textbf{zero contamination}---100\% on both verified and mutated---indicating genuine understanding rather than memorization.
 
 \subsection{Trajectory Analysis}
 
