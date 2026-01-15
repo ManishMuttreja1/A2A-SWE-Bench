@@ -24,6 +24,21 @@
     frame=single
 }
 
+% Minimal JSON lexer for listings
+\lstdefinelanguage{json}{
+    basicstyle=\ttfamily\footnotesize,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    showstringspaces=false,
+    breaklines=true,
+    morestring=[b]",
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morekeywords={true,false,null}
+}
+
 \title{\textbf{SWE-Bench-A2A: Process-Aware, Contamination-Resistant\\Evaluation of Software Engineering Agents}\\
 \large{via Agent-to-Agent Protocol}}
 
