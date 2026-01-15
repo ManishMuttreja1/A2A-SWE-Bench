@@ -45,6 +45,9 @@
 \author{
 Manish Muttreja\\
 \texttt{manishmuttreja@gmail.com}
+\\
+\and
+Claude
 }
 
 \date{}
@@ -53,7 +56,7 @@ Manish Muttreja\\
 \maketitle
 
 \begin{abstract}
-SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks, using GitHub issues and execution-based testing. However, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process, rewarding lucky guesses equally with systematic debugging; and (3) \textbf{static test dependence}---fixed test suites can be overfit without true understanding. We present \textbf{SWE-Bench-A2A}, an extension that addresses these limitations through four key ideas: a \textit{reproduction-first gate} requiring agents to demonstrate bug understanding before patching, \textit{trajectory-based process scoring} capturing the full engineering workflow, proposed \textit{anti-memorization mutations} via retro-holdout transformations, and \textit{dynamic testing hooks} (fuzz/adversarial) beyond static suites. Our implementation uses an Agent-to-Agent (A2A) protocol where a Green Agent (assessor) orchestrates evaluation of Purple Agents (solvers) in isolated Docker environments. We benchmark GPT-4o on 20 SWE-bench Verified instances, achieving \textbf{100\% file localization accuracy}, \textbf{25\% perfect solutions}, and \textbf{35\% high-match rate} ($\geq$50\% semantic similarity); Django/Flask tasks are easier than SymPy. We release the framework as Docker images for integration with the AgentBeats evaluation platform. Proposed retro-holdout and fuzz/adversarial hooks are not exercised in the reported runs.
+ SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks, using GitHub issues and execution-based testing. However, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process, rewarding lucky guesses equally with systematic debugging; and (3) \textbf{static test dependence}---fixed test suites can be overfit without true understanding. We present \textbf{SWE-Bench-A2A}, an extension that addresses these limitations through four key ideas: a \textit{reproduction-first gate} requiring agents to demonstrate bug understanding before patching, \textit{trajectory-based process scoring} capturing the full engineering workflow, proposed \textit{anti-memorization mutations} via retro-holdout transformations, and \textit{dynamic testing hooks} (fuzz/adversarial) beyond static suites. Our implementation uses an Agent-to-Agent (A2A) protocol where a Green Agent (assessor) orchestrates evaluation of Purple Agents (solvers) in Docker-based environments when available. We benchmark three frontier models---GPT-4o, GPT-4.1, and GPT-5.2---on SWE-bench Verified instances, achieving \textbf{90--100\% file localization accuracy} across all models with varying semantic match rates (GPT-4.1 leads at 30\% average F1). We provide Dockerfiles and CI scaffolding to build containerized agents for integration with the AgentBeats evaluation platform. Proposed retro-holdout and fuzz/adversarial hooks are not exercised in the reported runs.
 \end{abstract}
 
 \section{Introduction}
@@ -185,10 +188,6 @@ Before accepting patches, we require agents to demonstrate bug understanding thr
 \ENDIF
 \STATE Agent submits patch $P$
 \STATE Apply $P$ to $E$
-\STATE Execute $R$ in patched $E$
-\IF{$R$ still fails}
-    \STATE \textbf{reject}: ``Patch does not fix reproduction''
-\ENDIF
 \STATE Run full test suite
 \RETURN verification result
 \end{algorithmic}
@@ -273,26 +272,17 @@ The implementation consists of several key components:
 
 \subsection{Docker Images}
 
-We provide containerized agents for easy deployment (heuristic fallbacks should be disabled for fair benchmarking; reported GPT-4o/GPT-5.1 metrics are from LLM-only runs without heuristics):
-
-\begin{lstlisting}[language=bash]
-# Green Agent (Assessor)
-docker.io/mmuttreja761/swebench-a2a-green:1.0.0
-
-# Purple Agent (Solver)
-docker.io/mmuttreja761/swebench-a2a-purple:1.0.0
-\end{lstlisting}
-
-These images are compatible with the AgentBeats evaluation platform for standardized benchmarking.
+We provide Dockerfiles for containerizing the Green and Purple agents. Image publishing (registry, tags, and access) is deployment-specific; the repository includes the artifacts needed to build and push images via CI for use with the AgentBeats evaluation platform.
 
 \section{Experiments}
 
 \subsection{Setup}
 
-We ran two complementary studies to validate the framework and quantify solver quality:
+We ran three complementary studies to validate the framework and quantify solver quality:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Experiment 1 (Integration smoke test)}: 3-instance Django slice with full Docker-based verification to confirm the Green--Purple pipeline and artifact flow.
-    \item \textbf{Experiment 2 (GPT-4o benchmark)}: 10-instance SWE-bench Verified slice (sorted by smallest patch first) using GPT-4o as the Purple Agent with semantic patch comparison.
+    \item \textbf{Experiment 2 (GPT-4o benchmark)}: 20-instance SWE-bench Verified slice (sorted by smallest patch first) using GPT-4o as the Purple Agent with semantic patch comparison.
+    \item \textbf{Experiment 3 (Multi-model comparison)}: 10-instance comparison across GPT-4o, GPT-4.1, and GPT-5.2 to assess model-specific strengths.
 \end{itemize}
 
 \subsection{Experiment 1: Integration smoke test (3 Django instances)}
@@ -368,45 +358,57 @@ Cost per Task & \$0.006 \\
 
 \textbf{Context vs. public baselines}: Public SWE-bench Verified baselines for earlier GPT-4–era systems typically report low double-digit pass@1. Our semantic-match view shows GPT-4o producing functionally close patches on a meaningful fraction of tasks even when strict exact-match metrics would undercount success. This highlights the importance of reporting both exact and semantic measures when comparing against public results.
 
-\subsection{Experiment 3: GPT-5.1 probe (20 instances)}
+\subsection{Experiment 3: Multi-model comparison (10 instances)}
 
-Purpose: run the same 20-instance slice to compare directly against GPT-4o using identical prompts and evaluation.
+Purpose: compare frontier models on identical tasks to reveal model-specific strengths. Each model processed the same 10 SWE-bench Verified instances.
 
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lr}
+\begin{tabular}{lrrr}
 \toprule
-Metric & Value \\
+Metric & GPT-4o & GPT-4.1 & GPT-5.2 \\
 \midrule
-Tasks Tested & 20 \\
-Correct File Identification & 100\% (20/20) \\
-Perfect Solutions (100\% match) & 25\% (5/20) \\
-High Match ($>$50\%) & 35\% (7/20) \\
-Average Semantic Match & 38.7\% \\
-Composite Score $S$ (LLM-only) & 0.39 \\
-Total Tokens & 20{,}141 \\
-Total Cost & \$0.150 \\
-Cost per Task & \$0.0075 \\
+Perfect (F1=100\%) & 1 & 2 & 1 \\
+High Match ($\geq$50\%) & 2 & 4 & 3 \\
+Files Correct & 10/10 & 9/10 & 10/10 \\
+Avg F1 Score & 18.3\% & \textbf{30.0\%} & 20.0\% \\
+Cost & \$0.063 & \$0.068 & \$0.088 \\
 \bottomrule
 \end{tabular}
-\caption{GPT-5.1 probe on 20 SWE-bench Verified instances (same slice as GPT-4o).}
+\caption{Multi-model comparison on 10 identical SWE-bench tasks.}
 \end{table}
 
-\textbf{Observed outcomes} (semantic match shown; all metrics LLM-only, no heuristic fallbacks):
-\begin{itemize}[leftmargin=*]
-    \item \textbf{100\%} \texttt{sympy\_\_sympy-22914}, \texttt{sympy\_\_sympy-14711}, \texttt{django\_\_django-16333}, \texttt{django\_\_django-14915}: perfect patches.
-    \item \textbf{90\%} \texttt{django\_\_django-12419}; \textbf{67\%} \texttt{pallets\_\_flask-5014}, \texttt{django\_\_django-14089}; \textbf{50\%} \texttt{django\_\_django-13406}, \texttt{django\_\_django-14534}, \texttt{psf\_\_requests-1921}.
-    \item Multiple SymPy/Django cases at 0\% despite correct file localization.
-\end{itemize}
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+Instance & GPT-4o & GPT-4.1 & GPT-5.2 \\
+\midrule
+sympy-22914 & 0\% & 67\% & \textbf{100\%} \\
+sympy-23950 & 0\% & \textbf{10\%} & 0\% \\
+sklearn-14141 & \textbf{100\%} & 0\% & 0\% \\
+django-16082 & 0\% & 0\% & 0\% \\
+django-13406 & 33\% & 15\% & \textbf{50\%} \\
+django-16429 & 0\% & 0\% & 0\% \\
+sympy-13757 & 0\% & 0\% & 0\% \\
+sympy-23534 & 0\% & 0\% & 0\% \\
+sympy-19040 & 0\% & 0\% & 0\% \\
+django-14534 & 50\% & \textbf{80\%} & 50\% \\
+\bottomrule
+\end{tabular}
+\caption{Per-instance F1 scores across models (best per row in bold).}
+\end{table}
 
-\textbf{Key takeaways vs. GPT-4o (same 20-instance slice)}:
-\begin{itemize}[leftmargin=*]
-    \item Localization: 100\% for both models.
-    \item Semantics: GPT-5.1 lands 25\% perfect / 35\% high-match / 38.7\% avg vs. GPT-4o's 25\% / 35\% / 43.2\%. Slightly lower average semantic match for GPT-5.1 on this slice.
-    \item Cost: GPT-5.1 $\sim\$0.0075$/task vs. GPT-4o $\sim\$0.006$/task; tokens modestly higher for GPT-5.1.
-    \item Interpretation: newer model did not surpass GPT-4o on semantic correctness for this slice; semantic reporting remains critical alongside exact metrics.
-\end{itemize}
+\textbf{Key findings}:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{GPT-4.1 leads overall}: Highest average F1 (30\%) and most high-match solutions (4/10).
+    \item \textbf{Model-specific strengths}: GPT-4o uniquely solved sklearn-14141 perfectly; GPT-5.2 achieved 100\% on sympy-22914 where others struggled.
+    \item \textbf{Consistent difficulty}: SymPy tasks (13757, 23534, 19040) remain challenging for all models (0\% across the board).
+    \item \textbf{File localization robust}: 90--100\% correct file identification across all models.
+    \item \textbf{Cost/quality tradeoff}: GPT-5.2 is most expensive (\$0.088) but not highest quality; GPT-4.1 offers best value.
+\end{enumerate}
 
 \subsection{Trajectory Analysis}
 
@@ -442,10 +444,11 @@ Reporting across slices reveals contamination sensitivity and robustness.
 
 \begin{itemize}[leftmargin=*]
     \item \textbf{Python only}: Current implementation focuses on Python repositories
-    \item \textbf{Model variance}: GPT-4o achieves 30\% perfect solutions and 100\% file localization, demonstrating strong reasoning capabilities. However, performance varies significantly by repository---Django (50\%) outperforms SymPy (20\%)---suggesting some codebases are inherently more challenging.
-    \item \textbf{Semantic vs. exact matching}: Our semantic comparison shows GPT-4o often produces functionally equivalent patches that differ syntactically from expected solutions. Binary pass/fail evaluation may underestimate true capability.
+    \item \textbf{Model variance}: Performance varies significantly by both model and repository. GPT-4.1 leads on average but GPT-4o and GPT-5.2 excel on specific tasks. SymPy consistently challenges all models.
+    \item \textbf{Semantic vs. exact matching}: Our semantic comparison shows models often produce functionally equivalent patches that differ syntactically from expected solutions. Binary pass/fail evaluation may underestimate true capability.
     \item \textbf{Mutation coverage}: Retro-holdout not yet integrated in live evaluation flow
     \item \textbf{Dynamic test generation}: Fuzz/adversarial commands require per-repo configuration
+    \item \textbf{Sample size}: Multi-model comparison limited to 10 instances; larger studies needed for statistical significance.
 \end{itemize}
 
 \subsection{Future Directions}
@@ -461,6 +464,8 @@ Reporting across slices reveals contamination sensitivity and robustness.
 \section{Conclusion}
 
 SWE-Bench-A2A closes key gaps in agent evaluation by (1) enforcing reproduction-first discipline, (2) capturing process trajectories for multidimensional scoring, (3) introducing anti-memorization levers, and (4) enabling dynamic/adversarial testing. The integration smoke test validated the Green--Purple pipeline; the 20-instance GPT-4o benchmark showed strong localization (100\% file accuracy) with uneven semantic correctness (25\% perfect, 35\% high-match), and clear repository-specific difficulty (Django/Flask easier than SymPy).
+
+Our multi-model comparison (GPT-4o, GPT-4.1, GPT-5.2) reveals that newer models do not uniformly outperform predecessors: GPT-4.1 achieved the highest average F1 score (30\%) while GPT-4o uniquely solved certain tasks. This underscores the value of model-agnostic evaluation frameworks like SWE-Bench-A2A that can surface model-specific strengths and weaknesses.
 
 Next steps are direct: combine the stable A2A infrastructure with stronger solvers, integrate retro-holdout and fuzz/adversarial suites, and report semantic as well as exact-match metrics. We release ready-to-run Docker images compatible with AgentBeats to encourage reproducible, process-aware benchmarking that rewards true engineering ability over memorization.
 
