@@ -374,11 +374,11 @@ Purpose: compare frontier models on identical tasks to reveal model-specific str
 \toprule
 Metric & GPT-4o & GPT-4.1 & GPT-5.2 \\
 \midrule
-Perfect (F1=100\%) & 1 & 2 & 1 \\
-High Match ($\geq$50\%) & 2 & 4 & 3 \\
-Files Correct & 10/10 & 9/10 & 10/10 \\
-Avg F1 Score & 18.3\% & \textbf{30.0\%} & 20.0\% \\
-Cost & \$0.063 & \$0.068 & \$0.088 \\
+Perfect (F1=100\%) & \textbf{1} & 0 & 0 \\
+High Match ($\geq$50\%) & \textbf{2} & 2 & 0 \\
+Files Correct & \textbf{10/10} & 9/10 & 10/10 \\
+Avg F1 Score & \textbf{18.3\%} & 17.2\% & 7.0\% \\
+Cost & \textbf{\$0.063} & \$0.068 & \$0.088 \\
 \bottomrule
 \end{tabular}
 \caption{Multi-model comparison on 10 identical SWE-bench tasks.}
@@ -391,16 +391,16 @@ Cost & \$0.063 & \$0.068 & \$0.088 \\
 \toprule
 Instance & GPT-4o & GPT-4.1 & GPT-5.2 \\
 \midrule
-sympy-22914 & 0\% & 67\% & \textbf{100\%} \\
+sympy-22914 & 0\% & \textbf{67\%} & 44\% \\
 sympy-23950 & 0\% & \textbf{10\%} & 0\% \\
 sklearn-14141 & \textbf{100\%} & 0\% & 0\% \\
 django-16082 & 0\% & 0\% & 0\% \\
-django-13406 & 33\% & 15\% & \textbf{50\%} \\
+django-13406 & \textbf{33\%} & 15\% & 7\% \\
 django-16429 & 0\% & 0\% & 0\% \\
 sympy-13757 & 0\% & 0\% & 0\% \\
 sympy-23534 & 0\% & 0\% & 0\% \\
 sympy-19040 & 0\% & 0\% & 0\% \\
-django-14534 & 50\% & \textbf{80\%} & 50\% \\
+django-14534 & 50\% & \textbf{80\%} & 18\% \\
 \bottomrule
 \end{tabular}
 \caption{Per-instance F1 scores across models (best per row in bold).}
@@ -408,11 +408,11 @@ django-14534 & 50\% & \textbf{80\%} & 50\% \\
 
 \textbf{Key findings}:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{GPT-4.1 leads overall}: Highest average F1 (30\%) and most high-match solutions (4/10).
-    \item \textbf{Model-specific strengths}: GPT-4o uniquely solved sklearn-14141 perfectly; GPT-5.2 achieved 100\% on sympy-22914 where others struggled.
+    \item \textbf{GPT-4o leads at small scale}: Highest average F1 (18.3\%) and only model with a perfect solution (sklearn-14141).
+    \item \textbf{Model-specific strengths}: GPT-4o uniquely solved sklearn-14141 perfectly; GPT-4.1 achieved highest score on sympy-22914 (67\%) and django-14534 (80\%).
     \item \textbf{Consistent difficulty}: SymPy tasks (13757, 23534, 19040) remain challenging for all models (0\% across the board).
     \item \textbf{File localization robust}: 90--100\% correct file identification across all models.
-    \item \textbf{Cost/quality tradeoff}: GPT-5.2 is most expensive (\$0.088) but not highest quality; GPT-4.1 offers best value.
+    \item \textbf{Cost/quality tradeoff}: GPT-4o offers best value (highest quality at lowest cost \$0.063); GPT-5.2 is most expensive (\$0.088) with lowest quality (7.0\%).
 \end{enumerate}
 
 \subsection{Experiment 4: Large-scale benchmark (100 instances)}
@@ -500,7 +500,7 @@ Reporting across slices reveals contamination sensitivity and robustness.
 
 SWE-Bench-A2A closes key gaps in agent evaluation by (1) enforcing reproduction-first discipline, (2) capturing process trajectories for multidimensional scoring, (3) introducing anti-memorization levers, and (4) enabling dynamic/adversarial testing. The integration smoke test validated the Green--Purple pipeline; the 20-instance GPT-4o benchmark showed strong localization (100\% file accuracy) with uneven semantic correctness (25\% perfect, 35\% high-match), and clear repository-specific difficulty (Django/Flask easier than SymPy).
 
-Our multi-model comparison (GPT-4o, GPT-4.1, GPT-5.2) reveals nuanced performance patterns. At small scale (10 tasks), GPT-4.1 led with 30\% average F1; at large scale (100 tasks), GPT-5.2 dominated with 44.8\% average semantic match, 88\% file localization, and lower cost. This reversal underscores the importance of large-scale evaluation and model-agnostic frameworks like SWE-Bench-A2A that surface both model-specific strengths and statistically robust performance estimates.
+Our multi-model comparison (GPT-4o, GPT-4.1, GPT-5.2) reveals nuanced performance patterns. At small scale (10 tasks), GPT-4o led with 18.3\% average F1 and best cost efficiency; at large scale (100 tasks), GPT-5.2 dominated with 44.8\% average semantic match, 88\% file localization, and lower cost per task. This scale-dependent reversal underscores the importance of large-scale evaluation and model-agnostic frameworks like SWE-Bench-A2A.
 
 Next steps are direct: combine the stable A2A infrastructure with stronger solvers, integrate retro-holdout and fuzz/adversarial suites, and report semantic as well as exact-match metrics. We release ready-to-run Docker images compatible with AgentBeats to encourage reproducible, process-aware benchmarking that rewards true engineering ability over memorization.
 
