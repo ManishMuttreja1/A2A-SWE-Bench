@@ -200,10 +200,14 @@ This gate enforces test-driven development principles: understand the problem (r
 We capture complete agent trajectories and compute multi-dimensional scores:
 
 \begin{equation}
-    S = 0.35\,s_{\text{correct}} + 0.20\,s_{\text{process}} + 0.15\,s_{\text{efficiency}} + 0.15\,s_{\text{collaboration}} + 0.10\,s_{\text{understanding}} + 0.05\,s_{\text{adaptation}}
+\begin{split}
+    S = & \; 0.35\,s_{\text{correct}} + 0.20\,s_{\text{process}} \\
+        & + 0.15\,s_{\text{efficiency}} + 0.15\,s_{\text{collab}} \\
+        & + 0.10\,s_{\text{understand}} + 0.05\,s_{\text{adapt}}
+\end{split}
 \end{equation}
 
-where $\mathcal{C}$ includes:
+where the scoring dimensions are:
 
 \begin{table}[h]
 \centering
