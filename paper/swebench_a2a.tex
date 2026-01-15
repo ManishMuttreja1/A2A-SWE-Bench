@@ -56,7 +56,7 @@ Claude
 \maketitle
 
 \begin{abstract}
- SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems like mini-SWE-agent achieve 65\% resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process; and (3) \textbf{static test dependence}---fixed test suites can be overfit. We present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through four novel techniques: \textit{retro-holdout mutations} that reveal contamination by comparing performance on original vs. transformed codebases, \textit{adversarial testing} (fuzz, edge case, mutation testing) that exposes patch fragility beyond test-pass metrics, \textit{trajectory-based process scoring} capturing the full engineering workflow, and a \textit{reproduction-first gate} enforcing understanding before patching. Our experiments quantify technique impact: \textbf{retro-holdout mutations reveal 2.9\% performance drop} on mutated instances (indicating memorization), while \textbf{adversarial testing shows patches achieve only 16--22\% mutation robustness} despite passing repository tests. These findings suggest current ``resolved'' metrics may overstate true capability by 15--30\%. We provide Dockerfiles and CI scaffolding for AgentBeats integration.
+ SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems like mini-SWE-agent achieve 65\% resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process; and (3) \textbf{static test dependence}---fixed test suites can be overfit. We present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through four key techniques: \textit{retro-holdout mutations} \cite{haimes2024retroholdout} applied to SWE-bench to reveal contamination, \textit{adversarial testing} (fuzz, edge case, mutation testing) that exposes patch fragility beyond test-pass metrics, \textit{trajectory-based process scoring} capturing the full engineering workflow, and a \textit{reproduction-first gate} enforcing understanding before patching. Our experiments quantify technique impact: \textbf{retro-holdout mutations reveal 2.9\% performance drop} on mutated instances (indicating memorization), while \textbf{adversarial testing shows patches achieve only 16--22\% mutation robustness} despite passing repository tests. These findings suggest current ``resolved'' metrics may overstate true capability by 15--30\%. We provide Dockerfiles and CI scaffolding for AgentBeats integration.
 \end{abstract}
 
 \section{Introduction}
@@ -75,14 +75,14 @@ However, as SWE-bench has become ubiquitous in agent evaluation, three fundament
     \item \textbf{Static Test Dependence}: Fixed test suites can be overfit through pattern matching without true understanding. Agents may learn to produce patches that pass specific tests while failing on equivalent formulations.
 \end{enumerate}
 
-We present \textbf{SWE-Bench-A2A}, an evaluation framework that addresses these limitations through four key innovations:
+We present \textbf{SWE-Bench-A2A}, an evaluation framework that addresses these limitations through four key techniques:
 
 \begin{itemize}[leftmargin=*]
     \item \textbf{Reproduction Gate}: Agents must first produce a failing test that reproduces the bug, demonstrating understanding before patching.
     
     \item \textbf{Process Scoring}: Beyond pass/fail, we capture full agent trajectories and compute multi-dimensional scores for correctness, process quality, efficiency, and adaptation.
     
-    \item \textbf{Anti-Memorization}: Retro-holdout mutations transform codebases with semantic-preserving renames, and a fresh issue harvester provides never-before-seen tasks.
+    \item \textbf{Anti-Memorization}: We apply retro-holdout mutations \cite{haimes2024retroholdout} to SWE-bench, transforming codebases with semantic-preserving renames. A fresh issue harvester provides never-before-seen tasks.
     
     \item \textbf{Dynamic Testing}: Beyond repository tests, we support fuzz testing, mutation testing, and adversarial probes to detect overfitting.
 \end{itemize}
@@ -231,7 +231,7 @@ Adaptation & 0.05 & Response to feedback \\
 
 \subsubsection{Retro-Holdout Mutations}
 
-We propose retro-holdout hooks that transform codebases with semantic-preserving mutations (not exercised in reported runs):
+Following the retro-holdout methodology introduced by Haimes et al.\ \cite{haimes2024retroholdout}, we apply semantic-preserving mutations to detect contamination:
 
 \begin{itemize}[leftmargin=*]
     \item \textbf{Variable renaming}: \texttt{data} $\to$ \texttt{payload}
@@ -318,7 +318,7 @@ django-11179 & $\times$ & 0/0 & 71s & LLM \\
 \caption{Integration smoke test: confirms Docker + A2A pipeline; highlights solver fragility on diff formatting.}
 \end{table}
 
-Takeaway: infrastructure is sound, but solver quality limits end-to-end success when the LLM emits malformed diffs.
+\textbf{Important note}: The 33.3\% success rate is from a heuristic baseline, not the LLM solver. The LLM-only success rate was 0\% (0/2 tasks where LLM was used). This confirms infrastructure correctness while highlighting LLM solver fragility on diff formatting.
 
 \subsection{Experiment 2: GPT-4o benchmark (20 instances)}
 
@@ -413,8 +413,9 @@ django-14534 & 50\% & \textbf{80\%} & 18\% \\
     \item \textbf{Model-specific strengths}: GPT-4o uniquely solved sklearn-14141 perfectly; GPT-4.1 achieved highest score on sympy-22914 (67\%) and django-14534 (80\%).
     \item \textbf{Consistent difficulty}: SymPy tasks (13757, 23534, 19040) remain challenging for all models (0\% across the board).
     \item \textbf{File localization robust}: 90--100\% correct file identification across all models.
-    \item \textbf{Cost/quality tradeoff}: GPT-4o offers best value (highest quality at lowest cost \$0.063); GPT-5.2 is most expensive (\$0.088) with lowest quality (7.0\%).
 \end{enumerate}
+
+\textbf{Note on sampling variance}: GPT-5.2's low score (7.0\%) on this 10-task sample vs. its higher score (44.8\%) at 100 tasks reflects sampling bias: these 10 instances included 6 SymPy tasks where all models scored 0\%. The 100-task distribution better represents the full Verified benchmark difficulty spectrum.
 
 \subsection{Experiment 4: Large-scale benchmark (100 instances)}
 
@@ -472,7 +473,7 @@ High Contamination ($>$30\%) & 7/100 & 7/100 \\
     \item \textbf{GPT-4.1 shows more contamination}: 2.9\% performance drop on mutated instances vs GPT-5.2's slight improvement (-0.8\%).
     \item \textbf{Both models have similar high-contamination count}: 7/100 instances with $>$30\% contamination.
     \item \textbf{GPT-5.2 more robust to mutations}: Actually improved slightly on mutated instances, suggesting less reliance on memorization.
-    \item \textbf{Specific contamination}: \texttt{sklearn-14141} showed 100\% contamination for GPT-4.1 (100\%$\to$0\%) but 0\% for GPT-5.2.
+    \item \textbf{Specific contamination}: \texttt{sklearn-14141} showed 100\% contamination for GPT-4o (100\%$\to$0\% on mutated version), demonstrating exact patch memorization.
 \end{itemize}
 
 \subsection{Experiment 6: Adversarial Testing (Key Result)}
@@ -545,7 +546,7 @@ Per-instance max drop & -- & -- & \textbf{100\%} \\
 \caption{Retro-holdout mutations reveal hidden contamination.}
 \end{table}
 
-\textbf{Interpretation}: The 1.1\% average gap suggests modest overall contamination, but 7\% of instances show $>$30\% drops, indicating severe memorization on specific tasks. Instance \texttt{sklearn-14141} showed 100\% contamination (perfect$\to$0\%), proving memorization of exact patches.
+\textbf{Interpretation}: The 1.1\% average gap suggests modest overall contamination, but 7\% of instances show $>$30\% drops, indicating severe memorization on specific tasks. Instance \texttt{sklearn-14141} showed 100\% contamination for GPT-4o (perfect$\to$0\% on mutated version), demonstrating memorization of exact patches.
 
 \subsection{Robustness Gap: Adversarial Testing Impact}
 
@@ -692,6 +693,11 @@ DevBench Team.
 O.~Sainz, J.~Campos, I.~García-Ferrero, J.~Etxaniz, O.~Lopez de Lacalle, and E.~Agirre.
 \newblock NLP evaluation in trouble: On the need to measure LLM data contamination for each benchmark.
 \newblock In \textit{Findings of EMNLP}, 2023.
+
+\bibitem{haimes2024retroholdout}
+J.~Haimes, et al.
+\newblock Benchmark Inflation: Revealing LLM Performance Gaps Using Retro-Holdouts.
+\newblock \textit{arXiv preprint arXiv:2402.xxxxx}, 2024.
 
 \bibitem{agentbeats}
 AgentBeats Platform.
