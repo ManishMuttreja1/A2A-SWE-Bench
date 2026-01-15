@@ -1,0 +1,252 @@
+{
+  "timestamp": "20260115_004250",
+  "model": "gpt-4o",
+  "num_tasks": 10,
+  "stats": {
+    "tokens": 10398,
+    "cost": 0.07237,
+    "tasks": 10
+  },
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1_score": 0.6666666666666666,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "expected_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.093524,
+      "patch": "--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -74,7 +74,9 @@\n     _known_functions = {\n         'Abs': 'abs',\n         'sign': 'numpy.sign',\n-        'KroneckerDelta': 'int',\n+        'KroneckerDelta': 'int',\n+        'Min': 'min',\n+        'Max': 'max',\n     }\n \n     _known_functions_math = {"
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/sets/contains.py"
+        ],
+        "expected_files": [
+          "sympy/sets/contains.py"
+        ],
+        "gen_additions": 19,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 7.861637,
+      "patch": "--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -181,7 +181,23 @@ class Contains(Boolean):\n         return self._eval_subs(old, new)\n \n     def as_set(self):\n-        return self\n+        # If the expression is a simple Contains(x, set), return set\n+        # If it is False, return EmptySet\n+        # Otherwise, return ConditionSet\n+        from sympy.sets.sets import EmptySet, ConditionSet\n+        from sympy.core.symbol import Symbol\n+        if self == False:\n+            return "
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "expected_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.251242,
+      "patch": "--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -74,6 +74,7 @@ def get_deps_info():\n     deps = [\n         (\"pip\", None),\n         (\"setuptools\", None),\n         (\"sklearn\", \"sklearn\"),\n         (\"numpy\", \"numpy\"),\n         (\"scipy\", \"scipy\"),\n         (\"Cython\", \"Cython\"),\n         (\"pandas\", \"pandas\"),\n         (\"matplotlib\", \"matplotlib\"),\n+        (\"joblib\", \"joblib\"),\n     ]\n \n     deps_info = {}\n     for modname, import_name in deps:"
+    },
+    {
+      "instance_id": "django__django-16082",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "expected_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 6.325083,
+      "patch": "--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -491,7 +491,13 @@ class CombinedExpression(Expression):\n         # Try to infer the output_field if not provided.\n         if output_field is None and lhs._output_field_or_none is not None and rhs._output_field_or_none is not None:\n-            if connector in (Combinable.ADD, Combinable.SUB, Combinable.MUL, Combinable.DIV):\n+            if connector in (Combinable.ADD, Combinable.SUB, Combinable.MUL, Combinable.DIV, "
+    },
+    {
+      "instance_id": "django__django-13406",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.09090909090909091,
+        "recall": 0.5,
+        "f1_score": 0.15384615384615385,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "django/dmodels/query.py"
+        ],
+        "expected_files": [
+          "django/dmodels/query.py"
+        ],
+        "gen_additions": 11,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.422093,
+      "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -210,6 +210,19 @@ class QuerySet:\n     @query.setter\n     def query(self, value):\n+        # Set _iterable_class based on the query's values_select and values_select_list.\n+        # This is a best-effort fix for pickled queries with .values() or .values_list().\n+        if getattr(value, \"values_select\", None):\n+            from django.db.models.query import ValuesIterable\n+            self._iterable_class = ValuesIterable\n+    "
+    },
+    {
+      "instance_id": "django__django-16429",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/utils/timesince.py"
+        ],
+        "expected_files": [
+          "django/utils/timesince.py"
+        ],
+        "gen_additions": 9,
+        "exp_additions": 1,
+        "gen_deletions": 3,
+        "exp_deletions": 0
+      },
+      "elapsed": 5.258649,
+      "patch": "--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -93,7 +93,11 @@ def timesince(d, now=None, reversed=False, depth=2):\n     # If d is in the future, return '0 minutes'\n     if d > now:\n         return '0\\xa0minutes'\n \n     # Find the pivot point (the most recent \"whole\" time period)\n-    pivot = datetime.datetime(now.year, now.month, d.day)\n+    if timezone.is_aware(d):\n+        pivot = datetime.datetime(now.year, now.month, d.day, tzinfo=d.tzinfo)\n+    else:\n+        pivot = da"
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "gen_additions": 10,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.021354,
+      "patch": "--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -677,6 +677,14 @@ class Poly(Expr):\n     def __mul__(self, other):\n         if isinstance(other, Poly):\n             return self.mul(other)\n+        from sympy.core.expr import Expr\n+        # Allow Poly to absorb multiplication from the left (e.g., x*Poly(x))\n+        if not isinstance(other, Poly) and isinstance(other, Expr):\n+            try:\n+                return self.mul(Poly(other, *self.gens, domain=self.domain))\n+        "
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/core/symbol.py"
+        ],
+        "expected_files": [
+          "sympy/core/symbol.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.856132,
+      "patch": "--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -222,7 +222,13 @@ def symbols(names, **args):\n     if isinstance(names, (tuple, list)):\n-        return tuple(symbols(name, **args) for name in names)\n+        res = tuple(symbols(name, **args) for name in names)\n+        # If all elements are tuples (from range notation), return as is.\n+        # If all elements are not tuples, return as is.\n+        # If all elements are tuples of length 1, flatten one level.\n+        if all(isinstance(x"
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/factortools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/factortools.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 1,
+        "gen_deletions": 2,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.45642,
+      "patch": "--- a/sympy/polys/factortools.py\n+++ b/sympy/polys/factortools.py\n@@ -1150,7 +1150,7 @@\n         if not all(ground_roots):\n-            coeff, factors = factor_list(f, gens=gens, extension=extension, modulus=modulus)\n+            coeff, factors = factor_list(f, gens=gens, extension=extension, modulus=modulus)\n             result = _factors_to_expr(coeff, factors, gens)\n         else:\n-            result = f\n+            result = f\n         return result"
+    },
+    {
+      "instance_id": "django__django-14534",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.14285714285714285,
+        "recall": 0.5,
+        "f1_score": 0.22222222222222224,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "django/forms/widgets.py"
+        ],
+        "expected_files": [
+          "django/forms/boundfield.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.887849,
+      "patch": "--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -108,7 +108,11 @@ class BoundWidget:\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        # Use the id from the widget's attrs if available, otherwise fallback to previous behavior.\n+        attrs = self.data.get('attrs', {})\n+        id_ = attrs.get('id')\n+        if id_ is not None:\n+            return id_\n+        return 'id_%s_%s' % (self.data['name'], self.data['index'])"
+    }
+  ]
+}
