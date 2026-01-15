@@ -18,7 +18,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy source code
 COPY src/ ./src/
 COPY main.py .
+COPY start_green_agent.py .
 COPY data/ ./data/
+COPY leaderboard/ ./leaderboard/
 
 # Create directories for runtime data
 RUN mkdir -p /app/data/swebench_cache /app/logs

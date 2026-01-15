@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import os
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 from enum import Enum
@@ -322,8 +323,11 @@ class ReproductionGate:
     
     def _validate_bypass_token(self, token: str) -> bool:
         """Validate bypass token (for emergency/admin use)"""
-        # In production, this would check against secure token store
-        return token == "EMERGENCY_BYPASS_2024"
+        # Validate against environment variable - never hardcode tokens
+        expected_token = os.getenv("REPRO_BYPASS_TOKEN")
+        if not expected_token:
+            return False  # No bypass allowed if token not configured
+        return token == expected_token
     
     async def reject_patch(self, task: Task, reason: str) -> Dict[str, Any]:
         """
