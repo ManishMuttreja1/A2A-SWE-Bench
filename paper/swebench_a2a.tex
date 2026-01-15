@@ -45,9 +45,6 @@
 \author{
 Manish Muttreja\\
 \texttt{manishmuttreja@gmail.com}
-\\
-\and
-Claude
 }
 
 \date{}
@@ -56,7 +53,7 @@ Claude
 \maketitle
 
 \begin{abstract}
- SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems like mini-SWE-agent achieve 65\% resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process; and (3) \textbf{static test dependence}---fixed test suites can be overfit. We present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through four key techniques: \textit{retro-holdout mutations} \cite{haimes2024retroholdout} applied to SWE-bench to reveal contamination, \textit{adversarial testing} (fuzz, edge case, mutation testing) that exposes patch fragility beyond test-pass metrics, \textit{trajectory-based process scoring} capturing the full engineering workflow, and a \textit{reproduction-first gate} enforcing understanding before patching. Our experiments quantify technique impact: \textbf{retro-holdout mutations reveal 2.9\% performance drop} on mutated instances (indicating memorization), while \textbf{adversarial testing shows patches achieve only 16--22\% mutation robustness} despite passing repository tests. These findings suggest current ``resolved'' metrics may overstate true capability by 15--30\%. We provide Dockerfiles and CI scaffolding for AgentBeats integration.
+ SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems like mini-SWE-agent achieve 65\% resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process; and (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through four key techniques: \textit{retro-holdout mutations} \cite{haimes2024retroholdout} applied to SWE-bench to reveal contamination, \textit{adversarial testing} (fuzz, edge case, mutation testing) that exposes patch fragility beyond test-pass metrics, \textit{trajectory-based process scoring} capturing the full engineering workflow, and a \textit{reproduction-first gate} enforcing understanding before patching. Our experiments quantify technique impact: \textbf{retro-holdout mutations reveal 2.9\% performance drop} on mutated instances (indicating memorization), while \textbf{adversarial testing shows patches achieve only 16--22\% mutation robustness} despite passing repository tests. These findings suggest current ``resolved'' metrics may overstate true capability by 15--30\%. I provide Dockerfiles and CI scaffolding for AgentBeats integration.
 \end{abstract}
 
 \section{Introduction}
@@ -75,19 +72,19 @@ However, as SWE-bench has become ubiquitous in agent evaluation, three fundament
     \item \textbf{Static Test Dependence}: Fixed test suites can be overfit through pattern matching without true understanding. Agents may learn to produce patches that pass specific tests while failing on equivalent formulations.
 \end{enumerate}
 
-We present \textbf{SWE-Bench-A2A}, an evaluation framework that addresses these limitations through four key techniques:
+I present \textbf{SWE-Bench-A2A}, an evaluation framework that addresses these limitations through four key techniques:
 
 \begin{itemize}[leftmargin=*]
     \item \textbf{Reproduction Gate}: Agents must first produce a failing test that reproduces the bug, demonstrating understanding before patching.
     
-    \item \textbf{Process Scoring}: Beyond pass/fail, we capture full agent trajectories and compute multi-dimensional scores for correctness, process quality, efficiency, and adaptation.
+    \item \textbf{Process Scoring}: Beyond pass/fail, the framework captures full agent trajectories and computes multi-dimensional scores for correctness, process quality, efficiency, and adaptation.
     
-    \item \textbf{Anti-Memorization}: We apply retro-holdout mutations \cite{haimes2024retroholdout} to SWE-bench, transforming codebases with semantic-preserving renames. A fresh issue harvester provides never-before-seen tasks.
+    \item \textbf{Anti-Memorization}: I apply retro-holdout mutations \cite{haimes2024retroholdout} to SWE-bench, transforming codebases with semantic-preserving renames. A fresh issue harvester provides never-before-seen tasks.
     
-    \item \textbf{Dynamic Testing}: Beyond repository tests, we support fuzz testing, mutation testing, and adversarial probes to detect overfitting.
+    \item \textbf{Dynamic Testing}: Beyond repository tests, the framework supports fuzz testing, mutation testing, and adversarial probes to detect overfitting.
 \end{itemize}
 
-Our framework implements the Agent-to-Agent (A2A) protocol, enabling modular composition of assessors (Green Agents) and participants (Purple Agents). This design allows any solver to be evaluated without modification, promoting reproducibility and fair comparison.
+The framework implements the Agent-to-Agent (A2A) protocol, enabling modular composition of assessors (Green Agents) and participants (Purple Agents). This design allows any solver to be evaluated without modification, promoting reproducibility and fair comparison.
 
 \section{Related Work}
 
@@ -105,7 +102,7 @@ Data contamination in LLM benchmarks has been extensively documented \cite{conta
 
 \subsection{Process-Aware Evaluation}
 
-Traditional software engineering emphasizes process quality alongside outcomes. Test-driven development (TDD) requires understanding before implementation. Our reproduction gate operationalizes this principle for agent evaluation.
+Traditional software engineering emphasizes process quality alongside outcomes. Test-driven development (TDD) requires understanding before implementation. The reproduction gate operationalizes this principle for agent evaluation.
 
 \section{Limitations of Current SWE-bench}
 
@@ -144,7 +141,7 @@ Repository test suites, while valuable, have fixed specifications. Agents may le
 
 \subsection{A2A Protocol Architecture}
 
-Our framework implements the Agent-to-Agent protocol with two actor types:
+The framework implements the Agent-to-Agent protocol with two actor types:
 
 \begin{description}
     \item[Green Agent (Assessor)] Orchestrates evaluation: provisions environments, dispatches tasks, verifies solutions, computes scores.
@@ -175,7 +172,7 @@ This separation enables any solver to be evaluated without code changes, promoti
 
 \subsection{Reproduction Gate}
 
-Before accepting patches, we require agents to demonstrate bug understanding through reproduction:
+Before accepting patches, the framework requires agents to demonstrate bug understanding through reproduction:
 
 \begin{algorithm}
 \caption{Reproduction Gate Protocol}
@@ -197,7 +194,7 @@ This gate enforces test-driven development principles: understand the problem (r
 
 \subsection{Trajectory-Based Process Scoring}
 
-We capture complete agent trajectories and compute multi-dimensional scores:
+The framework captures complete agent trajectories and compute multi-dimensional scores:
 
 \begin{equation}
 \begin{split}
@@ -231,7 +228,7 @@ Adaptation & 0.05 & Response to feedback \\
 
 \subsubsection{Retro-Holdout Mutations}
 
-Following the retro-holdout methodology introduced by Haimes et al.\ \cite{haimes2024retroholdout}, we apply semantic-preserving mutations to detect contamination:
+Following the retro-holdout methodology introduced by Haimes et al.\ \cite{haimes2024retroholdout}, I apply semantic-preserving mutations to detect contamination:
 
 \begin{itemize}[leftmargin=*]
     \item \textbf{Variable renaming}: \texttt{data} $\to$ \texttt{payload}
@@ -248,7 +245,7 @@ A harvester monitors GitHub for new issues in target repositories, providing tas
 
 \subsection{Dynamic Testing}
 
-Beyond repository tests, we provide hooks for (not enabled by default in reported runs):
+Beyond repository tests, the framework provides hooks for (not enabled by default in reported runs):
 
 \begin{description}
     \item[Fuzz Testing] Property-based tests with random inputs
@@ -276,20 +273,20 @@ The implementation consists of several key components:
 
 \subsection{Docker Images}
 
-We provide Dockerfiles for containerizing the Green and Purple agents. Image publishing (registry, tags, and access) is deployment-specific; the repository includes the artifacts needed to build and push images via CI for use with the AgentBeats evaluation platform.
+I provide Dockerfiles for containerizing the Green and Purple agents. Image publishing (registry, tags, and access) is deployment-specific; the repository includes the artifacts needed to build and push images via CI for use with the AgentBeats evaluation platform.
 
 \section{Experiments}
 
 \subsection{Setup}
 
-We ran six experiments to validate our framework and quantify the impact of each technique:
+I ran six experiments to validate the framework and quantify the impact of each technique:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Experiments 1--4 (Baseline Performance)}: Establish baseline metrics using semantic patch comparison across 3--100 instances with GPT-4o, GPT-4.1, and GPT-5.2 as Purple Agents.
     \item \textbf{Experiment 5 (Anti-Contamination---Key Result)}: Retro-holdout mutation testing to quantify memorization vs understanding.
     \item \textbf{Experiment 6 (Adversarial---Key Result)}: Fuzz, edge case, and mutation testing to quantify patch robustness beyond test-pass.
 \end{itemize}
 
-The first four experiments provide baseline metrics; experiments 5--6 quantify the impact of our novel techniques.
+The first four experiments provide baseline metrics; experiments 5--6 quantify the impact of the novel techniques.
 
 \subsection{Experiment 1: Integration smoke test (3 Django instances)}
 
@@ -362,7 +359,7 @@ Cost per Task & \$0.006 \\
     \item \textbf{Cost efficiency holds}: \$0.006 per task with frontier model API calls.
 \end{enumerate}
 
-\textbf{Context vs. public baselines}: Public SWE-bench Verified baselines for earlier GPT-4–era systems typically report low double-digit pass@1. Our semantic-match view shows GPT-4o producing functionally close patches on a meaningful fraction of tasks even when strict exact-match metrics would undercount success. This highlights the importance of reporting both exact and semantic measures when comparing against public results.
+\textbf{Context vs. public baselines}: Public SWE-bench Verified baselines for earlier GPT-4–era systems typically report low double-digit pass@1. The semantic-match view shows GPT-4o producing functionally close patches on a meaningful fraction of tasks even when strict exact-match metrics would undercount success. This highlights the importance of reporting both exact and semantic measures when comparing against public results.
 
 \subsection{Experiment 3: Multi-model comparison (10 instances)}
 
@@ -525,7 +522,7 @@ This visibility enables debugging agent behavior and computing process scores.
 
 \section{Impact of Novel Techniques}
 
-Our experiments reveal that standard SWE-bench metrics may significantly overstate true agent capability. We quantify the impact of each novel technique:
+The experiments reveal that standard SWE-bench metrics may significantly overstate true agent capability. I quantify the impact of each novel technique:
 
 \subsection{Contamination Gap: Retro-Holdout Impact}
 
@@ -593,7 +590,7 @@ Process Score $S$ & 0.43 & Low \\
 
 \subsection{Estimated True Capability}
 
-Combining our findings, we estimate:
+Combining these findings, I estimate:
 
 \begin{equation}
 \text{True Capability} \approx \text{Resolved} \times (1 - \text{ContamGap}) \times \text{RobustnessRate}
@@ -608,7 +605,7 @@ This suggests current leaderboard scores may overstate true capability by \textb
 
 \section{Evaluation Slices}
 
-We propose four evaluation slices for comprehensive assessment:
+I propose four evaluation slices for comprehensive assessment:
 
 \begin{description}
     \item[Verified] Standard SWE-bench Verified instances
@@ -626,7 +623,7 @@ Reporting across slices reveals contamination sensitivity and robustness.
 \begin{itemize}[leftmargin=*]
     \item \textbf{Python only}: Current implementation focuses on Python repositories
     \item \textbf{Model variance}: Performance varies significantly by both model and repository. At 100 tasks, GPT-5.2 leads overall but GPT-4o and GPT-4.1 excel on specific tasks. SymPy consistently challenges all models.
-    \item \textbf{Semantic vs. exact matching}: Our semantic comparison shows models often produce functionally equivalent patches that differ syntactically from expected solutions. Binary pass/fail evaluation may underestimate true capability.
+    \item \textbf{Semantic vs. exact matching}: The semantic comparison shows models often produce functionally equivalent patches that differ syntactically from expected solutions. Binary pass/fail evaluation may underestimate true capability.
     \item \textbf{Mutation coverage}: Retro-holdout not yet integrated in live evaluation flow
     \item \textbf{Dynamic test generation}: Fuzz/adversarial commands require per-repo configuration
 \end{itemize}
@@ -646,13 +643,13 @@ Reporting across slices reveals contamination sensitivity and robustness.
 
 SWE-Bench-A2A provides tools to quantify three critical gaps in current SWE-bench evaluation:
 
-\textbf{1. Contamination Gap (Retro-Holdout):} Our mutation testing reveals that 7\% of instances show $>$30\% performance drop when codebases are transformed with semantic-preserving renames. This indicates memorization of specific patches rather than true understanding. One instance showed 100\% contamination---a ``perfect'' solution that completely failed on the mutated version.
+\textbf{1. Contamination Gap (Retro-Holdout):} The mutation testing reveals that 7\% of instances show $>$30\% performance drop when codebases are transformed with semantic-preserving renames. This indicates memorization of specific patches rather than true understanding. One instance showed 100\% contamination---a ``perfect'' solution that completely failed on the mutated version.
 
 \textbf{2. Robustness Gap (Adversarial Testing):} While patches pass repository tests, they fail on 81\% of code mutations and 59\% of edge cases. Current ``\% resolved'' metrics may overstate true capability by 5-6$\times$ when robustness is considered.
 
-\textbf{3. Process Gap (Trajectory Scoring):} Binary pass/fail treats lucky guesses equally with systematic debugging. Our multi-dimensional scoring (correctness, process, efficiency, adaptation) provides fairer comparison that rewards transferable engineering skills.
+\textbf{3. Process Gap (Trajectory Scoring):} Binary pass/fail treats lucky guesses equally with systematic debugging. The multi-dimensional scoring (correctness, process, efficiency, adaptation) provides fairer comparison that rewards transferable engineering skills.
 
-These findings have implications for the SWE-bench leaderboard. While systems like mini-SWE-agent achieve 65\% resolved, our analysis suggests \textbf{true contamination-adjusted, robustness-weighted capability may be significantly lower}. We recommend the community adopt:
+These findings have implications for the SWE-bench leaderboard. While systems like mini-SWE-agent achieve 65\% resolved, this analysis suggests \textbf{true contamination-adjusted, robustness-weighted capability may be significantly lower}. I recommend the community adopt:
 
 \begin{itemize}[leftmargin=*]
     \item \textbf{Multi-slice reporting}: Report on Verified, Mutated, and Adversarial slices
@@ -660,11 +657,11 @@ These findings have implications for the SWE-bench leaderboard. While systems li
     \item \textbf{Contamination disclosure}: Flag instances with high verified-to-mutated drops
 \end{itemize}
 
-We release ready-to-run Docker images compatible with AgentBeats to encourage reproducible, process-aware benchmarking that rewards true engineering ability over memorization.
+I release ready-to-run Docker images compatible with AgentBeats to encourage reproducible, process-aware benchmarking that rewards true engineering ability over memorization.
 
 \section*{Acknowledgments}
 
-We thank the SWE-bench team for their foundational work and the AgentBeats community for evaluation infrastructure.
+I thank the SWE-bench team for their foundational work and the AgentBeats community for evaluation infrastructure.
 
 \bibliographystyle{plain}
 \begin{thebibliography}{9}
