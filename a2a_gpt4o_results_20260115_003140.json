@@ -1,0 +1,36 @@
+{
+  "timestamp": "20260115_003140",
+  "model": "gpt-4o",
+  "num_tasks": 1,
+  "stats": {
+    "tokens": 853,
+    "cost": 0.005015,
+    "tasks": 1
+  },
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "expected_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.254944,
+      "patch": "--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -50,6 +50,8 @@\n     'Abs': 'abs',\n     'Min': 'min',\n     'Max': 'max',\n+    # other functions...\n }\n \n class PythonCodePrinter(CodePrinter):"
+    }
+  ]
+}

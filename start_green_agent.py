@@ -178,8 +178,8 @@ async def start_green_agent_server():
 Press Ctrl+C to stop the server.
     """)
     
-    # Run server
-    server.run()
+    # Run server (use run_async since we're already in an async context)
+    await server.run_async()
 
 
 async def main():
