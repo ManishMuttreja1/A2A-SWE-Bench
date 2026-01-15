@@ -74,7 +74,7 @@
       "id": "overall_performance_ab",
       "name": "Overall Performance",
       "description": "Score and accuracy per agent (AgentBeats results table)",
-      "sql": "SELECT id, score AS \"Score\", accuracy AS \"Accuracy\" FROM results ORDER BY score DESC",
+      "sql": "SELECT id, score AS \"Score\", accuracy AS \"Accuracy\" FROM ( SELECT id, COALESCE(score, pass_rate) AS score, COALESCE(accuracy, pass_rate) AS accuracy, ROW_NUMBER() OVER (PARTITION BY id ORDER BY COALESCE(score, pass_rate) DESC) AS rn FROM results ) WHERE rn = 1 ORDER BY score DESC",
       "columns": [
         {"name": "id", "type": "string", "label": "Agent"},
         {"name": "Score", "type": "number", "label": "Score"},
