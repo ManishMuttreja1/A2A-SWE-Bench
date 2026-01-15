@@ -475,21 +475,21 @@ Reporting across slices reveals contamination sensitivity and robustness.
 
 \begin{itemize}[leftmargin=*]
     \item \textbf{Python only}: Current implementation focuses on Python repositories
-    \item \textbf{Model variance}: Performance varies significantly by both model and repository. GPT-4.1 leads on average but GPT-4o and GPT-5.2 excel on specific tasks. SymPy consistently challenges all models.
+    \item \textbf{Model variance}: Performance varies significantly by both model and repository. At 100 tasks, GPT-5.2 leads overall but GPT-4o and GPT-4.1 excel on specific tasks. SymPy consistently challenges all models.
     \item \textbf{Semantic vs. exact matching}: Our semantic comparison shows models often produce functionally equivalent patches that differ syntactically from expected solutions. Binary pass/fail evaluation may underestimate true capability.
     \item \textbf{Mutation coverage}: Retro-holdout not yet integrated in live evaluation flow
     \item \textbf{Dynamic test generation}: Fuzz/adversarial commands require per-repo configuration
-    \item \textbf{Sample size}: Multi-model comparison limited to 10 instances; larger studies needed for statistical significance.
 \end{itemize}
 
 \subsection{Future Directions}
 
 \begin{enumerate}[leftmargin=*]
-    \item Integrate stronger models (Claude 3.5, GPT-4) for Purple agent
+    \item Integrate additional frontier models (Claude 3.5 Sonnet, Gemini 2.0) for Purple agent comparison
     \item Complete retro-holdout pipeline with semantic equivalence verification
     \item Implement default fuzz command packs for common frameworks
     \item Extend to multi-language evaluation (TypeScript, Rust)
     \item Add visual/multimodal signals for UI-related bugs
+    \item Scale evaluation to full SWE-bench Verified (500+ instances)
 \end{enumerate}
 
 \section{Conclusion}
