@@ -56,7 +56,7 @@ Claude
 \maketitle
 
 \begin{abstract}
- SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks, using GitHub issues and execution-based testing. However, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process, rewarding lucky guesses equally with systematic debugging; and (3) \textbf{static test dependence}---fixed test suites can be overfit without true understanding. We present \textbf{SWE-Bench-A2A}, an extension that addresses these limitations through four key ideas: a \textit{reproduction-first gate} requiring agents to demonstrate bug understanding before patching, \textit{trajectory-based process scoring} capturing the full engineering workflow, proposed \textit{anti-memorization mutations} via retro-holdout transformations, and \textit{dynamic testing hooks} (fuzz/adversarial) beyond static suites. Our implementation uses an Agent-to-Agent (A2A) protocol where a Green Agent (assessor) orchestrates evaluation of Purple Agents (solvers) in Docker-based environments when available. We benchmark three frontier models---GPT-4o, GPT-4.1, and GPT-5.2---on SWE-bench Verified instances. In our 100-task benchmark, GPT-5.2 achieves \textbf{44.8\% average semantic match} and \textbf{88\% file localization}, outperforming GPT-4.1 (38.7\%, 82.8\%) at lower cost. Our \textbf{anti-contamination testing} via retro-holdout mutations reveals GPT-4.1 shows 2.9\% performance drop on mutated instances while GPT-5.2 is robust (-0.8\% drop), suggesting different memorization patterns. We provide Dockerfiles and CI scaffolding for AgentBeats integration.
+ SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks, using GitHub issues and execution-based testing. However, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process, rewarding lucky guesses equally with systematic debugging; and (3) \textbf{static test dependence}---fixed test suites can be overfit without true understanding. We present \textbf{SWE-Bench-A2A}, an extension that addresses these limitations through four key ideas: a \textit{reproduction-first gate} requiring agents to demonstrate bug understanding before patching, \textit{trajectory-based process scoring} capturing the full engineering workflow, proposed \textit{anti-memorization mutations} via retro-holdout transformations, and \textit{dynamic testing hooks} (fuzz/adversarial) beyond static suites. Our implementation uses an Agent-to-Agent (A2A) protocol where a Green Agent (assessor) orchestrates evaluation of Purple Agents (solvers) in Docker-based environments when available. We benchmark three frontier models---GPT-4o, GPT-4.1, and GPT-5.2---on SWE-bench Verified instances. In our 100-task benchmark, GPT-5.2 achieves \textbf{44.8\% average semantic match} and \textbf{88\% file localization}, outperforming GPT-4.1 (38.7\%, 82.8\%) at lower cost. Our \textbf{anti-contamination testing} via retro-holdout mutations reveals GPT-4.1 shows 2.9\% performance drop on mutated instances while GPT-5.2 is robust (-0.8\% drop), suggesting different memorization patterns. Our \textbf{adversarial testing framework} (fuzz, edge case, mutation testing) shows patches achieve 95--98\% fuzz resistance but only 10--16\% mutation scores, highlighting robustness gaps. We provide Dockerfiles and CI scaffolding for AgentBeats integration.
 \end{abstract}
 
 \section{Introduction}
@@ -289,6 +289,7 @@ We ran five complementary studies to validate the framework and quantify solver 
     \item \textbf{Experiment 3 (Multi-model comparison)}: 10-instance comparison across GPT-4o, GPT-4.1, and GPT-5.2 to assess model-specific strengths.
     \item \textbf{Experiment 4 (Large-scale benchmark)}: 100-instance comparison of GPT-4.1 and GPT-5.2 for statistically robust conclusions.
     \item \textbf{Experiment 5 (Anti-contamination)}: Retro-holdout mutation testing to detect memorization vs genuine understanding.
+    \item \textbf{Experiment 6 (Adversarial)}: Fuzz testing, adversarial input generation, and patch mutation testing for robustness.
 \end{itemize}
 
 \subsection{Experiment 1: Integration smoke test (3 Django instances)}
@@ -475,6 +476,38 @@ High Contamination ($>$30\%) & 7/100 & 7/100 \\
     \item \textbf{Specific contamination}: \texttt{sklearn-14141} showed 100\% contamination for GPT-4.1 (100\%$\to$0\%) but 0\% for GPT-5.2.
 \end{itemize}
 
+\subsection{Experiment 6: Adversarial Testing (52 instances)}
+
+Purpose: validate patch robustness using fuzz testing, adversarial input generation, and mutation testing. This complements the anti-contamination work by testing whether patches handle edge cases, malformed inputs, and code mutations.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrr}
+\toprule
+Metric & GPT-4.1 & GPT-5.2 \\
+\midrule
+Instances Tested & 10 & 52 \\
+Pass Rate & 40.0\% & \textbf{28.8\%} \\
+Avg Fuzz Score & 95.7\% & \textbf{97.8\%} \\
+Avg Adversarial Score & 40.0\% & 37.7\% \\
+Avg Mutation Score & 16.0\% & 9.8\% \\
+Overall Adversarial Score & 47.1\% & \textbf{44.6\%} \\
+\bottomrule
+\end{tabular}
+\caption{Adversarial testing: fuzz, edge case, and mutation robustness.}
+\end{table}
+
+\textbf{Key findings}:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{High fuzz resistance}: Both models show $>$95\% fuzz test scores, indicating patches include defensive code patterns.
+    \item \textbf{Low mutation scores}: 9.8--16.0\% mutation scores indicate patches may be fragile---tests would not catch many code mutations.
+    \item \textbf{Adversarial vulnerability}: 37--40\% adversarial scores suggest patches may not handle all edge cases (null inputs, boundary conditions, injection attacks).
+    \item \textbf{Tradeoff observed}: GPT-5.2 has better fuzz resilience but lower mutation score; GPT-4.1 has better adversarial handling but more potential crashes detected.
+\end{enumerate}
+
+The adversarial testing framework provides complementary signal to semantic match: a patch can be semantically correct but still fragile to edge cases or mutations.
+
 \subsection{Trajectory Analysis}
 
 For successful cases, the captured trajectory shows:
@@ -533,6 +566,8 @@ SWE-Bench-A2A closes key gaps in agent evaluation by (1) enforcing reproduction-
 Our multi-model comparison (GPT-4o, GPT-4.1, GPT-5.2) reveals nuanced performance patterns. At small scale (10 tasks), GPT-4o led with 18.3\% average F1 and best cost efficiency; at large scale (100 tasks), GPT-5.2 dominated with 44.8\% average semantic match, 88\% file localization, and lower cost per task.
 
 Crucially, our anti-contamination testing via retro-holdout mutations reveals different memorization patterns: GPT-4.1 shows 2.9\% performance drop on mutated instances (6.5\% contamination score), while GPT-5.2 is actually \textit{more robust} on mutations (-0.8\% drop, 5.8\% contamination). This suggests GPT-5.2 relies less on memorized patterns, making it more suitable for fair evaluation.
+
+Our adversarial testing framework reveals complementary insights: while patches achieve high fuzz resistance (95--98\%), mutation scores remain low (10--16\%), indicating patches may be fragile to code modifications. This highlights the gap between ``passes tests'' and ``truly robust solutions.''
 
 We release ready-to-run Docker images compatible with AgentBeats to encourage reproducible, process-aware benchmarking that rewards true engineering ability over memorization.
 

@@ -1,0 +1,280 @@
+{
+  "model": "gpt-4.1",
+  "num_tasks": 10,
+  "seed": 42,
+  "timestamp": "20260115_092153",
+  "summary": {
+    "total": 10,
+    "passed": 4,
+    "failed": 6,
+    "pass_rate": 0.4,
+    "avg_fuzz_score": 0.9571428571428571,
+    "avg_adversarial_score": 0.4,
+    "avg_mutation_score": 0.16,
+    "avg_overall_score": 0.4711428571428572
+  },
+  "solver_stats": {
+    "solved": 10,
+    "failed": 0,
+    "total_cost": 0.07396
+  },
+  "evaluator_stats": {
+    "evaluations": 10,
+    "passed": 4,
+    "failed": 6,
+    "high_risk": 10,
+    "pass_rate": 0.4,
+    "fuzz_stats": {
+      "tests_generated": 0,
+      "tests_run": 70,
+      "crashes_found": 0,
+      "crash_rate": 0.0
+    },
+    "adversarial_stats": {
+      "tests_generated": 50,
+      "categories": {}
+    },
+    "mutation_stats": {
+      "total_mutations": 100,
+      "mutations_by_type": {
+        "operator": {
+          "total": 98,
+          "killed": 14
+        },
+        "negation": {
+          "total": 2,
+          "killed": 2
+        }
+      },
+      "kill_rates_by_type": {
+        "operator": 0.14285714285714285,
+        "negation": 1.0
+      }
+    }
+  },
+  "results": [
+    {
+      "instance_id": "astropy__astropy-7671",
+      "patch_length": 646,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.4,
+      "overall_score": 0.64,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 40% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 4,
+        "survived": 6
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-13579",
+      "patch_length": 780,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.0,
+      "overall_score": 0.3171428571428571,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-14598",
+      "patch_length": 515,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.2,
+      "overall_score": 0.45714285714285713,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-13453",
+      "patch_length": 1507,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.4,
+      "overall_score": 0.5800000000000001,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 40% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 4,
+        "survived": 6
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-14309",
+      "patch_length": 391,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.1,
+      "overall_score": 0.45999999999999996,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-14539",
+      "patch_length": 1023,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.2,
+      "overall_score": 0.56,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-14995",
+      "patch_length": 847,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.1,
+      "overall_score": 0.4,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-7606",
+      "patch_length": 497,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.2,
+      "overall_score": 0.56,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-13977",
+      "patch_length": 898,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.0,
+      "overall_score": 0.42,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-14508",
+      "patch_length": 759,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.0,
+      "overall_score": 0.3171428571428571,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    }
+  ]
+}

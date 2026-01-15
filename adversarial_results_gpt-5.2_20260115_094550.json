@@ -1,0 +1,1290 @@
+{
+  "model": "gpt-5.2",
+  "num_tasks": 100,
+  "seed": 42,
+  "timestamp": "20260115_094550",
+  "summary": {
+    "total": 100,
+    "passed": 9,
+    "failed": 91,
+    "pass_rate": 0.09,
+    "avg_fuzz_score": 0.4062637362637363,
+    "avg_adversarial_score": 0.146,
+    "avg_mutation_score": 0.042,
+    "avg_overall_score": 0.18247912087912088
+  },
+  "solver_stats": {
+    "solved": 42,
+    "failed": 58,
+    "total_cost": 0.3176999999999999
+  },
+  "evaluator_stats": {
+    "evaluations": 42,
+    "passed": 9,
+    "failed": 33,
+    "high_risk": 42,
+    "pass_rate": 0.21428571428571427,
+    "fuzz_stats": {
+      "tests_generated": 108,
+      "tests_run": 402,
+      "crashes_found": 0,
+      "crash_rate": 0.0
+    },
+    "adversarial_stats": {
+      "tests_generated": 210,
+      "categories": {}
+    },
+    "mutation_stats": {
+      "total_mutations": 418,
+      "mutations_by_type": {
+        "operator": {
+          "total": 397,
+          "killed": 31
+        },
+        "boundary": {
+          "total": 10,
+          "killed": 0
+        },
+        "negation": {
+          "total": 7,
+          "killed": 7
+        },
+        "removal": {
+          "total": 4,
+          "killed": 4
+        }
+      },
+      "kill_rates_by_type": {
+        "operator": 0.07808564231738035,
+        "boundary": 0.0,
+        "negation": 1.0,
+        "removal": 1.0
+      }
+    }
+  },
+  "results": [
+    {
+      "instance_id": "django__django-11951",
+      "patch_length": 758,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.0,
+      "overall_score": 0.3771428571428571,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-15315",
+      "patch_length": 633,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.0,
+      "mutation_score": 0.2,
+      "overall_score": 0.38,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "django__django-13158",
+      "patch_length": 1195,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.0,
+      "overall_score": 0.42,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-15499",
+      "patch_length": 1801,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.1,
+      "overall_score": 0.52,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 19,
+        "passed": 19,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "django__django-13401",
+      "patch_length": 1367,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.4,
+      "overall_score": 0.52,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 40% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 4,
+        "survived": 6
+      }
+    },
+    {
+      "instance_id": "django__django-13569",
+      "patch_length": 1183,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.0,
+      "overall_score": 0.48,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-14539",
+      "patch_length": 2018,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.3,
+      "overall_score": 0.54,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 30% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 13,
+        "passed": 13,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 3,
+        "survived": 7
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-13236",
+      "patch_length": 1389,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.1,
+      "overall_score": 0.4,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "django__django-11880",
+      "patch_length": 632,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.0,
+      "overall_score": 0.3171428571428571,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-11292",
+      "patch_length": 4301,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.0,
+      "overall_score": 0.48,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 19,
+        "passed": 19,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-13964",
+      "patch_length": 2470,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.1,
+      "overall_score": 0.45999999999999996,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 13,
+        "passed": 13,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "django__django-14792",
+      "patch_length": 1074,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.2,
+      "overall_score": 0.39714285714285713,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "django__django-13807",
+      "patch_length": 1412,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.8,
+      "mutation_score": 0.0,
+      "overall_score": 0.54,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-12262",
+      "patch_length": 7443,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.2,
+      "overall_score": 0.56,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "django__django-14534",
+      "patch_length": 499,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.0,
+      "overall_score": 0.48,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-14765",
+      "patch_length": 887,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.0,
+      "mutation_score": 0.2,
+      "overall_score": 0.38,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "django__django-11299",
+      "patch_length": 2058,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.1,
+      "overall_score": 0.4,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 19,
+        "passed": 19,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "django__django-13810",
+      "patch_length": 3292,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.0,
+      "overall_score": 0.42,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-11095",
+      "patch_length": 1771,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.0,
+      "overall_score": 0.42,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 13,
+        "passed": 13,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-13398",
+      "patch_length": 4014,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.3,
+      "overall_score": 0.48,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 30% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 13,
+        "passed": 13,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 3,
+        "survived": 7
+      }
+    },
+    {
+      "instance_id": "django__django-14539",
+      "patch_length": 1157,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.1,
+      "overall_score": 0.52,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-14995",
+      "patch_length": 1463,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.0,
+      "overall_score": 0.48,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 13,
+        "passed": 13,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-11265",
+      "patch_length": 780,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.2,
+      "overall_score": 0.5,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "django__django-13786",
+      "patch_length": 1908,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.0,
+      "overall_score": 0.36,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-15280",
+      "patch_length": 1620,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.0,
+      "mutation_score": 0.0,
+      "overall_score": 0.3,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-14608",
+      "patch_length": 1477,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.4,
+      "overall_score": 0.47714285714285715,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 40% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 4,
+        "survived": 6
+      }
+    },
+    {
+      "instance_id": "django__django-11400",
+      "patch_length": 2229,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.0,
+      "overall_score": 0.48,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-13363",
+      "patch_length": 917,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.0,
+      "overall_score": 0.3171428571428571,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 8,
+        "killed": 0,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-13579",
+      "patch_length": 2876,
+      "fuzz_score": 0.8461538461538461,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.1,
+      "overall_score": 0.3538461538461538,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 13,
+        "passed": 11,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "django__django-15503",
+      "patch_length": 3958,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.0,
+      "overall_score": 0.48,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 25,
+        "passed": 25,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-11163",
+      "patch_length": 472,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.2,
+      "overall_score": 0.5,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "django__django-13590",
+      "patch_length": 1103,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.0,
+      "overall_score": 0.36,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-14508",
+      "patch_length": 848,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.4,
+      "mutation_score": 0.1,
+      "overall_score": 0.45999999999999996,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "django__django-11149",
+      "patch_length": 1920,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.2,
+      "overall_score": 0.39714285714285713,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "django__django-14376",
+      "patch_length": 675,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.1,
+      "overall_score": 0.3571428571428571,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "django__django-12039",
+      "patch_length": 1970,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.0,
+      "overall_score": 0.48,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 19,
+        "passed": 19,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-11815",
+      "patch_length": 1187,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.0,
+      "overall_score": 0.36,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "django__django-15525",
+      "patch_length": 423,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.1,
+      "overall_score": 0.4,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "django__django-11119",
+      "patch_length": 579,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.6,
+      "mutation_score": 0.2,
+      "overall_score": 0.56,
+      "passed": true,
+      "high_risk_issues": [
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "django__django-14915",
+      "patch_length": 291,
+      "fuzz_score": 0.9230769230769231,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.1,
+      "overall_score": 0.3769230769230769,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 10% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 13,
+        "passed": 12,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 1,
+        "survived": 9
+      }
+    },
+    {
+      "instance_id": "django__django-14855",
+      "patch_length": 1047,
+      "fuzz_score": 0.8571428571428571,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.2,
+      "overall_score": 0.39714285714285713,
+      "passed": false,
+      "high_risk_issues": [
+        "Fuzz testing found 1 potential crashes",
+        "Low mutation score: 20% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 6,
+        "crashes": 1
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 2,
+        "survived": 8
+      }
+    },
+    {
+      "instance_id": "django__django-11790",
+      "patch_length": 2156,
+      "fuzz_score": 1.0,
+      "adversarial_score": 0.2,
+      "mutation_score": 0.0,
+      "overall_score": 0.36,
+      "passed": false,
+      "high_risk_issues": [
+        "Low mutation score: 0% - patch may be fragile"
+      ],
+      "fuzz_details": {
+        "total": 7,
+        "passed": 7,
+        "crashes": 0
+      },
+      "mutation_details": {
+        "total": 10,
+        "killed": 0,
+        "survived": 10
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-14365",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14140",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14559",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-11532",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13741",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13315",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-12155",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13410",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13297",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13033",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13212",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14155",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-11276",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "astropy__astropy-12907",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14580",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-15467",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "astropy__astropy-7166",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-12308",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13195",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-11179",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14493",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-15098",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13933",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-12276",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13449",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "astropy__astropy-7671",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "astropy__astropy-14598",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-15103",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14170",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-15127",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-11885",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-12663",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14725",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-11333",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13279",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-12304",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-11555",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-15554",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-12708",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13516",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13346",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13837",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14089",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-11133",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "astropy__astropy-7606",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14034",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13658",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-15037",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-11848",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-12419",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14311",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13128",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-14434",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-12143",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-10999",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-15277",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-13406",
+      "error": "patch_generation_failed",
+      "passed": false
+    },
+    {
+      "instance_id": "django__django-11490",
+      "error": "patch_generation_failed",
+      "passed": false
+    }
+  ]
+}
