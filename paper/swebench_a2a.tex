@@ -282,12 +282,13 @@ We provide Dockerfiles for containerizing the Green and Purple agents. Image pub
 
 \subsection{Setup}
 
-We ran four complementary studies to validate the framework and quantify solver quality:
+We ran five complementary studies to validate the framework and quantify solver quality:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Experiment 1 (Integration smoke test)}: 3-instance Django slice with full Docker-based verification to confirm the Green--Purple pipeline and artifact flow.
     \item \textbf{Experiment 2 (GPT-4o benchmark)}: 20-instance SWE-bench Verified slice (sorted by smallest patch first) using GPT-4o as the Purple Agent with semantic patch comparison.
     \item \textbf{Experiment 3 (Multi-model comparison)}: 10-instance comparison across GPT-4o, GPT-4.1, and GPT-5.2 to assess model-specific strengths.
     \item \textbf{Experiment 4 (Large-scale benchmark)}: 100-instance comparison of GPT-4.1 and GPT-5.2 for statistically robust conclusions.
+    \item \textbf{Experiment 5 (Anti-contamination)}: Retro-holdout mutation testing to detect memorization vs genuine understanding.
 \end{itemize}
 
 \subsection{Experiment 1: Integration smoke test (3 Django instances)}
@@ -444,6 +445,35 @@ Cost per Task & \$0.013 & \textbf{\$0.011} \\
     \item \textbf{Both models reliable}: 99--100\% task completion shows production-ready robustness.
     \item \textbf{Cost efficiency improves}: \$0.011--0.013 per task at scale vs \$0.006 in earlier runs reflects more complex tasks in the full distribution.
 \end{enumerate}
+
+\subsection{Experiment 5: Anti-Contamination Testing (10 instances)}
+
+Purpose: validate the retro-holdout mutation framework by comparing model performance on verified vs mutated instances. Performance drops indicate potential memorization.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lr}
+\toprule
+Metric & Value \\
+\midrule
+Verified Avg Similarity & 25.0\% \\
+Mutated Avg Similarity & 20.0\% \\
+Performance Drop & 5.0\% \\
+Avg Contamination Score & 15.0\% \\
+High Contamination ($>$30\%) & 2/10 \\
+\bottomrule
+\end{tabular}
+\caption{Anti-contamination pilot: GPT-5.2 on verified vs mutated tasks.}
+\end{table}
+
+\textbf{Contamination detected}: Two instances showed significant performance drops after mutation:
+\begin{itemize}[leftmargin=*]
+    \item \texttt{sympy-23534}: 50\%$\to$0\% (100\% contamination)
+    \item \texttt{django-14534}: 100\%$\to$50\% (50\% contamination)
+\end{itemize}
+
+\texttt{sklearn-14141} showed \textbf{zero contamination}---100\% on both verified and mutated---indicating genuine understanding rather than memorization.
 
 \subsection{Trajectory Analysis}
 
