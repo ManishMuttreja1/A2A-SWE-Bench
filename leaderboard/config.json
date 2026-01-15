@@ -1,0 +1,85 @@
+[
+    {
+      "id": "main_leaderboard",
+      "name": "Overall Rankings",
+      "description": "Comprehensive agent rankings with weighted scoring",
+      "sql": "SELECT ROW_NUMBER() OVER (ORDER BY (correctness_score * 0.35 + process_score * 0.20 + efficiency_score * 0.15 + collaboration_score * 0.15 + understanding_score * 0.10 + adaptation_score * 0.05) DESC) AS rank, agent_name, agent_id, ROUND((correctness_score * 0.35 + process_score * 0.20 + efficiency_score * 0.15 + collaboration_score * 0.15 + understanding_score * 0.10 + adaptation_score * 0.05) * 100, 2) AS score, CASE WHEN (correctness_score * 0.35 + process_score * 0.20 + efficiency_score * 0.15 + collaboration_score * 0.15 + understanding_score * 0.10 + adaptation_score * 0.05) >= 0.93 THEN 'A+' WHEN (correctness_score * 0.35 + process_score * 0.20 + efficiency_score * 0.15 + collaboration_score * 0.15 + understanding_score * 0.10 + adaptation_score * 0.05) >= 0.90 THEN 'A' WHEN (correctness_score * 0.35 + process_score * 0.20 + efficiency_score * 0.15 + collaboration_score * 0.15 + understanding_score * 0.10 + adaptation_score * 0.05) >= 0.80 THEN 'B' WHEN (correctness_score * 0.35 + process_score * 0.20 + efficiency_score * 0.15 + collaboration_score * 0.15 + understanding_score * 0.10 + adaptation_score * 0.05) >= 0.70 THEN 'C' ELSE 'F' END AS grade, COUNT(*) AS tasks_completed, ROUND(AVG(correctness_score) * 100, 1) AS correctness_pct, ROUND(AVG(process_score) * 100, 1) AS process_pct FROM assessment_results GROUP BY agent_name, agent_id ORDER BY score DESC LIMIT 100",
+      "columns": [
+        {"name": "rank", "type": "number", "label": "#"},
+        {"name": "agent_name", "type": "string", "label": "Agent"},
+        {"name": "score", "type": "number", "label": "Score", "format": "percent"},
+        {"name": "grade", "type": "string", "label": "Grade"},
+        {"name": "tasks_completed", "type": "number", "label": "Tasks"},
+        {"name": "correctness_pct", "type": "number", "label": "Correctness"},
+        {"name": "process_pct", "type": "number", "label": "Process"}
+      ],
+      "default": false
+    },
+    {
+      "id": "category_breakdown",
+      "name": "Category Breakdown",
+      "description": "Detailed scores across all 6 evaluation categories",
+      "sql": "SELECT agent_name, ROUND(AVG(correctness_score) * 100, 1) AS correctness, ROUND(AVG(process_score) * 100, 1) AS process_quality, ROUND(AVG(efficiency_score) * 100, 1) AS efficiency, ROUND(AVG(collaboration_score) * 100, 1) AS collaboration, ROUND(AVG(understanding_score) * 100, 1) AS understanding, ROUND(AVG(adaptation_score) * 100, 1) AS adaptation FROM assessment_results GROUP BY agent_name ORDER BY correctness DESC",
+      "columns": [
+        {"name": "agent_name", "type": "string", "label": "Agent"},
+        {"name": "correctness", "type": "number", "label": "Correctness (35%)"},
+        {"name": "process_quality", "type": "number", "label": "Process (20%)"},
+        {"name": "efficiency", "type": "number", "label": "Efficiency (15%)"},
+        {"name": "collaboration", "type": "number", "label": "Collaboration (15%)"},
+        {"name": "understanding", "type": "number", "label": "Understanding (10%)"},
+        {"name": "adaptation", "type": "number", "label": "Adaptation (5%)"}
+      ]
+    },
+    {
+      "id": "process_metrics",
+      "name": "Process Quality Metrics",
+      "description": "Bug reproduction and dialogue quality metrics",
+      "sql": "SELECT agent_name, COUNT(*) AS total_tasks, SUM(CASE WHEN reproduction_verified THEN 1 ELSE 0 END) AS bugs_reproduced, ROUND(AVG(CASE WHEN reproduction_verified THEN 1.0 ELSE 0.0 END) * 100, 1) AS reproduction_rate, ROUND(AVG(dialogue_turns), 1) AS avg_dialogue_turns, ROUND(AVG(questions_asked), 1) AS avg_questions, ROUND(AVG(review_iterations), 1) AS avg_review_iterations FROM assessment_results GROUP BY agent_name ORDER BY reproduction_rate DESC",
+      "columns": [
+        {"name": "agent_name", "type": "string", "label": "Agent"},
+        {"name": "total_tasks", "type": "number", "label": "Tasks"},
+        {"name": "bugs_reproduced", "type": "number", "label": "Bugs Reproduced"},
+        {"name": "reproduction_rate", "type": "number", "label": "Repro Rate %"},
+        {"name": "avg_dialogue_turns", "type": "number", "label": "Avg Dialogue"},
+        {"name": "avg_questions", "type": "number", "label": "Avg Questions"},
+        {"name": "avg_review_iterations", "type": "number", "label": "Avg Reviews"}
+      ]
+    },
+    {
+      "id": "efficiency_metrics",
+      "name": "Efficiency Metrics",
+      "description": "Execution time and action efficiency",
+      "sql": "SELECT agent_name, ROUND(AVG(execution_time_seconds), 0) AS avg_time_seconds, ROUND(AVG(actions_taken), 0) AS avg_actions, ROUND(AVG(efficiency_score) / NULLIF(AVG(actions_taken), 0) * 100, 2) AS action_efficiency, COUNT(*) AS tasks_completed FROM assessment_results GROUP BY agent_name ORDER BY action_efficiency DESC",
+      "columns": [
+        {"name": "agent_name", "type": "string", "label": "Agent"},
+        {"name": "avg_time_seconds", "type": "number", "label": "Avg Time (s)"},
+        {"name": "avg_actions", "type": "number", "label": "Avg Actions"},
+        {"name": "action_efficiency", "type": "number", "label": "Action Efficiency"},
+        {"name": "tasks_completed", "type": "number", "label": "Tasks"}
+      ]
+    },
+    {
+      "id": "overall_performance",
+      "name": "Overall Performance (Pass Rate & Time)",
+      "description": "Top pass rate and time per agent",
+      "sql": "SELECT id, ROUND(pass_rate, 1) AS \"Pass Rate\", ROUND(time_used, 1) AS \"Time\", total_tasks AS \"# Tasks\" FROM ( SELECT *, ROW_NUMBER() OVER (PARTITION BY id ORDER BY pass_rate DESC, time_used ASC) AS rn FROM ( SELECT results.participants.agent AS id, res.pass_rate AS pass_rate, res.time_used AS time_used, SUM(res.max_score) OVER (PARTITION BY results.participants.agent) AS total_tasks FROM results CROSS JOIN UNNEST(results.results) AS r(res) ) ) WHERE rn = 1 ORDER BY \"Pass Rate\" DESC;",
+      "columns": [
+        {"name": "id", "type": "string", "label": "Agent"},
+        {"name": "Pass Rate", "type": "number", "label": "Pass Rate"},
+        {"name": "Time", "type": "number", "label": "Time"},
+        {"name": "# Tasks", "type": "number", "label": "# Tasks"}
+      ]
+    },
+    {
+      "id": "overall_performance_ab",
+      "name": "Overall Performance (AgentBeats Results)",
+      "description": "Score and accuracy per agent (AgentBeats results table)",
+      "sql": "SELECT id, score AS \"Score\", accuracy AS \"Accuracy\" FROM ( SELECT id, COALESCE(score, pass_rate) AS score, COALESCE(accuracy, pass_rate) AS accuracy, ROW_NUMBER() OVER (PARTITION BY id ORDER BY COALESCE(score, pass_rate) DESC) AS rn FROM results ) WHERE rn = 1 ORDER BY score DESC",
+      "columns": [
+        {"name": "id", "type": "string", "label": "Agent"},
+        {"name": "Score", "type": "number", "label": "Score"},
+        {"name": "Accuracy", "type": "number", "label": "Accuracy"}
+      ],
+      "default": true
+    }
+]
