@@ -1,0 +1,255 @@
+{
+  "timestamp": "20260115_004653",
+  "model": "gpt-4o",
+  "num_tasks": 10,
+  "stats": {
+    "tokens": 11463,
+    "cost": 0.08844500000000001,
+    "tasks": 10
+  },
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.2857142857142857,
+        "recall": 1.0,
+        "f1_score": 0.4444444444444445,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sympy/printing/pycode.py",
+          "sympy/printing/tests/test_pycode.py"
+        ],
+        "expected_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.594264,
+      "patch": "--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -1,6 +1,6 @@\n \"\"\"\n Python code printer\n \"\"\"\n@@ -34,6 +34,8 @@ _known_functions = {\n     'Abs': 'abs',\n     'acos': 'math.acos',\n     'acosh': 'math.acosh',\n+    'Min': 'min',\n+    'Max': 'max',\n     'asin': 'math.asin',\n     'asinh': 'math.asinh',\n     'atan': 'math.atan',\n--- a/sympy/printing/tests/test_pycode.py\n+++ b/sympy/printing/tests/test_pycode.py\n@@ -6,7 +6,7 @@\n from sympy.core import Expr, Mod, symbols, Eq, Le, Gt, zoo, "
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/sets/tests/test_contains.py",
+          "sympy/sets/contains.py"
+        ],
+        "expected_files": [
+          "sympy/sets/contains.py"
+        ],
+        "gen_additions": 19,
+        "exp_additions": 1,
+        "gen_deletions": 4,
+        "exp_deletions": 1
+      },
+      "elapsed": 7.585555,
+      "patch": "--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -1,6 +1,7 @@\n from __future__ import annotations\n \n from sympy.core.basic import Basic\n+from sympy.core.symbol import Symbol\n from sympy.core.relational import Relational\n from sympy.logic.boolalg import BooleanFunction\n from sympy.sets.sets import Set\n@@ -52,6 +53,23 @@ class Contains(BooleanFunction):\n     def _eval_simplify(self, **kwargs):\n         return self\n \n+    def as_set(self):\n+        \"\"\"\n+        Rewrite ``Contains(x, S)`"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "expected_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.331149,
+      "patch": "--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -1,6 +1,7 @@\n \"\"\"Utility methods to print system info for debugging\"\"\"\n \n import platform\n+import joblib\n \n from ..externals._packaging.version import parse as parse_version\n \n@@ -44,6 +45,7 @@ def _get_deps_info():\n         \"Cython\": cython_version,\n         \"pandas\": pandas_version,\n         \"matplotlib\": matplotlib_version,\n+        \"joblib\": joblib.__version__,\n     }\n \n     return deps_info"
+    },
+    {
+      "instance_id": "django__django-16082",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "expected_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "gen_additions": 12,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 6.0073,
+      "patch": "--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -1,6 +1,7 @@\n import copy\n import datetime\n import functools\n+import operator\n import inspect\n import itertools\n import math\n@@ -15,6 +16,7 @@ from django.core.exceptions import FieldError\n from django.db.models.constants import LOOKUP_SEP\n from django.db.models.fields import (\n     AutoField,\n+    DecimalField,\n     Field,\n     FloatField,\n     IntegerField,\n@@ -590,6 +592,18 @@ class CombinedExpression(SQLiteNumeric"
+    },
+    {
+      "instance_id": "django__django-13406",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.037037037037037035,
+        "recall": 0.5,
+        "f1_score": 0.06896551724137931,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "django/dmodels/query.py",
+          "tests/queryset_pickle/tests.py"
+        ],
+        "expected_files": [
+          "django/dmodels/query.py"
+        ],
+        "gen_additions": 26,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 11.173705,
+      "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1,6 +1,7 @@\n import copy\n import operator\n import warnings\n+from django.db.models.query import ValuesIterable\n from functools import lru_cache, partial, reduce\n from itertools import chain, islice\n \n@@ -210,6 +211,11 @@ class QuerySet:\n \n     @query.setter\n     def query(self, value):\n+        # When restoring a Query from a pickled representation, the QuerySet's\n+        # iterable class isn't restored. Ensure values()-based qu"
+    },
+    {
+      "instance_id": "django__django-16429",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/utils/timesince.py"
+        ],
+        "expected_files": [
+          "django/utils/timesince.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.855054,
+      "patch": "--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -90,14 +90,18 @@ def timesince(d, now=None, reversed=False, time_strings=None, depth=2):\n     # Convert datetime.date to datetime.datetime for comparison.\n     if not isinstance(d, datetime.datetime):\n         d = datetime.datetime(d.year, d.month, d.day)\n     if not isinstance(now, datetime.datetime):\n         now = datetime.datetime(now.year, now.month, now.day)\n \n     # Ensure that d and now are either both naive or both aware"
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "gen_additions": 10,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 6.210654,
+      "patch": "--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -1,6 +1,7 @@\n \"\"\"User-friendly public interface to polynomial functions. \"\"\"\n \n from __future__ import print_function, division\n+from sympy.core.sympify import _sympify\n \n from sympy.core import (S, Add, Mul, Pow, Expr, Symbol, Tuple,\n     sympify, Basic, Dummy, Lambda, Function, Derivative, diff, expand,\n@@ -1460,6 +1461,17 @@ class Poly(Basic):\n     def __mul__(f, g):\n         return f.mul(g)\n \n+    def __rmul__(f, g):\n+        \""
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/core/symbol.py"
+        ],
+        "expected_files": [
+          "sympy/core/symbol.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.98267,
+      "patch": "--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -1,3 +1,4 @@\n+from sympy.core.function import FunctionClass\n from sympy.core.assumptions import StdFactKB\n from sympy.core.cache import cacheit\n from sympy.core.compatibility import iterable, is_sequence\n@@ -789,7 +790,7 @@ def symbols(names, **args):\n     if isinstance(names, str):\n         return _symbols(names, args)\n \n-    if is_sequence(names):\n+    if is_sequence(names) and not isinstance(names, FunctionClass):\n         result = []\n "
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/factortools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/factortools.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.944825,
+      "patch": "--- a/sympy/polys/factortools.py\n+++ b/sympy/polys/factortools.py\n@@ -1147,7 +1147,7 @@ def _factor_list(f, gens, args, method):\n         if extension:\n             # factor over algebraic extension\n             K = K.algebraic_field(*extension)\n-            f = f.set_domain(K)\n+            f = f.set_domain(K).set_modulus(None)\n \n         if method is None:\n             method = args.get('method', None)"
+    },
+    {
+      "instance_id": "django__django-14534",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.1111111111111111,
+        "recall": 0.5,
+        "f1_score": 0.1818181818181818,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "django/forms/boundfield.py"
+        ],
+        "expected_files": [
+          "django/forms/boundfield.py"
+        ],
+        "gen_additions": 7,
+        "exp_additions": 1,
+        "gen_deletions": 2,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.791633,
+      "patch": "--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -1,3 +1,4 @@\n+from django.utils.functional import cached_property\n from django.utils.html import conditional_escape, format_html\n from django.utils.safestring import mark_safe\n \n@@ -353,9 +354,14 @@ class BoundWidget:\n     def __str__(self):\n         return self.tag(wrap_label=True)\n \n-    @property\n+    @cached_property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        \""
+    }
+  ]
+}
