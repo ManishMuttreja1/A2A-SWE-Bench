@@ -20,9 +20,9 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Data Contamination}{2}{subsection.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Patch-Only Evaluation}{2}{subsection.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Static Test Overfitting}{2}{subsection.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}SWE-Bench-A2A Design}{2}{section.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}A2A Protocol Architecture}{2}{subsection.4.1}\protected@file@percent }
 \citation{haimes2024retroholdout}
+\@writefile{toc}{\contentsline {section}{\numberline {4}SWE-Bench-A2A Design}{3}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}A2A Protocol Architecture}{3}{subsection.4.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Reproduction Gate}{3}{subsection.4.2}\protected@file@percent }
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Reproduction Gate Protocol}}{3}{algorithm.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Trajectory-Based Process Scoring}{3}{subsection.4.3}\protected@file@percent }
@@ -30,7 +30,7 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Anti-Memorization Strategies}{3}{subsection.4.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1}Retro-Holdout Mutations}{3}{subsubsection.4.4.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.2}Fresh Issue Harvesting}{3}{subsubsection.4.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Dynamic Testing}{3}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Dynamic Testing}{4}{subsection.4.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {5}Implementation}{4}{section.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}System Architecture}{4}{subsection.5.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Docker Images}{4}{subsection.5.2}\protected@file@percent }
@@ -49,33 +49,35 @@
 \@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Anti-contamination at scale: GPT-4.1 shows higher contamination than GPT-5.2.}}{6}{table.7}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Experiment 6: Adversarial Testing (Key Result)}{6}{subsection.6.7}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Adversarial testing (10 instances): fuzz, edge case, and mutation robustness.}}{6}{table.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.8}Trajectory Analysis}{7}{subsection.6.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.8}Experiment 7: Claude 3 Haiku Benchmark (100 instances)}{7}{subsection.6.8}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Claude 3 Haiku vs OpenAI models (100 instances). Note: Haiku is a smaller/faster model.}}{7}{table.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.9}Trajectory Analysis}{7}{subsection.6.9}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {7}Impact of Novel Techniques}{7}{section.7}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Contamination Gap: Retro-Holdout Impact}{7}{subsection.7.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Retro-holdout mutations reveal hidden contamination (100 instances per model).}}{7}{table.9}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Retro-holdout mutations reveal hidden contamination (100 instances per model).}}{7}{table.10}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Robustness Gap: Adversarial Testing Impact}{7}{subsection.7.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Adversarial testing reveals hidden fragility (10 instances, avg of GPT-4.1 and GPT-5.2).}}{7}{table.10}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Multi-dimensional scoring captures nuance.}}{7}{table.11}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Process Gap: Trajectory Analysis Impact}{7}{subsection.7.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Estimated True Capability}{7}{subsection.7.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8}Evaluation Slices}{7}{section.8}\protected@file@percent }
-\bibstyle{plain}
-\bibcite{jimenez2024swebench}{1}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Adversarial testing reveals hidden fragility (10 instances, avg of GPT-4.1 and GPT-5.2).}}{8}{table.11}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Multi-dimensional scoring captures nuance.}}{8}{table.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Process Gap: Trajectory Analysis Impact}{8}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Estimated True Capability}{8}{subsection.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Evaluation Slices}{8}{section.8}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {9}Limitations and Future Work}{8}{section.9}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Current Limitations}{8}{subsection.9.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Future Directions}{8}{subsection.9.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{8}{section.10}\protected@file@percent }
+\bibstyle{plain}
+\bibcite{jimenez2024swebench}{1}
 \bibcite{chen2021codex}{2}
 \bibcite{austin2021mbpp}{3}
 \bibcite{devbench2024}{4}
 \bibcite{contamination2023}{5}
 \bibcite{haimes2024retroholdout}{6}
 \bibcite{agentbeats}{7}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{9}{section.10}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {A}A2A Protocol Specification}{9}{appendix.A}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Agent Card Format}{9}{subsection.A.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Artifact Types}{9}{subsection.A.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B}Scoring Formula Details}{9}{appendix.B}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Correctness Score}{9}{subsection.B.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Process Score}{9}{subsection.B.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Efficiency Score}{9}{subsection.B.3}\protected@file@percent }
-\gdef \@abspage@last{9}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Scoring Formula Details}{10}{appendix.B}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Correctness Score}{10}{subsection.B.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Process Score}{10}{subsection.B.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Efficiency Score}{10}{subsection.B.3}\protected@file@percent }
+\gdef \@abspage@last{10}
