@@ -89,6 +89,19 @@ I present \textbf{SWE-Bench-A2A}, an evaluation framework that addresses these l
 
 The framework implements the Agent-to-Agent (A2A) protocol, enabling modular composition of assessors (Green Agents) and participants (Purple Agents). This design allows any solver to be evaluated without modification, promoting reproducibility and fair comparison.
 
+\textbf{Our contributions:}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Framework}: SWE-Bench-A2A, implementing the A2A protocol for agent evaluation with reproduction gates and trajectory-based process scoring.
+    
+    \item \textbf{Contamination detection}: Retro-holdout testing on 100 instances showing 2.9\% contamination gap (20.2\%$\to$17.2\%), with 7 instances exhibiting $>$50\% performance drops---including \texttt{sklearn-14141} dropping 100\%$\to$0\%, proving memorization.
+    
+    \item \textbf{Robustness analysis}: Adversarial testing (10 instances) revealing 51.3\% overall robustness vs 60\% semantic pass rate, with only 22\% mutation resilience---demonstrating that patches matching expected text are brittle.
+    
+    \item \textbf{Cross-provider evaluation}: Baseline metrics for 4 models (GPT-4o, Claude Sonnet 4.5, Opus 4.1, Haiku) across 100 instances each, demonstrating framework generality.
+    
+    \item \textbf{Open infrastructure}: Dockerfiles, CI scaffolding for AgentBeats integration, and anti-contamination pipeline released at \url{https://github.com/ManishMuttreja1/A2A-SWE-Bench}.
+\end{enumerate}
+
 \section{Related Work}
 
 \subsection{Code Generation Benchmarks}
