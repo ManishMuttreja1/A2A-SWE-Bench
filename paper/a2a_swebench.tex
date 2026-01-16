@@ -52,7 +52,7 @@ Manish Muttreja\\
 \maketitle
 
 \begin{abstract}
- SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems like mini-SWE-agent achieve 65\% resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process; and (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through four key techniques: \textit{retro-holdout mutations} \cite{haimes2024retroholdout} applied to SWE-bench to reveal contamination, \textit{adversarial testing} (fuzz, edge case, mutation testing) that exposes patch fragility beyond test-pass metrics, \textit{trajectory-based process scoring} capturing the full engineering workflow, and a \textit{reproduction-first gate} enforcing understanding before patching. The experiments quantify technique impact: \textbf{retro-holdout mutations reveal 2.9\% performance drop} on mutated instances (indicating memorization), while \textbf{adversarial testing shows patches achieve only 16--22\% mutation robustness} despite passing repository tests. Cross-model evaluation with GPT-4.1, GPT-5.2, \textbf{Claude Sonnet 4.5} (27.7\% avg), Claude Opus 4.1 (18.8\%), and Claude 3 Haiku (18.5\%) demonstrates framework generality across 5 models and 2 providers. These findings suggest current ``resolved'' metrics may overstate true capability by 3--5$\times$. I provide Dockerfiles and CI scaffolding for AgentBeats integration.
+ SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems achieve 65\%+ resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process; and (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework addressing these limitations through four techniques: \textit{retro-holdout mutations} \cite{haimes2024retroholdout} to detect contamination, \textit{adversarial testing} (fuzz, edge case, mutation testing) to expose patch fragility, \textit{trajectory-based process scoring} capturing the full engineering workflow, and a \textit{reproduction-first gate} enforcing understanding before patching. Cross-model evaluation with GPT-4o, GPT-4.1, GPT-5.2, Claude Sonnet 4.5 (27.7\% avg), Claude Opus 4.1 (18.8\%), and Claude 3 Haiku (18.5\%) demonstrates framework generality across 5 models and 2 providers. Preliminary testing shows evidence of contamination (e.g., GPT-4o achieved 100\%$\to$0\% on mutated \texttt{sklearn-14141}). I provide Dockerfiles, anti-contamination infrastructure, and CI scaffolding for AgentBeats integration.
 \end{abstract}
 
 \section{Introduction}
@@ -278,14 +278,14 @@ I provide Dockerfiles for containerizing the Green and Purple agents. Image publ
 
 \subsection{Setup}
 
-I ran six experiments to validate the framework and quantify the impact of each technique:
+I ran seven experiments to validate the framework:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Experiments 1--4 (Baseline Performance)}: Establish baseline metrics using semantic patch comparison across 3--100 instances with GPT-4o, GPT-4.1, and GPT-5.2 as Purple Agents.
-    \item \textbf{Experiment 5 (Anti-Contamination---Key Result)}: Retro-holdout mutation testing to quantify memorization vs understanding.
-    \item \textbf{Experiment 6 (Adversarial---Key Result)}: Fuzz, edge case, and mutation testing to quantify patch robustness beyond test-pass.
+    \item \textbf{Experiments 1--4}: Establish baseline metrics using semantic patch comparison across 3--100 instances with GPT-4o, GPT-4.1, and GPT-5.2.
+    \item \textbf{Experiments 5--6}: Describe anti-contamination and adversarial testing methodology (infrastructure implemented, large-scale analysis pending).
+    \item \textbf{Experiment 7}: Cross-provider evaluation with Claude model family (100 instances each).
 \end{itemize}
 
-The first four experiments provide baseline metrics; experiments 5--6 quantify the impact of the novel techniques.
+Experiments 1--4 and 7 provide quantitative results; experiments 5--6 describe the methodology and infrastructure for future contamination/robustness analysis.
 
 \subsection{Experiment 1: Integration smoke test (3 Django instances)}
 
@@ -443,66 +443,30 @@ Cost per Task & \$0.013 & \textbf{\$0.011} \\
     \item \textbf{Cost efficiency improves}: \$0.011--0.013 per task at scale vs \$0.006 in earlier runs reflects more complex tasks in the full distribution.
 \end{enumerate}
 
-\subsection{Experiment 5: Anti-Contamination Testing (Key Result)}
+\subsection{Experiment 5: Anti-Contamination Framework (Methodology)}
 
-\textbf{Purpose}: Quantify the contamination gap by comparing performance on original vs. retro-holdout mutated instances. Performance drops reveal memorization.
+\textbf{Purpose}: The framework implements retro-holdout mutations to detect contamination. While the infrastructure is complete, full evaluation at scale is pending.
 
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{lrr}
-\toprule
-Metric & GPT-4.1 & GPT-5.2 \\
-\midrule
-Verified Avg Similarity & 20.2\% & 21.6\% \\
-Mutated Avg Similarity & 17.2\% & 22.3\% \\
-Performance Drop & 2.9\% & -0.8\% \\
-Avg Contamination Score & 6.5\% & \textbf{5.8\%} \\
-High Contamination ($>$30\%) & 7/100 & 7/100 \\
-\bottomrule
-\end{tabular}
-\caption{Anti-contamination at scale: GPT-4.1 shows higher contamination than GPT-5.2.}
-\end{table}
+\textbf{Methodology}: The anti-contamination pipeline applies semantic-preserving transformations (variable/function/class renaming, docstring rephrasing) to create ``mutated'' versions of SWE-bench instances. Performance drops between original and mutated versions indicate memorization.
 
-\textbf{Key findings}:
+\textbf{Preliminary observation}: In small-scale testing, we observed that GPT-4o achieved 100\% semantic match on \texttt{sklearn-14141} (original) but 0\% on the mutated version, suggesting exact patch memorization for this instance. This motivates larger-scale contamination studies.
+
+\textbf{Status}: The retro-holdout infrastructure is implemented and available in the repository. Comprehensive contamination analysis across 100+ instances is planned for future work.
+
+\subsection{Experiment 6: Adversarial Testing Framework (Methodology)}
+
+\textbf{Purpose}: The framework implements adversarial testing to quantify patch robustness beyond test-pass metrics.
+
+\textbf{Methodology}: The adversarial evaluator includes three components:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{GPT-4.1 shows more contamination}: 2.9\% performance drop on mutated instances vs GPT-5.2's slight improvement (-0.8\%).
-    \item \textbf{Both models have similar high-contamination count}: 7/100 instances with $>$30\% contamination.
-    \item \textbf{GPT-5.2 more robust to mutations}: Actually improved slightly on mutated instances, suggesting less reliance on memorization.
-    \item \textbf{Specific contamination}: \texttt{sklearn-14141} showed 100\% contamination for GPT-4o (100\%$\to$0\% on mutated version), demonstrating exact patch memorization.
+    \item \textbf{Fuzz Testing}: Property-based tests with random inputs to verify defensive coding
+    \item \textbf{Adversarial Edge Cases}: LLM-generated edge cases (null inputs, boundary conditions, malformed data)
+    \item \textbf{Mutation Testing}: Code mutations (operator swaps, boundary changes) to test patch resilience
 \end{itemize}
 
-\subsection{Experiment 6: Adversarial Testing (Key Result)}
+\textbf{Hypothesis}: Patches that pass repository tests may still be fragile to real-world usage variations. Standard ``\% resolved'' metrics may overstate robustness.
 
-\textbf{Purpose}: Quantify the robustness gap by testing patches against fuzz inputs, edge cases, and code mutations. This reveals fragility hidden by test-pass metrics.
-
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{lrr}
-\toprule
-Metric & GPT-4.1 & GPT-5.2 \\
-\midrule
-Instances Tested & 10 & 10 \\
-Pass Rate & 40.0\% & \textbf{60.0\%} \\
-Avg Fuzz Score & 95.7\% & \textbf{97.7\%} \\
-Avg Adversarial Score & 40.0\% & \textbf{44.0\%} \\
-Avg Mutation Score & 16.0\% & \textbf{22.0\%} \\
-Overall Adversarial Score & 47.1\% & \textbf{51.3\%} \\
-\bottomrule
-\end{tabular}
-\caption{Adversarial testing (10 instances): fuzz, edge case, and mutation robustness.}
-\end{table}
-
-\textbf{Key findings}:
-\begin{enumerate}[leftmargin=*]
-    \item \textbf{GPT-5.2 wins on adversarial robustness}: 60\% pass rate vs 40\% for GPT-4.1, with higher scores across all metrics.
-    \item \textbf{High fuzz resistance}: Both models show $>$95\% fuzz test scores, indicating patches include defensive code patterns.
-    \item \textbf{Low mutation scores}: 16--22\% mutation scores indicate patches may be fragile---tests would not catch many code mutations.
-    \item \textbf{Adversarial handling}: 40--44\% adversarial scores suggest patches may not handle all edge cases (null inputs, boundary conditions).
-\end{enumerate}
-
-The adversarial testing framework provides complementary signal to semantic match: a patch can be semantically correct but still fragile to edge cases or mutations.
+\textbf{Status}: The adversarial testing infrastructure is implemented and available in the repository (\texttt{src/adversarial/}). Comprehensive robustness analysis is planned for future work.
 
 \subsection{Experiment 7: Claude Model Family Benchmark (100 instances)}
 
@@ -545,7 +509,7 @@ Claude Opus 4.1 & 100/100 & 18.8\% & 3 & Anthropic \\
 \textbf{Key findings}:
 \begin{enumerate}[leftmargin=*]
     \item \textbf{GPT-5.2 leads overall}: 44.8\% avg match, significantly ahead of all Claude models.
-    \item \textbf{Claude Sonnet 4.5 leads Anthropic family}: 27.7\% avg match with 8 high-quality solutions, outperforming both Opus 4.1 (18.8\%) and Haiku (18.9\%).
+    \item \textbf{Claude Sonnet 4.5 leads Anthropic family}: 27.7\% avg match with 8 high-quality solutions, outperforming both Opus 4.1 (18.8\%) and Haiku (18.5\%).
     \item \textbf{Opus 4.1 comparable to Haiku}: Opus 4.1 achieves 18.8\% avg match (vs Haiku's 18.5\%), with 3 high-match solutions ($\geq$70\%). Both are outperformed by Sonnet 4.5 (27.7\%).
     \item \textbf{Framework generality validated}: The A2A framework successfully evaluates 5 different models across 2 providers without modification.
 \end{enumerate}
@@ -575,85 +539,41 @@ This visibility enables debugging agent behavior and computing process scores.
 
 \section{Impact of Novel Techniques}
 
-The experiments reveal that standard SWE-bench metrics may significantly overstate true agent capability. I quantify the impact of each novel technique:
+The framework provides tools to investigate three potential gaps in current SWE-bench evaluation:
 
-\subsection{Contamination Gap: Retro-Holdout Impact}
+\subsection{Contamination Detection via Retro-Holdout}
 
-Comparing performance on original vs. mutated instances reveals memorization:
+The retro-holdout methodology applies semantic-preserving mutations to detect memorization. Preliminary evidence:
 
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{lrrr}
-\toprule
-Metric & Original & Mutated & Gap \\
-\midrule
-GPT-4.1 Avg Similarity & 20.2\% & 17.2\% & \textbf{-2.9\%} \\
-GPT-5.2 Avg Similarity & 21.6\% & 22.3\% & +0.8\% \\
-High Contamination ($>$30\%) & -- & 7/100 & -- \\
-\bottomrule
-\end{tabular}
-\caption{Retro-holdout mutations reveal hidden contamination (100 instances per model).}
-\end{table}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Case study}: GPT-4o achieved 100\% semantic match on \texttt{sklearn-14141} (original) but 0\% on the mutated version, demonstrating exact patch memorization.
+    \item \textbf{Implication}: Some ``perfect'' solutions may reflect recall rather than reasoning.
+\end{itemize}
 
-\textbf{Interpretation}: GPT-4.1 shows a 2.9\% performance drop on mutated instances, indicating memorization. GPT-5.2 is more robust (+0.8\%). However, 7\% of instances show $>$30\% drops for both models. Instance \texttt{sklearn-14141} showed 100\% contamination for GPT-4o (perfect$\to$0\% on mutated version), demonstrating memorization of exact patches.
+\textbf{Status}: Infrastructure implemented; large-scale contamination analysis is future work.
 
-\subsection{Robustness Gap: Adversarial Testing Impact}
+\subsection{Robustness via Adversarial Testing}
 
-Standard test-pass metrics miss patch fragility:
+The adversarial framework tests patches against fuzz inputs, edge cases, and code mutations:
 
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{lrr}
-\toprule
-Test Type & Avg Pass Rate & Gap from 100\% \\
-\midrule
-Fuzz Tests & 96.7\% & -3.3\% \\
-Adversarial Edge Cases & 42.0\% & \textbf{-58.0\%} \\
-Mutation Tests & 19.0\% & \textbf{-81.0\%} \\
-\bottomrule
-\end{tabular}
-\caption{Adversarial testing reveals hidden fragility (10 instances, avg of GPT-4.1 and GPT-5.2).}
-\end{table}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Hypothesis}: Patches passing repository tests may still be fragile to real-world usage variations.
+    \item \textbf{Components}: Fuzz testing, LLM-generated edge cases, mutation testing.
+\end{itemize}
 
-\textbf{Interpretation}: While patches show high fuzz resistance (96.7\%), they fail on 58\% of adversarial edge cases and 81\% of code mutations. This suggests ``resolved'' patches may break under real-world usage variations.
+\textbf{Status}: Infrastructure implemented (\texttt{src/adversarial/}); comprehensive analysis is future work.
 
-\subsection{Process Gap: Trajectory Analysis Impact}
+\subsection{Process Quality via Trajectory Scoring}
 
-Binary pass/fail ignores engineering quality:
+Binary pass/fail ignores engineering quality. The multi-dimensional scoring captures:
 
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{lrr}
-\toprule
-Scoring Approach & Avg Score & Variance \\
-\midrule
-Binary (pass/fail) & 25\% & High \\
-Semantic Match & 44.8\% & Medium \\
-Process Score $S$ & 0.43 & Low \\
-\bottomrule
-\end{tabular}
-\caption{Multi-dimensional scoring captures nuance.}
-\end{table}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Process}: Systematic exploration vs. random guessing
+    \item \textbf{Understanding}: Reproduction quality before patching
+    \item \textbf{Efficiency}: Token/time usage optimization
+\end{itemize}
 
-\textbf{Interpretation}: Process scoring differentiates agents that systematically debug (high $s_{\text{process}}$) from those that guess correctly. This enables fairer comparison and identifies agents with transferable engineering skills.
-
-\subsection{Estimated True Capability}
-
-Combining these findings, I propose an adjusted capability estimate:
-
-\begin{equation}
-\text{Adjusted Capability} \approx \text{Resolved} \times (1 - \text{ContamGap}) \times \text{MutationRobustness}
-\end{equation}
-
-For a hypothetical 65\% resolved agent (using GPT-4.1's 2.9\% contamination gap and 19\% mutation robustness):
-\[
-\text{Adjusted} \approx 65\% \times 0.97 \times 0.19 \approx \textbf{12.0\%}
-\]
-
-\textbf{Caveat}: This is a rough estimate combining metrics from different experiment scales (100-task contamination, 10-task adversarial). The key insight is that current ``\% resolved'' metrics may significantly overstate true robust capability---potentially by \textbf{3-5$\times$}---when contamination and robustness are considered.
+\textbf{Contribution}: Process scoring differentiates agents that systematically debug from those that guess correctly, enabling fairer comparison.
 
 \section{Evaluation Slices}
 
@@ -693,23 +613,22 @@ Reporting across slices reveals contamination sensitivity and robustness.
 
 \section{Conclusion}
 
-SWE-Bench-A2A provides tools to quantify three critical gaps in current SWE-bench evaluation:
+SWE-Bench-A2A provides an evaluation framework and infrastructure to address three critical gaps in current SWE-bench evaluation:
 
-\textbf{1. Contamination Gap (Retro-Holdout):} The mutation testing reveals that 7\% of instances show $>$30\% performance drop when codebases are transformed with semantic-preserving renames. This indicates memorization of specific patches rather than true understanding. One instance showed 100\% contamination---a ``perfect'' solution that completely failed on the mutated version.
+\textbf{1. Contamination Detection (Retro-Holdout):} The framework applies semantic-preserving mutations to detect memorization. Preliminary evidence shows some models achieve perfect scores on original instances but fail completely on mutated versions (e.g., GPT-4o on \texttt{sklearn-14141}: 100\%$\to$0\%), indicating memorization of specific patches.
 
-\textbf{2. Robustness Gap (Adversarial Testing):} While patches pass repository tests, they fail on 81\% of code mutations and 58\% of adversarial edge cases. Current ``\% resolved'' metrics may overstate true capability by 3-5$\times$ when robustness is considered.
+\textbf{2. Robustness Testing (Adversarial):} The framework provides fuzz testing, adversarial edge cases, and mutation testing infrastructure. Hypothesis: current ``\% resolved'' metrics may overstate true capability when robustness is considered.
 
-\textbf{3. Process Gap (Trajectory Scoring):} Binary pass/fail treats lucky guesses equally with systematic debugging. The multi-dimensional scoring (correctness, process, efficiency, adaptation) provides fairer comparison that rewards transferable engineering skills.
+\textbf{3. Process Scoring (Trajectory):} Binary pass/fail treats lucky guesses equally with systematic debugging. The multi-dimensional scoring (correctness, process, efficiency, adaptation) enables fairer comparison that rewards transferable engineering skills.
 
-These findings have implications for the SWE-bench leaderboard. While systems like mini-SWE-agent achieve 65\% resolved, this analysis suggests \textbf{true contamination-adjusted, robustness-weighted capability may be significantly lower}. I recommend the community adopt:
-
+\textbf{Key contributions}:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Multi-slice reporting}: Report on Verified, Mutated, and Adversarial slices
-    \item \textbf{Robustness metrics}: Include mutation score alongside pass rate
-    \item \textbf{Contamination disclosure}: Flag instances with high verified-to-mutated drops
+    \item \textbf{Cross-provider evaluation}: Demonstrated framework generality across 5 models (GPT-4o, GPT-4.1, GPT-5.2, Claude Sonnet 4.5, Claude Opus 4.1, Claude 3 Haiku) and 2 providers
+    \item \textbf{Infrastructure}: Retro-holdout mutation pipeline, adversarial testing suite, trajectory capture
+    \item \textbf{AgentBeats integration}: Ready-to-run Docker images and CI scaffolding
 \end{itemize}
 
-I release ready-to-run Docker images compatible with AgentBeats to encourage reproducible, process-aware benchmarking that rewards true engineering ability over memorization.
+I recommend the community adopt multi-slice reporting (Verified, Mutated, Adversarial) to provide more complete evaluation of agent capabilities.
 
 \section*{Acknowledgments}
 
