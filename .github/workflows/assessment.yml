@@ -72,13 +72,7 @@ jobs:
         
     - name: Create directories
       run: |
-        mkdir -p output results leaderboard/results
-        
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyyaml tomli requests
-        pip list | grep -i yaml
+        mkdir -p output results
         
     - name: Generate Docker Compose
       run: |
@@ -109,19 +103,17 @@ jobs:
     - name: Collect Results
       if: always()
       run: |
-        mkdir -p results leaderboard/results
+        mkdir -p results
         cp -r output/* results/ 2>/dev/null || echo "No output files to copy"
-        cp -r output/* leaderboard/results/ 2>/dev/null || echo "No output files to copy"
         echo "=== Results ==="
         ls -la results/
-        ls -la leaderboard/results/
         
     - name: Create sample result if empty
       if: always()
       run: |
-        if [ ! -f leaderboard/results/*.json ] 2>/dev/null; then
+        if ! ls results/*.json 1>/dev/null 2>&1; then
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          cat > leaderboard/results/run_${{ github.run_id }}.json << EOF
+          cat > results/run_${{ github.run_id }}.json << EOF
         {
           "participants": {
             "agent": "019bbec8-5656-7792-b572-21fcf6cc36fb"
@@ -135,15 +127,14 @@ jobs:
         }
         EOF
         fi
+        ls -la results/
         
     - name: Upload Results Artifact
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: assessment-results-${{ github.run_id }}
-        path: |
-          results/
-          leaderboard/results/
+        path: results/
         if-no-files-found: warn
         
     - name: Commit results to repo
@@ -151,6 +142,6 @@ jobs:
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add leaderboard/results/ -f
+        git add results/
         git diff --staged --quiet || git commit -m "Add assessment results from run #${{ github.run_id }}"
         git push || echo "Push failed or nothing to push"

@@ -61,8 +61,8 @@ data/*.arrow
 .env.local
 *.env
 
-# Results
-results/
+# Results (keep results/ for AgentBeats leaderboard)
+# results/  -- NOT ignored, needed for AgentBeats
 outputs/
 benchmark_results_*.json
 claude_benchmark_results.json
