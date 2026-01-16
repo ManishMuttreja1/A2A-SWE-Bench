@@ -103,17 +103,17 @@ jobs:
     - name: Collect Results
       if: always()
       run: |
-        mkdir -p results
-        cp -r output/* results/ 2>/dev/null || echo "No output files to copy"
+        mkdir -p leaderboard/results
+        cp -r output/* leaderboard/results/ 2>/dev/null || echo "No output files to copy"
         echo "=== Results ==="
-        ls -la results/
+        ls -la leaderboard/results/
         
     - name: Create sample result if empty
       if: always()
       run: |
-        if ! ls results/*.json 1>/dev/null 2>&1; then
+        if ! ls leaderboard/results/*.json 1>/dev/null 2>&1; then
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          cat > results/run_${{ github.run_id }}.json << EOF
+          cat > leaderboard/results/run_${{ github.run_id }}.json << EOF
         {
           "participants": {
             "agent": "019bbec8-5656-7792-b572-21fcf6cc36fb"
@@ -127,14 +127,14 @@ jobs:
         }
         EOF
         fi
-        ls -la results/
+        ls -la leaderboard/results/
         
     - name: Upload Results Artifact
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: assessment-results-${{ github.run_id }}
-        path: results/
+        path: leaderboard/results/
         if-no-files-found: warn
         
     - name: Commit results to repo
@@ -142,6 +142,6 @@ jobs:
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add results/
+        git add leaderboard/results/
         git diff --staged --quiet || git commit -m "Add assessment results from run #${{ github.run_id }}"
         git push || echo "Push failed or nothing to push"
