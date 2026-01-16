@@ -70,19 +70,21 @@ jobs:
       with:
         python-version: '3.11'
         
-    - name: Install dependencies
+    - name: Create directories
       run: |
+        mkdir -p output results leaderboard/results
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
         pip install pyyaml tomli requests
+        pip list | grep -i yaml
         
     - name: Generate Docker Compose
       run: |
         python generate_compose.py --scenario scenario.toml
         echo "=== Generated docker-compose.yml ==="
         cat docker-compose.yml
-        
-    - name: Create directories
-      run: |
-        mkdir -p output results leaderboard/results
         
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
@@ -107,11 +109,12 @@ jobs:
     - name: Collect Results
       if: always()
       run: |
-        cp -r output/* results/ 2>/dev/null || true
-        cp -r output/* leaderboard/results/ 2>/dev/null || true
+        mkdir -p results leaderboard/results
+        cp -r output/* results/ 2>/dev/null || echo "No output files to copy"
+        cp -r output/* leaderboard/results/ 2>/dev/null || echo "No output files to copy"
         echo "=== Results ==="
-        ls -la results/ || echo "No results directory"
-        ls -la leaderboard/results/ || echo "No leaderboard results"
+        ls -la results/
+        ls -la leaderboard/results/
         
     - name: Create sample result if empty
       if: always()
