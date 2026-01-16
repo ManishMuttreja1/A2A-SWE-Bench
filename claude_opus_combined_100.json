@@ -1,0 +1,58 @@
+{
+  "model": "claude-opus-4-1",
+  "tasks_completed": 100,
+  "avg_semantic_match": 0.3785780885780886,
+  "high_matches": 3,
+  "per_task_results": [
+    {
+      "instance_id": "django__django-10097",
+      "semantic_match": 0.8181818181818182,
+      "patch_length": 1150
+    },
+    {
+      "instance_id": "django__django-12273",
+      "semantic_match": 0.18181818181818182,
+      "patch_length": 1306
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13779",
+      "semantic_match": 0.09090909090909091,
+      "patch_length": 811
+    },
+    {
+      "instance_id": "sympy__sympy-15017",
+      "semantic_match": 0.0,
+      "patch_length": 1805
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7205",
+      "semantic_match": 0.46153846153846156,
+      "patch_length": 1510
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8721",
+      "semantic_match": 0.8333333333333334,
+      "patch_length": 3386
+    },
+    {
+      "instance_id": "django__django-11451",
+      "semantic_match": 0.8333333333333334,
+      "patch_length": 494
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11578",
+      "semantic_match": 0.2,
+      "patch_length": 915
+    },
+    {
+      "instance_id": "django__django-11179",
+      "semantic_match": 0.2,
+      "patch_length": 1719
+    },
+    {
+      "instance_id": "django__django-12663",
+      "semantic_match": 0.16666666666666666,
+      "patch_length": 1014
+    }
+  ]
+}
