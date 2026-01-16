@@ -5,15 +5,18 @@ Based on: https://docs.agentbeats.dev/tutorial/
 """
 
 import argparse
+import json
 import os
 import sys
 
 try:
     import tomllib
 except ImportError:
-    import tomli as tomllib
-
-import yaml
+    try:
+        import tomli as tomllib
+    except ImportError:
+        print("Error: Neither tomllib nor tomli available", file=sys.stderr)
+        sys.exit(1)
 
 
 def fetch_agent_image(agentbeats_id: str) -> str:
@@ -43,32 +46,69 @@ def expand_env_vars(env_dict: dict) -> dict:
     return result
 
 
-def generate_compose(scenario_path: str) -> dict:
+def dict_to_yaml(d: dict, indent: int = 0) -> str:
+    """Convert dict to YAML format without external dependency."""
+    lines = []
+    prefix = "  " * indent
+    
+    for key, value in d.items():
+        if isinstance(value, dict):
+            lines.append(f"{prefix}{key}:")
+            lines.append(dict_to_yaml(value, indent + 1))
+        elif isinstance(value, list):
+            lines.append(f"{prefix}{key}:")
+            for item in value:
+                if isinstance(item, dict):
+                    # First key on same line as dash
+                    first = True
+                    for k, v in item.items():
+                        if first:
+                            lines.append(f"{prefix}  - {k}: {json.dumps(v) if isinstance(v, (dict, list)) else v}")
+                            first = False
+                        else:
+                            lines.append(f"{prefix}    {k}: {json.dumps(v) if isinstance(v, (dict, list)) else v}")
+                else:
+                    lines.append(f"{prefix}  - {item}")
+        elif isinstance(value, bool):
+            lines.append(f"{prefix}{key}: {str(value).lower()}")
+        elif isinstance(value, (int, float)):
+            lines.append(f"{prefix}{key}: {value}")
+        elif value is None:
+            lines.append(f"{prefix}{key}: null")
+        else:
+            # String - quote if contains special chars
+            if any(c in str(value) for c in [':', '#', '{', '}', '[', ']', ',', '&', '*', '?', '|', '-', '<', '>', '=', '!', '%', '@', '`']):
+                lines.append(f'{prefix}{key}: "{value}"')
+            else:
+                lines.append(f"{prefix}{key}: {value}")
+    
+    return "\n".join(lines)
+
+
+def generate_compose(scenario_path: str) -> str:
     """Generate Docker Compose configuration from scenario.toml."""
     with open(scenario_path, "rb") as f:
         scenario = tomllib.load(f)
     
     green_agent = scenario.get("green_agent", {})
     participants = scenario.get("participants", [])
-    config = scenario.get("config", {})
     
     # Get green agent image
     green_id = green_agent.get("agentbeats_id", "")
     green_image = green_agent.get("image", fetch_agent_image(green_id))
-    green_env = green_agent.get("env", {})
+    green_env = expand_env_vars(green_agent.get("env", {}))
     
-    services = {
-        "green-agent": {
-            "image": green_image,
-            "container_name": "swebench-green",
-            "environment": expand_env_vars(green_env),
-            "ports": ["8000:8000"],
-            "volumes": [
-                "./output:/app/output",
-                "./data:/app/data"
-            ],
-            "networks": ["swebench-network"]
-        }
+    # Build services section
+    services = {}
+    
+    # Green agent service
+    services["green-agent"] = {
+        "image": green_image,
+        "container_name": "swebench-green",
+        "environment": green_env,
+        "ports": ["8000:8000"],
+        "volumes": ["./output:/app/output", "./data:/app/data"],
+        "networks": ["swebench-network"]
     }
     
     # Add participant services
@@ -76,17 +116,18 @@ def generate_compose(scenario_path: str) -> dict:
         name = participant.get("name", f"purple-agent-{i}")
         p_id = participant.get("agentbeats_id", "")
         p_image = participant.get("image", fetch_agent_image(p_id))
-        p_env = participant.get("env", {})
+        p_env = expand_env_vars(participant.get("env", {}))
         p_env["GREEN_AGENT_URL"] = "http://swebench-green:8000"
         
         services[name] = {
             "image": p_image,
             "container_name": name,
-            "environment": expand_env_vars(p_env),
+            "environment": p_env,
             "depends_on": ["green-agent"],
             "networks": ["swebench-network"]
         }
     
+    # Build compose dict
     compose = {
         "version": "3.8",
         "services": services,
@@ -97,7 +138,7 @@ def generate_compose(scenario_path: str) -> dict:
         }
     }
     
-    return compose
+    return dict_to_yaml(compose)
 
 
 def main():
@@ -110,10 +151,10 @@ def main():
         print(f"Error: Scenario file not found: {args.scenario}", file=sys.stderr)
         sys.exit(1)
     
-    compose = generate_compose(args.scenario)
+    yaml_content = generate_compose(args.scenario)
     
     with open(args.output, "w") as f:
-        yaml.dump(compose, f, default_flow_style=False, sort_keys=False)
+        f.write(yaml_content)
     
     print(f"Generated {args.output} from {args.scenario}")
 
