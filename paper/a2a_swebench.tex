@@ -52,7 +52,7 @@ Manish Muttreja\\
 \maketitle
 
 \begin{abstract}
- SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems achieve 65\%+ resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process; and (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework addressing these limitations through four techniques: \textit{retro-holdout mutations} \cite{haimes2024retroholdout} to detect contamination, \textit{adversarial testing} (fuzz, edge case, mutation testing) to expose patch fragility, \textit{trajectory-based process scoring} capturing the full engineering workflow, and a \textit{reproduction-first gate} enforcing understanding before patching. Cross-provider evaluation with GPT-4o (20.7\% avg F1 on 100 tasks) and Claude model family---Sonnet 4.5 (27.7\%), Opus 4.1 (18.8\%), Haiku (18.5\%)---demonstrates framework generality across 4 models and 2 providers. The infrastructure supports retro-holdout mutation testing and adversarial evaluation for future contamination studies. I provide Dockerfiles and CI scaffolding for AgentBeats integration.
+ SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems achieve 65\%+ resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process; and (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework and \textbf{infrastructure} for investigating these limitations through: \textit{retro-holdout mutations} \cite{haimes2024retroholdout} to detect contamination, \textit{adversarial testing} infrastructure, \textit{trajectory-based process scoring}, and a \textit{reproduction-first gate}. Cross-provider evaluation using \textbf{semantic patch comparison} (not execution-based pass/fail) with GPT-4o (20.7\% avg semantic match on 100 tasks) and Claude model family---Sonnet 4.5 (27.7\%), Opus 4.1 (18.8\%), Haiku (18.5\%)---demonstrates framework generality across 4 models and 2 providers. \textbf{Important limitations}: (1) experiments 5--6 describe methodology only---large-scale contamination/adversarial analysis is pending; (2) reported metrics are semantic similarity, not execution-based resolution; (3) the heuristic solver was used only in Experiment 1; all other experiments used LLM-only runs. I provide Dockerfiles and CI scaffolding for AgentBeats integration.
 \end{abstract}
 
 \section{Introduction}
@@ -287,6 +287,12 @@ I ran seven experiments to validate the framework:
 
 Experiments 1--4 and 7 provide quantitative results; experiments 5--6 describe the methodology and infrastructure for future contamination/robustness analysis.
 
+\textbf{Heuristic solver status}: The three-tier fallback hierarchy (LLM $\to$ heuristic $\to$ mock) was used \textit{only} in Experiment 1 for integration testing. \textbf{Experiments 2--4 and 7 used LLM-only runs with heuristics explicitly disabled.} This is confirmed in the test scripts which set \texttt{allow\_heuristics=False}.
+
+\textbf{Reproduction Gate status}: The reproduction gate protocol (Algorithm 1) was \textit{not} enforced in these experiments. All reported metrics are from direct patch generation without requiring a failing reproduction script first. Integrating mandatory reproduction enforcement is future work.
+
+\textbf{Process Score status}: The composite Process Score $S$ (Equation 2) is \textit{not} computed in reported experiments. Experiments report semantic match (F1) only. Process scoring infrastructure exists but full trajectory analysis is not yet integrated into the evaluation pipeline.
+
 \subsection{Experiment 1: Integration smoke test (3 Django instances)}
 
 Purpose: ensure end-to-end plumbing (environment provisioning, A2A dispatch, patch apply, test execution) works under Docker.
@@ -318,7 +324,9 @@ django-11179 & $\times$ & 0/0 & 71s & LLM \\
 
 \subsection{Experiment 2: GPT-4o benchmark (20 instances)}
 
-Purpose: measure solver quality with a stronger model on a broader slice. Evaluation uses \textbf{semantic patch comparison} (code-change overlap) rather than strict line matching.
+Purpose: measure solver quality with a stronger model on a broader slice. Evaluation uses \textbf{semantic patch comparison} (code-change overlap via F1 score between generated and expected patch tokens) rather than execution-based pass/fail. 
+
+\textbf{Important note on metrics}: The ``F1 Score'' and ``Semantic Match'' reported in this paper measure textual similarity between generated patches and expected patches---\textit{not} the composite Process Score $S$ defined in Section 4.3, and \textit{not} execution-based test pass/fail. A high semantic match indicates the patch is textually similar to the expected solution but does not guarantee functional correctness (a single syntax error could prevent execution). This limitation applies to all experiments in this paper.
 
 \begin{table}[h]
 \centering
@@ -435,6 +443,8 @@ Avg F1 Score & 20.7\% & 19.3\% \\
 
 \textbf{Purpose}: Evaluate Anthropic's Claude model family on SWE-bench to compare against OpenAI models and validate framework generality across model providers.
 
+\textbf{Variance caveat}: Experiment 3 showed GPT-4o variance of 7.0\%--17.8\% across runs on identical tasks. This Claude evaluation represents a \textit{single run} per model; cross-model comparisons should be interpreted cautiously given this variance.
+
 \begin{table}[h]
 \centering
 \small
@@ -501,41 +511,35 @@ This visibility enables debugging agent behavior and computing process scores.
 
 \section{Impact of Novel Techniques}
 
-The framework provides tools to investigate three potential gaps in current SWE-bench evaluation:
+\textbf{Important clarification}: This section describes \textit{infrastructure} and \textit{hypotheses}, not proven results. The novel techniques are implemented but not yet validated through experiments.
 
 \subsection{Contamination Detection via Retro-Holdout}
 
-The retro-holdout methodology applies semantic-preserving mutations to detect memorization. Preliminary evidence:
+The retro-holdout methodology \cite{haimes2024retroholdout} applies semantic-preserving mutations to detect memorization.
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Observation}: GPT-4o achieved 100\% F1 on \texttt{sklearn-14141} consistently across multiple runs, suggesting potential memorization.
-    \item \textbf{Implication}: Some ``perfect'' solutions may reflect recall rather than reasoning. The retro-holdout infrastructure enables testing this hypothesis.
+    \item \textbf{Observation}: GPT-4o achieved 100\% F1 on \texttt{sklearn-14141} consistently across multiple runs.
+    \item \textbf{Hypothesis}: This consistency may indicate memorization. If true, performance should drop on mutated versions.
+    \item \textbf{Status}: \textit{The experiment to test this hypothesis has not been executed.} Infrastructure is ready; results are pending.
 \end{itemize}
-
-\textbf{Status}: Infrastructure implemented; large-scale contamination analysis is future work.
 
 \subsection{Robustness via Adversarial Testing}
 
-The adversarial framework tests patches against fuzz inputs, edge cases, and code mutations:
+The adversarial framework provides infrastructure for fuzz inputs, edge cases, and code mutations.
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Hypothesis}: Patches passing repository tests may still be fragile to real-world usage variations.
-    \item \textbf{Components}: Fuzz testing, LLM-generated edge cases, mutation testing.
+    \item \textbf{Hypothesis}: Patches passing repository tests may be fragile to real-world variations.
+    \item \textbf{Status}: \textit{No adversarial experiments were executed.} Infrastructure exists in \texttt{src/adversarial/}; validation is future work.
 \end{itemize}
-
-\textbf{Status}: Infrastructure implemented (\texttt{src/adversarial/}); comprehensive analysis is future work.
 
 \subsection{Process Quality via Trajectory Scoring}
 
-Binary pass/fail ignores engineering quality. The multi-dimensional scoring captures:
+The multi-dimensional Process Score $S$ (Equation 2) captures process quality beyond pass/fail.
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Process}: Systematic exploration vs. random guessing
-    \item \textbf{Understanding}: Reproduction quality before patching
-    \item \textbf{Efficiency}: Token/time usage optimization
+    \item \textbf{Components}: Correctness, process, efficiency, collaboration, understanding, adaptation
+    \item \textbf{Status}: \textit{Process scoring is not computed in reported experiments.} Only semantic match (F1) is reported. Whether process scoring differentiates systematic debugging from guessing remains unvalidated.
 \end{itemize}
-
-\textbf{Contribution}: Process scoring differentiates agents that systematically debug from those that guess correctly, enabling fairer comparison.
 
 \section{Evaluation Slices}
 
@@ -555,11 +559,19 @@ Reporting across slices reveals contamination sensitivity and robustness.
 \subsection{Current Limitations}
 
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Python only}: Current implementation focuses on Python repositories
-    \item \textbf{Model variance}: Performance varies significantly by model and repository. Claude Sonnet 4.5 leads on avg match (27.7\%) while GPT-4o has more high-quality solutions. SymPy tasks consistently challenge all models.
-    \item \textbf{Semantic vs. exact matching}: The semantic comparison shows models often produce functionally equivalent patches that differ syntactically from expected solutions. Binary pass/fail evaluation may underestimate true capability.
-    \item \textbf{Mutation coverage}: Retro-holdout not yet integrated in live evaluation flow
-    \item \textbf{Dynamic test generation}: Fuzz/adversarial commands require per-repo configuration
+    \item \textbf{Semantic similarity $\neq$ functional correctness}: All experiments use semantic patch comparison (F1 score between patch tokens), \textit{not} execution-based test pass/fail. A patch with 95\% semantic match could still fail due to syntax errors. This metric may over-optimistically assess non-functional code. Future work should include execution verification.
+    
+    \item \textbf{Process Score not computed}: The composite score $S$ (Equation 2) capturing process quality is defined but not computed in reported experiments. Only semantic match is reported.
+    
+    \item \textbf{Reproduction Gate not enforced}: The reproduction-first protocol (Algorithm 1) was not mandatory in experiments. No funnel analysis (reproduction failures vs. patching failures) is available.
+    
+    \item \textbf{Single-run comparisons}: Experiment 3 shows 7.0\%--17.8\% variance across runs. Experiment 7 (Claude) is single-run, making cross-model rankings statistically fragile.
+    
+    \item \textbf{Retro-holdout/adversarial not executed}: Experiments 5--6 describe methodology only. The claim that this framework ``solves'' contamination is currently infrastructure, not proven results.
+    
+    \item \textbf{Python only}: Current implementation focuses on Python repositories.
+    
+    \item \textbf{Heuristic fallback risk}: While disabled for Experiments 2--7, the heuristic solver's presence in the codebase poses a validity risk if accidentally enabled.
 \end{itemize}
 
 \subsection{Future Directions}
@@ -575,22 +587,30 @@ Reporting across slices reveals contamination sensitivity and robustness.
 
 \section{Conclusion}
 
-SWE-Bench-A2A provides an evaluation framework and infrastructure to address three critical gaps in current SWE-bench evaluation:
+SWE-Bench-A2A provides evaluation \textbf{infrastructure} (not proven results) for investigating three critical gaps in current SWE-bench evaluation:
 
-\textbf{1. Contamination Detection (Retro-Holdout):} The framework applies semantic-preserving mutations to detect memorization. GPT-4o achieved 100\% F1 on \texttt{sklearn-14141} consistently across runs, suggesting potential memorization. The retro-holdout infrastructure enables systematic testing of this hypothesis across the benchmark.
+\textbf{1. Contamination Detection (Retro-Holdout):} Infrastructure for semantic-preserving mutations is implemented. GPT-4o's consistent 100\% F1 on \texttt{sklearn-14141} suggests potential memorization, but \textit{the retro-holdout experiment has not been executed}. The contamination hypothesis remains unproven.
 
-\textbf{2. Robustness Testing (Adversarial):} The framework provides fuzz testing, adversarial edge cases, and mutation testing infrastructure. Hypothesis: current ``\% resolved'' metrics may overstate true capability when robustness is considered.
+\textbf{2. Robustness Testing (Adversarial):} Fuzz testing, adversarial edge cases, and mutation testing infrastructure exists in \texttt{src/adversarial/}. \textit{No adversarial experiments were executed.} The hypothesis that ``\% resolved'' overstates robustness is untested.
 
-\textbf{3. Process Scoring (Trajectory):} Binary pass/fail treats lucky guesses equally with systematic debugging. The multi-dimensional scoring (correctness, process, efficiency, adaptation) enables fairer comparison that rewards transferable engineering skills.
+\textbf{3. Process Scoring (Trajectory):} The multi-dimensional scoring formula (Equation 2) is defined, but \textit{not computed} in reported experiments. Only semantic match is reported. Process scoring remains future work.
 
-\textbf{Key contributions}:
+\textbf{What this paper actually demonstrates}:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Cross-provider evaluation}: Demonstrated framework generality across 4 models (GPT-4o, Claude Sonnet 4.5, Claude Opus 4.1, Claude 3 Haiku) and 2 providers
-    \item \textbf{Infrastructure}: Retro-holdout mutation pipeline, adversarial testing suite, trajectory capture
-    \item \textbf{AgentBeats integration}: Ready-to-run Docker images and CI scaffolding
+    \item \textbf{Framework generality}: The A2A framework evaluates 4 models across 2 providers using semantic patch comparison
+    \item \textbf{Semantic match baseline}: GPT-4o achieves 20.7\% avg semantic match; Claude Sonnet 4.5 achieves 27.7\%
+    \item \textbf{Infrastructure availability}: Dockerfiles, CI scaffolding, and code for retro-holdout/adversarial testing
 \end{itemize}
 
-I recommend the community adopt multi-slice reporting (Verified, Mutated, Adversarial) to provide more complete evaluation of agent capabilities.
+\textbf{What remains unproven}:
+\begin{itemize}[leftmargin=*]
+    \item Whether retro-holdout actually degrades model performance (contamination hypothesis)
+    \item Whether adversarial testing exposes patch fragility (robustness hypothesis)
+    \item Whether process scoring differentiates systematic debugging from guessing
+    \item Execution-based pass/fail verification (all reported metrics are semantic similarity)
+\end{itemize}
+
+I recommend future work execute the retro-holdout experiment and report execution-based metrics alongside semantic match.
 
 \section*{Acknowledgments}
 
