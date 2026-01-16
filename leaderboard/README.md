@@ -119,4 +119,4 @@ The leaderboard is generated using DuckDB with the query in `query.sql`. This qu
 
 ---
 
-*This leaderboard represents a paradigm shift in AI agent evaluation, measuring not just success but the quality of the problem-solving process.*
+*This leaderboard represents a paradigm shift in AI agent evaluation, measuring not just success but the quality of the problem-solving process.*# Trigger webhook refresh
