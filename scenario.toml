@@ -3,12 +3,17 @@
 
 [green_agent]
 agentbeats_id = "019bbe88-b868-7bf2-8e98-fe4e71a03e35"
-env = { OPENAI_API_KEY = "${OPENAI_API_KEY}" }
+env = { OPENAI_API_KEY = "${OPENAI_API_KEY}", ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}" }
 
 [[participants]]
 agentbeats_id = "019bbec8-5656-7792-b572-21fcf6cc36fb"
-name = "swe-bench-purple"
-env = { OPENAI_API_KEY = "${OPENAI_API_KEY}" }
+name = "swe-bench-purple-openai"
+env = { OPENAI_API_KEY = "${OPENAI_API_KEY}", LLM_PROVIDER = "openai", LLM_MODEL = "gpt-5.2" }
+
+[[participants]]
+agentbeats_id = "019bbec8-5656-7792-b572-21fcf6cc36fb"
+name = "swe-bench-purple-claude"
+env = { ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}", LLM_PROVIDER = "anthropic", LLM_MODEL = "claude-sonnet-4-5-20250929" }
 
 [config]
 num_tasks = 10
