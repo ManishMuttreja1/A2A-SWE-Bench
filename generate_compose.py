@@ -18,9 +18,14 @@ import yaml
 
 def fetch_agent_image(agentbeats_id: str) -> str:
     """Fetch Docker image for an AgentBeats agent ID."""
-    # For now, use local images based on naming convention
-    # In production, this would query the AgentBeats API
-    if "green" in agentbeats_id.lower() or agentbeats_id == "PASTE_GREEN_AGENT_UUID_HERE":
+    # Map agent IDs to their Docker images
+    # Green Agent: 019bbe88-b868-7bf2-8e98-fe4e71a03e35
+    # Purple Agent: 019bbec8-5656-7792-b572-21fcf6cc36fb
+    if agentbeats_id == "019bbe88-b868-7bf2-8e98-fe4e71a03e35":
+        return "ghcr.io/manishmuttreja1/a2a-swe-bench-green:latest"
+    elif agentbeats_id == "019bbec8-5656-7792-b572-21fcf6cc36fb":
+        return "ghcr.io/manishmuttreja1/a2a-swe-bench-purple:latest"
+    elif "green" in agentbeats_id.lower():
         return "ghcr.io/manishmuttreja1/a2a-swe-bench-green:latest"
     else:
         return "ghcr.io/manishmuttreja1/a2a-swe-bench-purple:latest"
