@@ -19,6 +19,7 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
+  IMAGE_OWNER: manishmuttreja1
 
 jobs:
   build-images:
@@ -43,7 +44,7 @@ jobs:
         context: .
         file: ./Dockerfile.green
         push: true
-        tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/a2a-swe-bench-green:latest
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/a2a-swe-bench-green:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
         
@@ -53,7 +54,7 @@ jobs:
         context: .
         file: ./Dockerfile.purple
         push: true
-        tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/a2a-swe-bench-purple:latest
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/a2a-swe-bench-purple:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -89,8 +90,8 @@ jobs:
         
     - name: Pull images
       run: |
-        docker pull ${{ env.REGISTRY }}/${{ github.repository_owner }}/a2a-swe-bench-green:latest || true
-        docker pull ${{ env.REGISTRY }}/${{ github.repository_owner }}/a2a-swe-bench-purple:latest || true
+        docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/a2a-swe-bench-green:latest || true
+        docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/a2a-swe-bench-purple:latest || true
         
     - name: Run Assessment
       env:
