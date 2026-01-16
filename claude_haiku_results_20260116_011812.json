@@ -1,0 +1,112 @@
+{
+  "model": "haiku",
+  "model_id": "claude-3-haiku-20240307",
+  "num_tasks": 10,
+  "successful": 9,
+  "failed": 1,
+  "avg_semantic_match": 0.04302210560567185,
+  "high_match_count": 0,
+  "perfect_count": 0,
+  "total_input_tokens": 3761,
+  "total_output_tokens": 1954,
+  "timestamp": "2026-01-16T01:18:12.520716",
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "success": true,
+      "generated_patch": "Here is the patch in unified diff format:\n\n```diff\n--- a/sympy/printing/python.py\n+++ b/sympy/printing/python.py\n@@ -281,6 +281,16 @@ class PythonCodePrinter(CodePrinter):\n         else:\n             return \"{}({})\".format(self._module_format(expr.__class__.__name__), ', '.join(map(self._print, expr.args)))\n \n+    def _print_Min(self, expr):\n+        \"\"\"Handling of the Min function\"\"\"\n+        return \"min({})\".format(\", \".join(self._print(arg) for arg in expr.args))\n+\n+    def _print_Max(self, expr):\n+        \"\"\"Handling of the Max function\"\"\"\n+        return \"max({})\".format(\", \".join(self._print(arg) for arg in expr.args))\n+\n+\n def pycode(expr, **settings):\n     \"\"\"Converts an expr to a string of Python code\n \n```",
+      "expected_patch": "diff --git a/sympy/printing/pycode.py b/sympy/printing/pycode.py\n--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -18,6 +18,8 @@\n \n _known_functions = {\n     'Abs': 'abs',\n+    'Min': 'min',\n+    'Max': 'max',\n }\n _known_functions_math = {\n     'acos': 'acos',\n",
+      "semantic_match": 0.006376195536663124,
+      "model": "claude-3-haiku-20240307",
+      "input_tokens": 294,
+      "output_tokens": 251
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "success": true,
+      "generated_patch": "Here is the minimal patch to fix the bug in the SymPy repository:\n\n```diff\n--- a/sympy/sets/sets.py\n+++ b/sympy/sets/sets.py\n@@ -1291,6 +1291,13 @@ class Contains(Set):\n     def as_set(self):\n         \"\"\"\n         Returns the subset of the domain for which the condition is True.\n+\n+        For a Contains object, this is simply the object itself, since\n+        Contains represents a boolean condition rather than a set.\n         \"\"\"\n-        return self\n+        return FiniteSet(self)\n+\n+    def as_relational(self, symbol):\n+        return self\n```\n\nThe key changes are:\n\n1. The `as_set` method now returns a `FiniteSet` containing the `Contains` object, rather than just returning the `Contains` object itself. This ensures that `Contains` objects can be used in contexts where a set is expected.\n2. The `as_relational` method is added, which simply returns the `Contains` object itself. This allows `Contains` objects to be used in contexts where a relational expression is expected.\n\nThese changes should fix the bug and allow `Contains` objects to be used properly in SymPy.",
+      "expected_patch": "diff --git a/sympy/sets/contains.py b/sympy/sets/contains.py\n--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -45,4 +45,4 @@ def binary_symbols(self):\n             isinstance(i, (Eq, Ne))])\n \n     def as_set(self):\n-        raise NotImplementedError()\n+        return self.args[1]\n",
+      "semantic_match": 0.004594180704441042,
+      "model": "claude-3-haiku-20240307",
+      "input_tokens": 339,
+      "output_tokens": 296
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "success": true,
+      "generated_patch": "Here's the minimal patch that fixes the bug:\n\n--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -23,6 +23,7 @@ def show_versions(print_full_report=False):\n         \"Python\": sys.version.replace(\"\\n\", \" \"),\n         \"scikit-learn\": sklearn.__version__,\n         \"NumPy\": np.__version__,\n+        \"joblib\": joblib.__version__,\n         \"SciPy\": scipy.__version__,\n         \"Matplotlib\": matplotlib.__version__,\n         \"Pandas\": pd.__version__,",
+      "expected_patch": "diff --git a/sklearn/utils/_show_versions.py b/sklearn/utils/_show_versions.py\n--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -48,6 +48,7 @@ def _get_deps_info():\n         \"Cython\",\n         \"pandas\",\n         \"matplotlib\",\n+        \"joblib\",\n     ]\n \n     def get_version(module):\n",
+      "semantic_match": 0.060781476121562955,
+      "model": "claude-3-haiku-20240307",
+      "input_tokens": 129,
+      "output_tokens": 157
+    },
+    {
+      "instance_id": "django__django-16082",
+      "success": true,
+      "generated_patch": "Here is the patch that fixes the bug:\n\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -837,11 +837,15 @@ class Mod(CombinedExpression):\n         if not (lhs.output_field.is_numeric() and rhs.output_field.is_numeric()):\n             raise TypeError('Modulo cannot be performed on non-numeric types.')\n \n+        lhs_is_decimal = isinstance(lhs.output_field, models.DecimalField)\n+        rhs_is_decimal = isinstance(rhs.output_field, models.DecimalField)\n+        output_field = models.DecimalField() if lhs_is_decimal or rhs_is_decimal else models.IntegerField()\n+\n         return Mod(\n             lhs,\n             rhs,\n             output_field=output_field,\n-            _output_field_resolve_cache=models.DecimalField(),\n+            _output_field_resolve_cache=output_field,\n         )",
+      "expected_patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -533,6 +533,7 @@ def __hash__(self):\n             Combinable.SUB,\n             Combinable.MUL,\n             Combinable.DIV,\n+            Combinable.MOD,\n         )\n     },\n     # Bitwise operators.\n",
+      "semantic_match": 0.017341040462427744,
+      "model": "claude-3-haiku-20240307",
+      "input_tokens": 152,
+      "output_tokens": 262
+    },
+    {
+      "instance_id": "django__django-13406",
+      "success": true,
+      "generated_patch": "Here's the patch that fixes the bug:\n\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -3100,7 +3100,7 @@ class QuerySet:\n         if self.query.annotations:\n             # Annotations are present, so we need to recreate the QuerySet in\n             # order to get the correct results.\n-            return self.__class__(model=self.model, query=self.query)\n+            return self.__class__(model=self.model, query=self.__class__.from_queryset(type(self))(model=self.model).query)\n         return self\n\n QuerySet._hash = property(lambda self: hash(self.query))",
+      "expected_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -210,6 +210,8 @@ def query(self):\n \n     @query.setter\n     def query(self, value):\n+        if value.values_select:\n+            self._iterable_class = ValuesIterable\n         self._query = value\n \n     def as_manager(cls):\n",
+      "semantic_match": 0.1531322505800464,
+      "model": "claude-3-haiku-20240307",
+      "input_tokens": 1082,
+      "output_tokens": 177
+    },
+    {
+      "instance_id": "django__django-16429",
+      "success": true,
+      "generated_patch": "Here is the minimal patch to fix the bug:\n\n--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -96,7 +96,7 @@ def timesince(d, now=None, reversed=False, time_format=None, time_format_key=Non\n     if now is None:\n         now = timezone.now()\n     if d.tzinfo is None:\n-        d = datetime.datetime(d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond)\n+        d = datetime.datetime(d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond, tzinfo=d.tzinfo)\n     delta = now - d\n     if reversed:\n         delta = d - now",
+      "expected_patch": "diff --git a/django/utils/timesince.py b/django/utils/timesince.py\n--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -97,6 +97,7 @@ def timesince(d, now=None, reversed=False, time_strings=None, depth=2):\n             d.hour,\n             d.minute,\n             d.second,\n+            tzinfo=d.tzinfo,\n         )\n     else:\n         pivot = d\n",
+      "semantic_match": 0.014705882352941176,
+      "model": "claude-3-haiku-20240307",
+      "input_tokens": 408,
+      "output_tokens": 213
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "success": true,
+      "generated_patch": "Here is the minimal patch to fix the bug:\n\n--- sympy/polys/polytools.py    2021-09-01 12:00:00.000000000 +0000\n+++ sympy/polys/polytools.py    2021-09-01 12:00:00.000000000 +0000\n@@ -2282,7 +2282,7 @@\n         return Mul(Poly(self), other)\n \n     def __rmul__(self, other):\n-        return Mul(other, Poly(self))\n+        return Mul(sympify(other), Poly(self))\n\n def Poly(expr, *gens, **kwargs):\n     \"\"\"\n     Construct a polynomial from a expression.",
+      "expected_patch": "diff --git a/sympy/polys/polytools.py b/sympy/polys/polytools.py\n--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -106,6 +106,7 @@ class Poly(Expr):\n \n     is_commutative = True\n     is_Poly = True\n+    _op_priority = 10.001\n \n     def __new__(cls, rep, *gens, **args):\n         \"\"\"Create a new polynomial instance out of something useful. \"\"\"\n",
+      "semantic_match": 0.10889774236387782,
+      "model": "claude-3-haiku-20240307",
+      "input_tokens": 274,
+      "output_tokens": 182
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "success": false,
+      "error": "API error 529: {\"type\":\"error\",\"error\":{\"type\":\"overloaded_error\",\"message\":\"Overloaded\"},\"request_id\":\"req_011CXAa1nPF9pN2uD5pEGezw\"}",
+      "semantic_match": 0.0,
+      "model": "claude-3-haiku-20240307"
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "success": true,
+      "generated_patch": "Here is a minimal patch that fixes the bug:\n\n```diff\n--- sympy/polys/polytools.py\t2023-03-06 15:23:44.000000000 +0000\n+++ sympy/polys/polytools.py\t2023-03-06 15:23:44.000000000 +0000\n@@ -2577,7 +2577,7 @@\n         if extension:\n             p = Poly(p, extension=extension)\n             factors = p.factor_list()[1]\n-            return Mul(*[Pow(factor, exp) for factor, exp in factors])\n+            return Mul(*[Pow(factor, exp) if factor else 1 for factor, exp in factors])\n         else:\n             return Mul(*[Pow(factor, exp) for factor, exp in p.factor_list()[1]])\n```\n\nThe change is in the `factor()` function in `sympy/polys/polytools.py`. The line `return Mul(*[Pow(factor, exp) for factor, exp in factors])` has been modified to handle the case where the factor is `0`. This ensures that the `y-1` factor is not dropped when `extension=[I]` is used.",
+      "expected_patch": "diff --git a/sympy/polys/factortools.py b/sympy/polys/factortools.py\n--- a/sympy/polys/factortools.py\n+++ b/sympy/polys/factortools.py\n@@ -1147,7 +1147,7 @@ def dmp_ext_factor(f, u, K):\n         return lc, []\n \n     f, F = dmp_sqf_part(f, u, K), f\n-    s, g, r = dmp_sqf_norm(f, u, K)\n+    s, g, r = dmp_sqf_norm(F, u, K)\n \n     factors = dmp_factor_list_include(r, u, K.dom)\n \n",
+      "semantic_match": 0.012237762237762238,
+      "model": "claude-3-haiku-20240307",
+      "input_tokens": 522,
+      "output_tokens": 297
+    },
+    {
+      "instance_id": "django__django-14534",
+      "success": true,
+      "generated_patch": "Here is the patch that fixes the bug:\n\n--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -400,7 +400,7 @@ class BoundWidget:\n     \"\"\"\n \n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs']['id']\n\n class BoundField:\n     \"\"\"",
+      "expected_patch": "diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -277,7 +277,7 @@ def template_name(self):\n \n     @property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs'].get('id')\n \n     @property\n     def choice_label(self):\n",
+      "semantic_match": 0.0091324200913242,
+      "model": "claude-3-haiku-20240307",
+      "input_tokens": 561,
+      "output_tokens": 119
+    }
+  ]
+}
