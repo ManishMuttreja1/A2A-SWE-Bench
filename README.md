@@ -1,264 +1,167 @@
-# SWEbench-A2A Framework ✅ FULLY IMPLEMENTED
+# SWE-Bench-A2A: A Framework for Contamination-Resistant and Process-Aware Agent Evaluation
 
-The SWEbench-A2A Framework: A **COMPLETE** implementation of the Agentified Agent Assessment (AAA) protocol for transforming SWE-bench from a static benchmark into a dynamic, agent-to-agent evaluation framework.
+[![Paper](https://img.shields.io/badge/Paper-PDF-red)](paper/a2a_swebench.pdf)
+[![AgentBeats](https://img.shields.io/badge/AgentBeats-Integration-blue)](https://agentbeats.dev/ManishMuttreja1/a2a-swe-bench)
 
-## 🎉 Implementation Status: 100% COMPLETE
+An evaluation framework for software engineering agents that quantifies **contamination** and **robustness gaps** in SWE-bench benchmarks.
 
-All requirements from "Enhancing SWE-bench with A2A.md" have been fully implemented, including:
-- ✅ Real SWE-bench dataset integration with HuggingFace Hub
-- ✅ Issue2Test reproduction gate with TDD enforcement  
-- ✅ Interactive dialogue system with ambiguity injection
-- ✅ Senior Developer code review persona
-- ✅ Retro-Holdout anti-contamination system
-- ✅ Advanced 6-category scoring metrics
-- ✅ End-to-end integration tested and validated
+## Key Results
 
-## Architecture Overview
+| Finding | Metric | Implication |
+|---------|--------|-------------|
+| **Contamination Gap** | 20.2% → 17.2% (-2.9%) | ~14% relative overstatement |
+| **Robustness Gap** | 60% semantic → 51.3% robust | ~15% relative overstatement |
+| **Proven Memorization** | sklearn-14141: 100% → 0% | Some "perfect" scores are recall, not reasoning |
+| **Mutation Resilience** | 22% | Patches match text but don't generalize |
 
-This implementation follows the strategic framework outlined in the analysis document, providing:
+**Conclusion**: Standard SWE-bench metrics likely overstate true engineering capability by **14-15%**.
 
-### Core Components (Phase 1 ✅)
+## Our Contributions
 
-1. **A2A Protocol Layer** (`src/a2a/`)
-   - Full JSON-RPC 2.0 over HTTP/S implementation
-   - Agent Card discovery mechanism
-   - Task lifecycle management (CREATED → IN_PROGRESS → COMPLETED/FAILED)
-   - Standardized artifact exchange
+1. **Framework**: SWE-Bench-A2A implementing A2A protocol with reproduction gates and process scoring
+2. **Contamination Detection**: Retro-holdout testing on 100 instances (7 with >50% drops)
+3. **Robustness Analysis**: Adversarial testing revealing 51.3% overall robustness vs 60% semantic
+4. **Cross-Provider Evaluation**: GPT-4o, Claude Sonnet 4.5, Opus 4.1, Haiku (100 instances each)
+5. **Open Infrastructure**: Dockerfiles, CI scaffolding, anti-contamination pipeline
 
-2. **Green Agent Service** (`src/green_agent/`)
-   - Orchestrates SWE-bench evaluation
-   - Dynamic environment provisioning with Docker
-   - Ambiguity injection to prevent memorization
-   - Self-healing infrastructure via synthesis engine
-
-3. **Purple Agent Framework** (`src/purple_agent/`)
-   - Wraps existing solvers as A2A-compliant agents
-   - Controller pattern for lifecycle management
-   - Multi-agent team coordination (Architect/Developer/Reviewer)
-
-4. **Environment Synthesis Engine** (`src/synthesis/`)
-   - Automatic dependency fixing
-   - LLM-powered error analysis and repair
-   - Self-healing build process
-
-### Enhanced Components (Phase 2 & 3 ✅)
-
-5. **Database & Persistence Layer** (`src/database/`)
-   - SQLAlchemy models for comprehensive data tracking
-   - Support for PostgreSQL with automatic migrations
-   - Models for Tasks, Assessments, Trajectories, Results, and Leaderboards
-   - Team registration and multi-agent tracking
-
-6. **Trajectory Capture System** (`src/trajectory/`)
-   - Real-time action logging with sequence tracking
-   - Comprehensive trajectory analysis and metrics
-   - Event streaming via Redis pub/sub
-   - Export capabilities (JSON, CSV, Markdown)
-   - Replay functionality for debugging
-
-7. **GitHub Harvester Service** (`src/harvester/`)
-   - Automated collection of fresh issues (< 24 hours old)
-   - Issue classification using ML heuristics
-   - Automatic scenario conversion from GitHub PRs
-   - Continuous harvesting with configurable intervals
-   - Support for 10+ major Python repositories
-
-8. **Leaderboard System** (`src/leaderboard/`)
-   - Multi-dimensional scoring algorithm
-   - Real-time rankings (overall, daily, weekly, scenario-specific)
-   - Agent performance statistics and trends
-   - Team evaluation support
-   - REST API for public access
-   - Export functionality for analysis
-
-## Key Features
-
-### Anti-Memorization Strategies
-- **Dynamic Task Mutation**: Variables renamed, files moved
-- **Ambiguity Injection**: Three types (lexical, syntactic, pragmatic)
-- **Living Benchmark**: Fresh issues from GitHub (< 24 hours old)
-
-### Infrastructure Improvements
-- **JIT Container Provisioning**: Warm pool management
-- **Self-Healing Builds**: Automatic dependency resolution
-- **Dynamic Environment Synthesis**: Fixes broken dependencies at runtime
-
-### Multi-Agent Support
-- **Team Coordination**: Triad pattern implementation
-- **Role Specialization**: Architect, Developer, Reviewer
-- **A2A Communication**: Standardized inter-agent messaging
-
-## Installation
+## Quick Start
 
 ```bash
-# Clone the repository
-git clone <repository>
-cd swebench-a2a
+# Clone
+git clone https://github.com/ManishMuttreja1/A2A-SWE-Bench.git
+cd A2A-SWE-Bench
 
-# Install dependencies
-pip install -e .
+# Install
+pip install -r requirements.txt
+
+# Run Green Agent (assessor)
+python start_green_agent.py
+
+# Run Purple Agent (solver) - in another terminal
+OPENAI_API_KEY=sk-... python start_purple_agent.py
+
+# Or run benchmark directly
+python test_gpt4o_a2a_full.py --tasks 10
 ```
 
-## Usage
+## Cross-Provider Results (100 instances each)
 
-### Running the Green Agent Service
+| Model | Avg Semantic Match | High Match (≥70%) | Provider |
+|-------|-------------------|-------------------|----------|
+| Claude Sonnet 4.5 | **27.7%** | 8 | Anthropic |
+| GPT-4o | 20.7% | **13** | OpenAI |
+| Claude Opus 4.1 | 18.8% | 3 | Anthropic |
+| Claude 3 Haiku | 18.5% | 1 | Anthropic |
+
+## Anti-Contamination Testing
+
+The retro-holdout pipeline applies semantic-preserving mutations to detect memorization:
 
 ```bash
-# Basic Green Agent
-python main.py green --port 8000
-
-# With anti-memorization features
-python main.py green --enable-ambiguity --enable-mutation --warm-pool
+# Run anti-contamination test
+python test_anti_contamination.py --tasks 100 --model gpt-4o
 ```
 
-### Running a Purple Agent
+**Results** (100 instances):
+- Verified avg: 20.2% → Mutated avg: 17.2%
+- 7 instances showed >50% contamination (complete memorization)
+- Key case: `sklearn-14141` dropped 100% → 0%
+
+## Adversarial Testing
+
+Tests patch robustness beyond repository test suites:
 
 ```bash
-# Simple solver agent
-python main.py purple --port 8001 --model simple-solver
+# Run adversarial test
+python test_adversarial.py --tasks 10 --model gpt-5.2
 ```
 
-### Running a Multi-Agent Team
+**Results** (10 instances):
+| Test Type | Score |
+|-----------|-------|
+| Fuzz Testing | 97.7% |
+| Adversarial Edge Cases | 44.0% |
+| Mutation Testing | **22.0%** |
+| Overall Robustness | 51.3% |
 
-```bash
-# Start individual agents first
-python main.py purple --port 8001  # Architect
-python main.py purple --port 8002  # Developer  
-python main.py purple --port 8003  # Reviewer
+The low mutation score (22%) proves patches are **brittle**—they match expected text but break when code is slightly altered.
 
-# Then coordinate them as a team
-python main.py team \
-  --architect-url http://localhost:8001 \
-  --developer-url http://localhost:8002 \
-  --reviewer-url http://localhost:8003
+## Architecture
+
 ```
-
-### Running a Demo
-
-```bash
-# Runs a complete evaluation demo
-python main.py demo
+┌─────────────────┐         ┌─────────────────┐
+│   Green Agent   │◄───────►│  Purple Agent   │
+│   (Assessor)    │  A2A    │   (Solver)      │
+├─────────────────┤         ├─────────────────┤
+│ • Task dispatch │         │ • LLM solver    │
+│ • Verification  │         │ • Patch gen     │
+│ • Scoring       │         │ • Multi-provider│
+└────────┬────────┘         └─────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Anti-Contamination │
+├─────────────────┤
+│ • Retro-holdout │
+│ • Adversarial   │
+│ • Fresh harvest │
+└─────────────────┘
 ```
-
-## API Endpoints
-
-### Green Agent (Port 8000)
-- `GET /.well-known/agent-card.json` - Agent discovery
-- `POST /a2a/task` - Create evaluation task
-- `GET /a2a/task/{task_id}` - Get task status
-- `GET /a2a/task/{task_id}/stream` - Stream updates (SSE)
-
-### Purple Agent (Port 8001+)
-- Same A2A endpoints for task handling
-- Receives tasks from Green Agent
-- Submits patches as artifacts
-
-### Leaderboard API (Port 8080)
-- `GET /api/leaderboard` - Get leaderboard entries
-- `GET /api/leaderboard/agent/{agent_id}` - Agent statistics
-- `GET /api/leaderboard/scenario/{scenario_id}` - Scenario leaderboard
-- `GET /api/leaderboard/trending` - Trending agents
-- `POST /api/leaderboard/update/{assessment_id}` - Update rankings
-- `GET /api/leaderboard/stats` - Global statistics
-- `GET /api/leaderboard/export` - Export data (JSON/CSV)
 
 ## Project Structure
 
 ```
 swebench-a2a/
 ├── src/
-│   ├── a2a/              # A2A protocol implementation
-│   │   ├── protocol.py    # Core protocol definitions
-│   │   ├── server.py      # A2A server
-│   │   └── client.py      # A2A client
-│   ├── green_agent/       # Green Agent (Assessor)
-│   │   ├── service.py     # Main service
-│   │   ├── scenario_manager.py
-│   │   ├── environment_orchestrator.py
-│   │   ├── verification_engine.py
-│   │   └── ambiguity_layer.py
-│   ├── purple_agent/      # Purple Agent (Participant)
-│   │   ├── wrapper.py     # Agent wrapper
-│   │   ├── controller.py  # Lifecycle management
-│   │   └── multi_agent.py # Team coordination
-│   ├── synthesis/         # Environment synthesis
-│   │   ├── engine.py      # Self-healing engine
-│   │   ├── dependency_fixer.py
-│   │   └── llm_synthesizer.py
-│   ├── database/          # Persistence layer (Phase 2)
-│   │   ├── models.py      # SQLAlchemy models
-│   │   └── connection.py  # Database management
-│   ├── trajectory/        # Trajectory capture (Phase 2)
-│   │   ├── capture.py     # Action logging
-│   │   ├── analyzer.py    # Metrics computation
-│   │   └── streaming.py   # Real-time events
-│   ├── harvester/         # GitHub harvester (Phase 3)
-│   │   ├── github_harvester.py
-│   │   ├── issue_classifier.py
-│   │   └── scenario_converter.py
-│   └── leaderboard/       # Leaderboard system (Phase 3)
-│       ├── leaderboard_service.py
-│       ├── scoring.py     # Scoring algorithm
-│       └── api.py         # REST API
-├── main.py               # Entry point
-├── pyproject.toml        # Project configuration
-├── docker-compose.yml    # Multi-service deployment
-├── Dockerfile           # Container image
-└── README.md            # This file
+│   ├── a2a/                 # A2A protocol implementation
+│   ├── green_agent/         # Assessor agent
+│   ├── purple_agent/        # Solver agent
+│   ├── anti_contamination/  # Retro-holdout pipeline
+│   ├── adversarial/         # Fuzz, edge case, mutation testing
+│   ├── scoring/             # Multi-dimensional metrics
+│   └── trajectory/          # Action logging
+├── paper/
+│   ├── a2a_swebench.tex     # Paper source
+│   └── a2a_swebench.pdf     # Compiled paper
+├── leaderboard/             # AgentBeats config
+├── test_*.py                # Benchmark scripts
+├── Dockerfile.green         # Green Agent container
+├── Dockerfile.purple        # Purple Agent container
+└── scenario.toml            # AgentBeats scenario config
 ```
 
-## Implementation Status
+## AgentBeats Integration
 
-### Phase 1: Foundation ✅ (Complete)
-- ✅ A2A protocol core implementation
-- ✅ Basic Green/Purple agent services
-- ✅ Docker orchestration with warm pools
-- ✅ Environment synthesis engine
-- ✅ Ambiguity injection layer
+This framework integrates with [AgentBeats](https://agentbeats.dev/) for standardized evaluation:
 
-### Phase 2: Enhancement ✅ (Complete)
-- ✅ Database persistence layer with SQLAlchemy
-- ✅ Trajectory capture and analysis system
-- ✅ Real-time event streaming with Redis
-- ✅ Comprehensive metrics computation
-- ✅ Export capabilities for trajectories
-- ⏳ Enhanced synthesis engine with caching
-- ⏳ Advanced code mutation strategies
+```bash
+# Generate Docker Compose from scenario
+python generate_compose.py --scenario scenario.toml
 
-### Phase 3: Scale ✅ (Mostly Complete)
-- ✅ GitHub harvester for fresh scenarios
-- ✅ Issue classification and conversion
-- ✅ Multi-dimensional leaderboard system
-- ✅ REST API for public access
-- ✅ Team evaluation support
-- ✅ Trending agent analysis
-- ⏳ Public service deployment (Kubernetes)
-- ⏳ Federation registry
+# Run assessment
+docker compose up
+```
 
-### Phase 4: Advanced (Future)
-- ⏳ Red Agent adversarial testing
-- ⏳ Advanced mutation engine
-- ⏳ Cross-platform federation
-- ⏳ ML-based performance prediction
+See `.github/workflows/assessment.yml` for CI automation.
 
-## Benefits Over Static SWE-bench
+## Limitations
 
-| Aspect | Static SWE-bench | SWEbench-A2A Framework |
-|--------|-----------------|-------------------|
-| **Memorization** | 76% blind localization | Dynamic mutation prevents memorization |
-| **Infrastructure** | Brittle Docker builds | Self-healing synthesis |
-| **Observability** | Final output only | Full trajectory logging |
-| **Interoperability** | Custom adapters needed | Standardized A2A protocol |
-| **Freshness** | Static dataset | Living benchmark with fresh issues |
+- **Semantic similarity ≠ execution pass/fail**: Metrics are textual, not execution-based
+- **Process scoring not computed**: Defined mathematically but not implemented in experiments
+- **Single-run variance**: 7-18% variance observed; comparisons are statistically fragile
+- **Adversarial sample size**: Only 10 instances tested
 
-## Contributing
+## Citation
 
-This is a reference implementation of the AAA framework. Contributions welcome for:
-- Additional synthesis strategies
-- More sophisticated ambiguity injection
-- Integration with real LLM providers
-- Production deployment configurations
+```bibtex
+@article{muttreja2026swebench-a2a,
+  title={SWE-Bench-A2A: A Framework for Contamination-Resistant and Process-Aware Agent Evaluation},
+  author={Muttreja, Manish},
+  journal={arXiv preprint},
+  year={2026}
+}
+```
 
 ## License
 
-MIT License - See LICENSE file for details
+MIT License - See LICENSE file for details.
