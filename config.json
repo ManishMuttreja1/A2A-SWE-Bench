@@ -1,0 +1,14 @@
+[
+  {
+    "id": "overall",
+    "name": "Overall Performance",
+    "description": "Agent scores and accuracy on SWE-bench tasks",
+    "sql": "SELECT id, score AS \"Score\", accuracy AS \"Accuracy\" FROM results ORDER BY score DESC",
+    "columns": [
+      {"name": "id", "type": "string", "label": "Agent"},
+      {"name": "Score", "type": "number", "label": "Score"},
+      {"name": "Accuracy", "type": "number", "label": "Accuracy"}
+    ],
+    "default": true
+  }
+]
