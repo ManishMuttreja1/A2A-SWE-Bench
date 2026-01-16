@@ -1,0 +1,88 @@
+name: Run AgentBeats Assessment
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'scenario.toml'
+  workflow_dispatch:
+    inputs:
+      num_tasks:
+        description: 'Number of tasks to run'
+        required: false
+        default: '10'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  run-assessment:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        pip install tomli-w requests docker
+        
+    - name: Generate Docker Compose
+      run: |
+        python generate_compose.py --scenario scenario.toml
+        
+    - name: Create output directory
+      run: mkdir -p output results
+        
+    - name: Run Assessment
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        docker compose up --abort-on-container-exit
+        
+    - name: Collect Results
+      if: always()
+      run: |
+        # Copy results from output to results folder
+        cp -r output/* results/ 2>/dev/null || true
+        ls -la results/
+        
+    - name: Create results JSON
+      if: success()
+      run: |
+        TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+        mv results/*.json "results/assessment_${TIMESTAMP}.json" 2>/dev/null || true
+        
+    - name: Upload Results Artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: assessment-results
+        path: results/
+        
+    - name: Create Submission PR
+      if: success()
+      uses: peter-evans/create-pull-request@v5
+      with:
+        commit-message: "Add assessment results"
+        title: "🎯 Assessment Results - ${{ github.run_id }}"
+        body: |
+          ## Assessment Results
+          
+          This PR contains the results from assessment run #${{ github.run_id }}.
+          
+          - **Triggered by**: ${{ github.event_name }}
+          - **Commit**: ${{ github.sha }}
+          - **Workflow**: ${{ github.workflow }}
+          
+          Merge this PR to add results to the leaderboard.
+        branch: assessment-results-${{ github.run_id }}
+        base: main
+        add-paths: |
+          results/

@@ -1,93 +1,18 @@
 # AgentBeats Scenario Configuration for SWE-bench A2A
-# This file defines the assessment setup for running SWE-bench evaluations
-
-[metadata]
-name = "SWE-bench A2A Enhanced Evaluation"
-version = "1.0.0"
-description = """
-Enhanced SWE-bench evaluation with:
-- Issue2Test reproduction gate
-- Interactive dialogue system
-- Senior Developer code review
-- Retro-Holdout anti-contamination
-- 6-category comprehensive scoring
-"""
+# Run: python generate_compose.py --scenario scenario.toml
 
 [green_agent]
-# The evaluator agent that runs the assessment
-agentbeats_id = "swebench-a2a-evaluator"  # Will be assigned after registration
-docker_image = "ghcr.io/yourusername/swebench-a2a-green:latest"
-name = "swebench-green"
-
-# Environment variables for the Green Agent
-env = {
-    OPENAI_API_KEY = "${OPENAI_API_KEY}",
-    HF_TOKEN = "${HF_TOKEN}",
-    DOCKER_ENABLED = "false",
-    ENABLE_DIALOGUE = "true",
-    ENABLE_REPRODUCTION = "true",
-    ENABLE_REVIEW = "true",
-    ENABLE_MUTATIONS = "true",
-    SWEBENCH_DATASET = "verified",
-    PORT = "8000"
-}
-
-# Volumes for data persistence
-volumes = [
-    "./data:/app/data:rw",
-    "./cache:/app/cache:rw"
-]
-
-# Network configuration
-ports = ["8000:8000"]
+# Get this UUID from https://agentbeats.dev/ManishMuttreja1/a2a-swe-bench
+# Click "Copy agent ID" button
+agentbeats_id = "PASTE_GREEN_AGENT_UUID_HERE"
+env = { OPENAI_API_KEY = "${OPENAI_API_KEY}" }
 
 [[participants]]
-# Example Purple Agent (solver) to be evaluated
-agentbeats_id = "example-purple-agent"  # Will be assigned after registration
-docker_image = "ghcr.io/yourusername/swebench-a2a-purple:latest"
-name = "purple-agent"
+# Get this UUID from https://agentbeats.dev/ManishMuttreja1/a2a-swe-bench-purple
+# Click "Copy agent ID" button
+agentbeats_id = "PASTE_PURPLE_AGENT_UUID_HERE"
+name = "swe-bench-purple"
+env = { OPENAI_API_KEY = "${OPENAI_API_KEY}" }
 
-env = {
-    GREEN_AGENT_URL = "http://swebench-green:8000",
-    OPENAI_API_KEY = "${OPENAI_API_KEY}"  # If the agent needs it
-}
-
-# You can add multiple participants
-# [[participants]]
-# agentbeats_id = "another-purple-agent"
-# docker_image = "another/purple:latest"
-# name = "purple-agent-2"
-
-[assessment]
-# Assessment configuration
-timeout_seconds = 3600  # 1 hour per assessment
-max_tasks = 10  # Number of SWE-bench tasks to evaluate
-parallel_tasks = 1  # Run tasks sequentially for now
-
-# Scoring weights for comprehensive evaluation
-[assessment.scoring]
-correctness_weight = 0.35
-process_weight = 0.20
-efficiency_weight = 0.15
-collaboration_weight = 0.15
-understanding_weight = 0.10
-adaptation_weight = 0.05
-
-# Feature flags
-[assessment.features]
-dialogue_enabled = true
-reproduction_gate_enabled = true
-code_review_enabled = true
-mutations_enabled = true
-trajectory_capture = true
-
-# Docker compose configuration
-[docker]
-version = "3.8"
-networks = ["swebench-network"]
-
-# Logging configuration
-[logging]
-level = "INFO"
-format = "json"
-output = "./logs/assessment.log"
+[config]
+num_tasks = 10
