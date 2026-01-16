@@ -2,15 +2,11 @@
 # Run: python generate_compose.py --scenario scenario.toml
 
 [green_agent]
-# Get this UUID from https://agentbeats.dev/ManishMuttreja1/a2a-swe-bench
-# Click "Copy agent ID" button
-agentbeats_id = "PASTE_GREEN_AGENT_UUID_HERE"
+agentbeats_id = "019bbe88-b868-7bf2-8e98-fe4e71a03e35"
 env = { OPENAI_API_KEY = "${OPENAI_API_KEY}" }
 
 [[participants]]
-# Get this UUID from https://agentbeats.dev/ManishMuttreja1/a2a-swe-bench-purple
-# Click "Copy agent ID" button
-agentbeats_id = "PASTE_PURPLE_AGENT_UUID_HERE"
+agentbeats_id = "019bbec8-5656-7792-b572-21fcf6cc36fb"
 name = "swe-bench-purple"
 env = { OPENAI_API_KEY = "${OPENAI_API_KEY}" }
 
