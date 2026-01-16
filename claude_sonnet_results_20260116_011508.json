@@ -1,0 +1,85 @@
+{
+  "model": "sonnet",
+  "model_id": "claude-sonnet-4-20250514",
+  "num_tasks": 10,
+  "successful": 0,
+  "failed": 10,
+  "avg_semantic_match": 0,
+  "high_match_count": 0,
+  "perfect_count": 0,
+  "total_input_tokens": 0,
+  "total_output_tokens": 0,
+  "timestamp": "2026-01-16T01:15:08.949092",
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'messages'",
+      "semantic_match": 0.0,
+      "model": "claude-sonnet-4-20250514"
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'messages'",
+      "semantic_match": 0.0,
+      "model": "claude-sonnet-4-20250514"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'messages'",
+      "semantic_match": 0.0,
+      "model": "claude-sonnet-4-20250514"
+    },
+    {
+      "instance_id": "django__django-16082",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'messages'",
+      "semantic_match": 0.0,
+      "model": "claude-sonnet-4-20250514"
+    },
+    {
+      "instance_id": "django__django-13406",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'messages'",
+      "semantic_match": 0.0,
+      "model": "claude-sonnet-4-20250514"
+    },
+    {
+      "instance_id": "django__django-16429",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'messages'",
+      "semantic_match": 0.0,
+      "model": "claude-sonnet-4-20250514"
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'messages'",
+      "semantic_match": 0.0,
+      "model": "claude-sonnet-4-20250514"
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'messages'",
+      "semantic_match": 0.0,
+      "model": "claude-sonnet-4-20250514"
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'messages'",
+      "semantic_match": 0.0,
+      "model": "claude-sonnet-4-20250514"
+    },
+    {
+      "instance_id": "django__django-14534",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'messages'",
+      "semantic_match": 0.0,
+      "model": "claude-sonnet-4-20250514"
+    }
+  ]
+}

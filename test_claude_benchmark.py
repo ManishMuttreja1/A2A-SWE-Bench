@@ -15,13 +15,12 @@ import httpx
 class ClaudeBenchmarkAgent:
     """Benchmark agent for Claude models using Messages API directly"""
     
-    # Model mapping - use models available on your API key
+    # Model mapping - correct model names for 2025
     MODELS = {
-        "opus": "claude-3-opus-20240229",
-        "opus-4.5": "claude-3-opus-20240229", 
-        "sonnet": "claude-3-sonnet-20240229",
-        "sonnet-4": "claude-3-sonnet-20240229",
-        "sonnet-3.5": "claude-3-sonnet-20240229",
+        "opus": "claude-opus-4-1",
+        "opus-4.1": "claude-opus-4-1",
+        "sonnet": "claude-sonnet-4-5-20250929",
+        "sonnet-4.5": "claude-sonnet-4-5-20250929",
         "haiku": "claude-3-haiku-20240307",
     }
     
@@ -232,7 +231,7 @@ async def main():
     
     parser = argparse.ArgumentParser(description="Benchmark Claude models on SWE-bench")
     parser.add_argument("--model", type=str, default="sonnet", 
-                        choices=["opus", "opus-4.5", "sonnet", "sonnet-4", "sonnet-3.5", "haiku"],
+                        choices=["opus", "opus-4.1", "sonnet", "sonnet-4.5", "haiku"],
                         help="Claude model to use")
     parser.add_argument("--tasks", type=int, default=100, help="Number of tasks to run")
     args = parser.parse_args()

@@ -1,0 +1,1015 @@
+{
+  "model": "sonnet",
+  "model_id": "claude-sonnet-4-5-20250929",
+  "num_tasks": 100,
+  "successful": 100,
+  "failed": 0,
+  "avg_semantic_match": 0.2773625993985437,
+  "high_match_count": 8,
+  "perfect_count": 0,
+  "total_input_tokens": 68338,
+  "total_output_tokens": 35173,
+  "timestamp": "2026-01-16T01:52:04.415530",
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -454,6 +454,12 @@ class PythonCodePrinter(AbstractPythonCodePrinter):\n     def _print_NoneType(self, arg):\n         return 'None'\n \n+    def _print_Min(self, expr):\n+        return \"min({})\".format(\", \".join(self._print(arg) for arg in expr.args))\n+\n+    def _print_Max(self, expr):\n+        return \"max({})\".format(\", \".join(self._print(arg) for arg in expr.args))\n+\n \n for k in PythonCodePrinter._kf:\n     setattr(PythonCodePrinter, '_print_%s' % k, _print_known_func)\n```",
+      "expected_patch": "diff --git a/sympy/printing/pycode.py b/sympy/printing/pycode.py\n--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -18,6 +18,8 @@\n \n _known_functions = {\n     'Abs': 'abs',\n+    'Min': 'min',\n+    'Max': 'max',\n }\n _known_functions_math = {\n     'acos': 'acos',\n",
+      "semantic_match": 0.02072538860103627,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 294,
+      "output_tokens": 222
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -39,9 +39,6 @@\n     def _eval_ask(self, assumptions):\n         return self.lhs in self.rhs\n \n-    def as_set(self):\n-        return self\n-\n     @property\n     def binary_symbols(self):\n         return set().union(*[i.binary_symbols\n```",
+      "expected_patch": "diff --git a/sympy/sets/contains.py b/sympy/sets/contains.py\n--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -45,4 +45,4 @@ def binary_symbols(self):\n             isinstance(i, (Eq, Ne))])\n \n     def as_set(self):\n-        raise NotImplementedError()\n+        return self.args[1]\n",
+      "semantic_match": 0.015122873345935728,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 339,
+      "output_tokens": 116
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -64,6 +64,7 @@ def show_versions():\n     deps = [\n         \"pip\",\n         \"setuptools\",\n+        \"joblib\",\n         \"sklearn\",\n         \"numpy\",\n         \"scipy\",\n```",
+      "expected_patch": "diff --git a/sklearn/utils/_show_versions.py b/sklearn/utils/_show_versions.py\n--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -48,6 +48,7 @@ def _get_deps_info():\n         \"Cython\",\n         \"pandas\",\n         \"matplotlib\",\n+        \"joblib\",\n     ]\n \n     def get_version(module):\n",
+      "semantic_match": 0.16738197424892703,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 129,
+      "output_tokens": 92
+    },
+    {
+      "instance_id": "django__django-16082",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -590,6 +590,7 @@\n \n \n class Mod(CombinedExpression):\n+    \"\"\"An expression representing the modulo operation.\"\"\"\n     operator = '%%'\n-    # Use ArithmeticError for divide by zero as a more generic exception\n-    pass\n+\n+    def __init__(self, lhs, rhs, output_field=None):\n+        super().__init__(lhs, self.operator, rhs, output_field)\n```\n\nWait, let me check the actual structure. The issue is about resolving output_field. Let me provide the correct patch:\n\n```diff\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -590,7 +590,16 @@\n \n \n class Mod(CombinedExpression):\n-    \"\"\"An expression representing the modulo operation.\"\"\"\n+    \"\"\"\n+    An expression representing the modulo operation.\n+    \"\"\"\n     operator = '%%'\n-\n-    def __init__(self, lhs, rhs, output_field=None):\n-        super().__init__(lhs, self.operator, rhs, output_field)\n+\n+    def _resolve_output_field(self):\n+        # Resolve output_field like other arithmetic operations\n+        if isinstance(self.lhs, (models.DecimalField, models.FloatField)) or isinstance(\n+            self.rhs, (models.DecimalField, models.FloatField)\n+        ):\n+            return models.DecimalField()\n+        return super()._resolve_output_field()\n```\n\nActually, let me check how other operators handle this:\n\n```diff\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -589,8 +589,11 @@\n \n \n class Mod(CombinedExpression):\n-    \"\"\"An expression representing the modulo operation.\"\"\"\n+    \"\"\"\n+    An expression representing the modulo operation.\n+    \"\"\"\n     operator = '%%'\n+    _output_field_or_none = True\n \n \n class Pow(CombinedExpression):\n```",
+      "expected_patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -533,6 +533,7 @@ def __hash__(self):\n             Combinable.SUB,\n             Combinable.MUL,\n             Combinable.DIV,\n+            Combinable.MOD,\n         )\n     },\n     # Bitwise operators.\n",
+      "semantic_match": 0.09812847749114821,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 152,
+      "output_tokens": 574
+    },
+    {
+      "instance_id": "django__django-13406",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1179,6 +1179,8 @@\n         c.query = self.query.chain()\n         c._sticky_filter = self._sticky_filter\n         c._for_write = self._for_write\n+        c._iterable_class = self._iterable_class\n+        c._fields = self._fields\n         c._prefetch_related_lookups = self._prefetch_related_lookups[:]\n         c._known_related_objects = self._known_related_objects\n         c._iterable_class = self._iterable_class\n\n</patch>",
+      "expected_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -210,6 +210,8 @@ def query(self):\n \n     @query.setter\n     def query(self, value):\n+        if value.values_select:\n+            self._iterable_class = ValuesIterable\n         self._query = value\n \n     def as_manager(cls):\n",
+      "semantic_match": 0.18838709677419355,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1082,
+      "output_tokens": 173
+    },
+    {
+      "instance_id": "django__django-16429",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -93,7 +93,7 @@\n                 months = (delta.days // 30) - 1\n             else:\n                 months = delta.days // 30\n-            pivot = datetime.datetime(d.year, d.month, d.day)\n+            pivot = datetime.datetime(d.year, d.month, d.day, tzinfo=d.tzinfo)\n             pivot = pivot + datetime.timedelta(days=months * 30)\n             if now - pivot >= datetime.timedelta(days=chunk):\n                 months += 1\n```",
+      "expected_patch": "diff --git a/django/utils/timesince.py b/django/utils/timesince.py\n--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -97,6 +97,7 @@ def timesince(d, now=None, reversed=False, time_strings=None, depth=2):\n             d.hour,\n             d.minute,\n             d.second,\n+            tzinfo=d.tzinfo,\n         )\n     else:\n         pivot = d\n",
+      "semantic_match": 0.12875536480686695,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 408,
+      "output_tokens": 171
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sympy/core/expr.py\n+++ b/sympy/core/expr.py\n@@ -109,6 +109,11 @@ class Expr(Basic, EvalfMixin):\n         return Add(self, other)\n \n     def __mul__(self, other):\n+        from sympy.polys import Poly\n+        if isinstance(other, Poly):\n+            # Let Poly handle the multiplication\n+            return NotImplemented\n+        \n         return Mul(self, other)\n \n     def __rmul__(self, other):\n\n```",
+      "expected_patch": "diff --git a/sympy/polys/polytools.py b/sympy/polys/polytools.py\n--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -106,6 +106,7 @@ class Poly(Expr):\n \n     is_commutative = True\n     is_Poly = True\n+    _op_priority = 10.001\n \n     def __new__(cls, rep, *gens, **args):\n         \"\"\"Create a new polynomial instance out of something useful. \"\"\"\n",
+      "semantic_match": 0.16115107913669063,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 274,
+      "output_tokens": 146
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "success": true,
+      "generated_patch": "<thinking>\nLet's first understand the problem. The `symbols` function in SymPy is supposed to create function objects when `cls=smp.Function` is specified. However, when there's an extra layer of parentheses like `symbols(('q:2', 'u:2'), cls=smp.Function)`, it creates Symbol objects instead of Function objects.\n\nLet me look at the symbols function implementation. The symbols function is likely in `sympy/core/symbol.py`.\n\nThe issue is that when you do:\n```python\nq, u = smp.symbols(('q:2', 'u:2'), cls=smp.Function)\n```\n\nThe extra layer of parentheses causes `('q:2', 'u:2')` to be treated as a single tuple argument, rather than two separate string arguments.\n\nWithout the extra parentheses:\n```python\nq, u = smp.symbols('q:2', 'u:2', cls=smp.Function)\n```\nThis would pass 'q:2' and 'u:2' as separate arguments.\n\nWith extra parentheses:\n```python\nq, u = smp.symbols(('q:2', 'u:2'), cls=smp.Function)\n```\nThis passes a single tuple `('q:2', 'u:2')` as the first argument.\n\nThe symbols function probably handles both cases, but when it detects a tuple/list as the first argument, it might be losing track of the `cls` parameter when processing the elements.\n\nLet me think about what the code might look like. The `symbols` function probably:\n1. Takes `*args` as the names\n2. If the first arg is a tuple/list/iterable, it unpacks it\n3. For each name string, it processes ranges like 'q:2' into ['q0', 'q1']\n4. Creates symbols for each processed name\n\nThe bug is likely that when it processes the tuple, it's not passing the `cls` parameter down correctly.\n\nLet me look for the symbols function. It's in `sympy/core/symbol.py`.\n\nLooking at typical SymPy code structure, the symbols function likely has something like:\n\n```python\ndef symbols(names, **args):\n    # Handle if names is a sequence\n    if isinstance(names, (tuple, list)):\n        # Process each element\n        result = []\n        for name in names:\n            result.append(symbols(name, **args))  # Recursive call\n        return tuple(result) if isinstance(names, tuple) else result\n    # ... rest of processing\n```\n\nThe key is that when it recurses, it needs to pass `**args` (which contains `cls`) to the recursive call.\n\nLet me think about the actual structure. The `symbols` function signature is probably:\n```python\ndef symbols(names, **args):\n```\n\nWhere `names` can be:\n- A single string: \"x\"\n- Multiple strings: \"x y\" or \"x, y\"\n- A tuple/list of strings: (\"x\", \"y\")\n- Range notation: \"x:3\" -> x0, x1, x2\n\nWhen you call `symbols(('q:2', 'u:2'), cls=Function)`, the names parameter receives the tuple `('q:2', 'u:2')`.\n\nThe function should:\n1. Detect it's a tuple\n2. Recursively call symbols on each element with the same **args\n3. Return a tuple of results\n\nBut somewhere in this process, it's not passing the `cls` parameter correctly.\n\nLet me trace through what likely happens:\n1. `symbols(('q:2', 'u:2'), cls=Function)` is called\n2. It sees names is a tuple\n3. It iterates over the tuple: 'q:2' and 'u:2'\n4. For each, it should call `symbols('q:2', cls=Function)` and `symbols('u:2', cls=Function)`\n5. Each of those should expand to [q0, q1] and [u0, u1] where each qi and ui is a Function\n\nThe bug is probably in step 4 - when iterating over the tuple, it's not passing the `cls` parameter.\n\nLet me look for the actual code. The file should be `sympy/core/symbol.py`.\n\nHere's what I think the buggy code looks like:\n\n```python\ndef symbols(names, **args):\n    if not isinstance(names, str):\n        # Handle sequence\n        if isinstance(names, (tuple, list, set)):\n            result = []\n            for name in names:\n                result.append(symbols(name))  # BUG: Missing **args\n            return type(names)(result)\n```\n\nThe fix would be:\n```python\ndef symbols(names, **args):\n    if not isinstance(names, str):\n        # Handle sequence\n        if isinstance(names, (tuple, list, set)):\n            result = []\n            for name in names:\n                result.append(symbols(name, **args))  # FIXED: Added **args\n            return type(names)(result)\n```\n\nNow let me find the actual location in the code. Based on the repository structure, it should be in `sympy/core/symbol.py`.\n\nLet me write the patch based on the typical structure of the symbols function. The key issue is that when a sequence is passed as the first argument, the recursive call to symbols doesn't pass along the **args (which contains cls).\n\nHere's the patch I'll create:\n\n```diff\n--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -XXX,X +XXX,X @@ def symbols(names, **args):\n     if not isinstance(names, str):\n         if is_sequence(names):\n             result = []\n             for name in names:\n-                result.append(symbols(name))\n+                result.append(symbols(name, **args))\n             return type(names)(result)\n```\n\nBut I need to find the exact line numbers and context. Let me think about the structure more carefully.\n\nActually, looking at SymPy's patterns, the function probably checks for iterables in a specific way. Let me think about the exact code pattern.\n\nThe symbols function in sympy/core/symbol.py probably has a structure like:\n\n```python\ndef symbols(names, **args):\n    result = []\n    \n    if is_sequence(names):\n        # Handle tuple/list\n        for name in names:\n            result.extend(symbols(name, **args))  # or append\n        return type(names)(result) if len(result) > 1 else result[0]\n    \n    # Handle string parsing\n    if isinstance(names, str):\n        # Parse string, handle ranges, etc.\n        ...\n```\n\nThe bug is likely in the part where it handles sequences - it's probably not passing **args.\n\nLet me construct a proper patch. I'll need to look at the actual structure of the file. But based on the bug description, the fix is clear: when recursively calling `symbols` for elements in a sequence, we need to pass `**args`.\n\nHere's my best guess at the patch:\n\n```diff\n--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -XXX,7 +XXX,7 @@ def symbols(names, **args):\n     if is_sequence(names):\n         result = []\n         for name in names:\n-            result.append(symbols(name))\n+            result.append(symbols(name, **args))\n         return type(names)(result)\n```\n\nBut I need to be more specific. Let me think about where exactly in the function this would be.\n\nLooking at typical SymPy code and the bug report, the symbols function probably has this structure:\n\n```python\ndef symbols(names, **args):\n    # ... some initial setup ...\n    \n    # Handle if names is a sequence (tuple, list)\n    if not isinstance(names, str):\n        if is_sequence(names):\n            result = []\n            for name in names:\n                result.append(symbols(name))  # BUG HERE\n            return type(names)(result)\n    \n    # ... rest of the function for handling strings ...\n```\n\nThe fix is to add **args to the recursive call.\n\nLet me write a complete patch. I'll look for the pattern where symbols is defined and where it handles sequences.\n\nActually, let me reconsider. The function signature might be:\n```python\ndef symbols(names, **args):\n```\n\nAnd early in the function, it probably checks if names is a non-string iterable. If so, it recursively calls symbols on each element.\n\nHere's my patch:\n\n```diff\n--- a",
+      "expected_patch": "diff --git a/sympy/core/symbol.py b/sympy/core/symbol.py\n--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -791,7 +791,7 @@ def literal(s):\n         return tuple(result)\n     else:\n         for name in names:\n-            result.append(symbols(name, **args))\n+            result.append(symbols(name, cls=cls, **args))\n \n         return type(names)(result)\n \n",
+      "semantic_match": 0.01010392609699769,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 299,
+      "output_tokens": 2048
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -5855,7 +5855,7 @@\n             result = _symbolic_factor_list(f, opt, method)\n \n         if result is not None:\n-            return _symbolic_factor(result[0], result[1])\n+            return _symbolic_factor(result[0], result[1], opt)\n \n     return f.as_expr()\n \n@@ -5886,7 +5886,7 @@\n     return poly, polyys\n \n \n-def _symbolic_factor(coeff, factors):\n+def _symbolic_factor(coeff, factors, opt=None):\n     \"\"\"Return factored expression from ``coeff`` and ``factors``.\"\"\"\n     factors = Mul(*[arg.as_expr()**k for arg, k in factors])\n     return coeff*factors\n@@ -5968,7 +5968,10 @@\n                 factors.append((g, k))\n \n         if not pure_translation:\n-            factors = [(arg.subs(reps_reverse), k) for arg, k in factors]\n+            # Only reverse substitution for generators that are in the polynomial\n+            gens_in_poly = set(f.gens)\n+            reps_reverse_filtered = {k: v for k, v in reps_reverse.items() if k in gens_in_poly}\n+            factors = [(arg.subs(reps_reverse_filtered), k) for arg, k in factors]\n \n         return coeff, factors\n \n\n</patch>",
+      "expected_patch": "diff --git a/sympy/polys/factortools.py b/sympy/polys/factortools.py\n--- a/sympy/polys/factortools.py\n+++ b/sympy/polys/factortools.py\n@@ -1147,7 +1147,7 @@ def dmp_ext_factor(f, u, K):\n         return lc, []\n \n     f, F = dmp_sqf_part(f, u, K), f\n-    s, g, r = dmp_sqf_norm(f, u, K)\n+    s, g, r = dmp_sqf_norm(F, u, K)\n \n     factors = dmp_factor_list_include(r, u, K.dom)\n \n",
+      "semantic_match": 0.07234042553191489,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 522,
+      "output_tokens": 406
+    },
+    {
+      "instance_id": "django__django-14534",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -291,7 +291,7 @@ class BoundWidget:\n \n     @property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs'].get('id', '')\n \n     @property\n     def choice_label(self):\n```",
+      "expected_patch": "diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -277,7 +277,7 @@ def template_name(self):\n \n     @property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs'].get('id')\n \n     @property\n     def choice_label(self):\n",
+      "semantic_match": 0.7926267281105991,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 561,
+      "output_tokens": 125
+    },
+    {
+      "instance_id": "psf__requests-1921",
+      "success": true,
+      "generated_patch": "```diff\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -450,7 +450,7 @@\n         headers = merge_setting(request.headers, self.headers, dict_class=CaseInsensitiveDict)\n \n         # Remove headers set to None\n-        for (k, v) in request.headers.items():\n+        for (k, v) in headers.items():\n             if v is None:\n                 del headers[k]\n \n```",
+      "expected_patch": "diff --git a/requests/sessions.py b/requests/sessions.py\n--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -59,6 +59,8 @@ def merge_setting(request_setting, session_setting, dict_class=OrderedDict):\n         if v is None:\n             del merged_setting[k]\n \n+    merged_setting = dict((k, v) for (k, v) in merged_setting.items() if v is not None)\n+\n     return merged_setting\n \n \n",
+      "semantic_match": 0.21341463414634146,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 277,
+      "output_tokens": 126
+    },
+    {
+      "instance_id": "pallets__flask-5014",
+      "success": true,
+      "generated_patch": "```diff\n--- a/src/flask/blueprints.py\n+++ b/src/flask/blueprints.py\n@@ -173,6 +173,9 @@\n         static_url_path: str | None = None,\n         root_path: str | None = None,\n     ):\n+        if not name:\n+            raise ValueError(\"Blueprint name cannot be empty\")\n+\n         super().__init__(\n             import_name=import_name,\n             static_folder=static_folder,\n```",
+      "expected_patch": "diff --git a/src/flask/blueprints.py b/src/flask/blueprints.py\n--- a/src/flask/blueprints.py\n+++ b/src/flask/blueprints.py\n@@ -190,6 +190,9 @@ def __init__(\n             root_path=root_path,\n         )\n \n+        if not name:\n+            raise ValueError(\"'name' may not be empty.\")\n+\n         if \".\" in name:\n             raise ValueError(\"'name' may not contain a dot '.' character.\")\n \n",
+      "semantic_match": 0.25577812018489987,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 140,
+      "output_tokens": 126
+    },
+    {
+      "instance_id": "django__django-14089",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/utils/datastructures.py\n+++ b/django/utils/datastructures.py\n@@ -622,6 +622,9 @@\n     def __iter__(self):\n         return iter(self.dict)\n \n+    def __reversed__(self):\n+        return reversed(self.dict)\n+\n     def __contains__(self, item):\n         return item in self.dict\n \n```",
+      "expected_patch": "diff --git a/django/utils/datastructures.py b/django/utils/datastructures.py\n--- a/django/utils/datastructures.py\n+++ b/django/utils/datastructures.py\n@@ -25,6 +25,9 @@ def discard(self, item):\n     def __iter__(self):\n         return iter(self.dict)\n \n+    def __reversed__(self):\n+        return reversed(self.dict)\n+\n     def __contains__(self, item):\n         return item in self.dict\n \n",
+      "semantic_match": 0.7435064935064936,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 165,
+      "output_tokens": 109
+    },
+    {
+      "instance_id": "sympy__sympy-15875",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sympy/core/add.py\n+++ b/sympy/core/add.py\n@@ -544,7 +544,10 @@\n                 return False\n         elif a.is_commutative is False:\n             return False\n-        return fuzzy_or([a.is_zero for a in self.args])\n+        # If all args are zero, return True. If any arg is definitely\n+        # nonzero, return False. Otherwise return None.\n+        v = fuzzy_and([a.is_zero for a in self.args])\n+        return v\n \n     @cacheit\n     def _eval_is_integer(self):\n\n</patch>",
+      "expected_patch": "diff --git a/sympy/core/add.py b/sympy/core/add.py\n--- a/sympy/core/add.py\n+++ b/sympy/core/add.py\n@@ -554,7 +554,7 @@ def _eval_is_zero(self):\n                 return\n         if z == len(self.args):\n             return True\n-        if len(nz) == len(self.args):\n+        if len(nz) == 0 or len(nz) == len(self.args):\n             return None\n         b = self.func(*nz)\n         if b.is_zero:\n",
+      "semantic_match": 0.2018348623853211,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 249,
+      "output_tokens": 178
+    },
+    {
+      "instance_id": "django__django-16333",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -153,10 +153,13 @@\n         user = super().save(commit=False)\n         user.set_password(self.cleaned_data[\"password1\"])\n         if commit:\n             user.save()\n+            self.save_m2m()\n         return user\n \n \n class UserChangeForm(forms.ModelForm):\n     password = ReadOnlyPasswordHashField(\n         label=_(\"Password\"),\n         help_text=_(\n```",
+      "expected_patch": "diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py\n--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -141,6 +141,8 @@ def save(self, commit=True):\n         user.set_password(self.cleaned_data[\"password1\"])\n         if commit:\n             user.save()\n+            if hasattr(self, \"save_m2m\"):\n+                self.save_m2m()\n         return user\n \n \n",
+      "semantic_match": 0.5128205128205128,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 254,
+      "output_tokens": 146
+    },
+    {
+      "instance_id": "django__django-12419",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/middleware/security.py\n+++ b/django/middleware/security.py\n@@ -12,7 +12,7 @@ class SecurityMiddleware(MiddlewareMixin):\n         self.sts_seconds = settings.SECURE_HSTS_SECONDS\n         self.sts_include_subdomains = settings.SECURE_HSTS_INCLUDE_SUBDOMAINS\n         self.sts_preload = settings.SECURE_HSTS_PRELOAD\n-        self.referrer_policy = settings.SECURE_REFERRER_POLICY\n+        self.referrer_policy = settings.SECURE_REFERRER_POLICY or 'same-origin'\n         self.content_type_nosniff = settings.SECURE_CONTENT_TYPE_NOSNIFF\n         self.redirect = settings.SECURE_SSL_REDIRECT\n         self.redirect_host = settings.SECURE_SSL_HOST\n```",
+      "expected_patch": "diff --git a/django/conf/global_settings.py b/django/conf/global_settings.py\n--- a/django/conf/global_settings.py\n+++ b/django/conf/global_settings.py\n@@ -637,6 +637,6 @@ def gettext_noop(s):\n SECURE_HSTS_PRELOAD = False\n SECURE_HSTS_SECONDS = 0\n SECURE_REDIRECT_EXEMPT = []\n-SECURE_REFERRER_POLICY = None\n+SECURE_REFERRER_POLICY = 'same-origin'\n SECURE_SSL_HOST = None\n SECURE_SSL_REDIRECT = False\n",
+      "semantic_match": 0.17943548387096775,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 271,
+      "output_tokens": 234
+    },
+    {
+      "instance_id": "django__django-15098",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/django/conf/urls/i18n.py\n+++ b/django/conf/urls/i18n.py\n@@ -12,7 +12,7 @@\n         urlpatterns (list of :func:`~django.urls.path` and/or :func:`~django.urls.re_path`)\n     \"\"\"\n     if not settings.USE_I18N:\n         return urlpatterns\n     return [\n-        path('<language_code:str>/', include(urlpatterns)),\n+        path('<language_code:path>/', include(urlpatterns)),\n     ]\n\n</patch>",
+      "expected_patch": "diff --git a/django/utils/translation/trans_real.py b/django/utils/translation/trans_real.py\n--- a/django/utils/translation/trans_real.py\n+++ b/django/utils/translation/trans_real.py\n@@ -43,7 +43,7 @@\n     re.IGNORECASE\n )\n \n-language_code_prefix_re = _lazy_re_compile(r'^/(\\w+([@-]\\w+)?)(/|$)')\n+language_code_prefix_re = _lazy_re_compile(r'^/(\\w+([@-]\\w+){0,2})(/|$)')\n \n \n @receiver(setting_changed)\n",
+      "semantic_match": 0.09042553191489362,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 991,
+      "output_tokens": 153
+    },
+    {
+      "instance_id": "sympy__sympy-14711",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sympy/physics/vector/vector.py\n+++ b/sympy/physics/vector/vector.py\n@@ -58,7 +58,8 @@ class Vector(BasisDependent):\n     def __add__(self, other):\n         \"\"\"The add operator for Vector. \"\"\"\n-        #if other == 0: return self\n+        if other == 0:\n+            return self\n         other = _check_vector(other)\n         return Vector(self.args + other.args)\n \n@@ -66,7 +67,8 @@ class Vector(BasisDependent):\n     def __sub__(self, other):\n         \"\"\"The subtraction operator. \"\"\"\n-        #if other == 0: return self\n+        if other == 0:\n+            return self\n         other = _check_vector(other)\n         return Vector(self.args + (-1 * other).args)\n \n```",
+      "expected_patch": "diff --git a/sympy/physics/vector/vector.py b/sympy/physics/vector/vector.py\n--- a/sympy/physics/vector/vector.py\n+++ b/sympy/physics/vector/vector.py\n@@ -57,6 +57,8 @@ def __hash__(self):\n \n     def __add__(self, other):\n         \"\"\"The add operator for Vector. \"\"\"\n+        if other == 0:\n+            return self\n         other = _check_vector(other)\n         return Vector(self.args + other.args)\n \n",
+      "semantic_match": 0.3508771929824561,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 407,
+      "output_tokens": 229
+    },
+    {
+      "instance_id": "sympy__sympy-17139",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sympy/simplify/fu.py\n+++ b/sympy/simplify/fu.py\n@@ -501,7 +501,7 @@\n                     return Mul(*p)\n             elif e.is_Pow:\n                 rv = fmap(e)\n-                if (rv.exp < 0) == True:\n+                if rv.exp.is_negative:\n                     return fmap(1/e)\n                 if (rv.exp > max) == True:\n                     if rv.base is S.ImaginaryUnit:\n```",
+      "expected_patch": "diff --git a/sympy/simplify/fu.py b/sympy/simplify/fu.py\n--- a/sympy/simplify/fu.py\n+++ b/sympy/simplify/fu.py\n@@ -500,6 +500,8 @@ def _f(rv):\n         # change is not going to allow a simplification as far as I can tell.\n         if not (rv.is_Pow and rv.base.func == f):\n             return rv\n+        if not rv.exp.is_real:\n+            return rv\n \n         if (rv.exp < 0) == True:\n             return rv\n",
+      "semantic_match": 0.3700159489633174,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 836,
+      "output_tokens": 145
+    },
+    {
+      "instance_id": "django__django-14915",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1228,6 +1228,12 @@\n     def __str__(self):\n         return str(self.value)\n \n+    def __hash__(self):\n+        return hash(self.value)\n+\n+    def __eq__(self, other):\n+        if isinstance(other, ModelChoiceIteratorValue):\n+            return self.value == other.value\n+        return self.value == other\n \n class ModelChoiceIterator:\n     def __init__(self, field):\n```",
+      "expected_patch": "diff --git a/django/forms/models.py b/django/forms/models.py\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1166,6 +1166,9 @@ def __init__(self, value, instance):\n     def __str__(self):\n         return str(self.value)\n \n+    def __hash__(self):\n+        return hash(self.value)\n+\n     def __eq__(self, other):\n         if isinstance(other, ModelChoiceIteratorValue):\n             other = other.value\n",
+      "semantic_match": 0.4092664092664093,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 386,
+      "output_tokens": 154
+    },
+    {
+      "instance_id": "pylint-dev__pylint-7080",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/pylint/lint/pylinter.py\n+++ b/pylint/lint/pylinter.py\n@@ -630,7 +630,7 @@\n                 for file_or_descr in self._iterate_file_descrs(files_or_modules):\n                     filepath = file_or_descr[\"path\"]\n                     if filepath == file and descr[\"basename\"] != basename:\n-                        continue\n+                        continue  # skip files with different basenames\n                     if self.should_analyze_file(descr[\"name\"], filepath):\n                         yield from self._get_file_descr_from_stdin(filepath)\n                     self.set_current_module(descr[\"name\"], filepath)\n@@ -713,6 +713,8 @@\n \n             # Discover python modules and packages in directory\n             for root, _, files in os.walk(something.location.path):\n+                if self._is_ignored_file(root, None, None):\n+                    continue\n                 for basename in files:\n                     if basename.endswith(\".py\"):\n                         filepath = os.path.join(root, basename)\n\n</patch>",
+      "expected_patch": "diff --git a/pylint/lint/expand_modules.py b/pylint/lint/expand_modules.py\n--- a/pylint/lint/expand_modules.py\n+++ b/pylint/lint/expand_modules.py\n@@ -52,6 +52,7 @@ def _is_ignored_file(\n     ignore_list_re: list[Pattern[str]],\n     ignore_list_paths_re: list[Pattern[str]],\n ) -> bool:\n+    element = os.path.normpath(element)\n     basename = os.path.basename(element)\n     return (\n         basename in ignore_list\n",
+      "semantic_match": 0.07933884297520662,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 8544,
+      "output_tokens": 286
+    },
+    {
+      "instance_id": "sympy__sympy-20428",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -1542,7 +1542,7 @@ class Poly(Basic):\n \n         f = per(dmp_clear_denoms(f.rep, f.dom, convert=convert))\n \n-        return coeff, f\n+        return coeff, f.strip()\n \n     def rat_clear_denoms(f, g):\n         \"\"\"\n\n</patch>",
+      "expected_patch": "diff --git a/sympy/polys/domains/expressiondomain.py b/sympy/polys/domains/expressiondomain.py\n--- a/sympy/polys/domains/expressiondomain.py\n+++ b/sympy/polys/domains/expressiondomain.py\n@@ -120,7 +120,7 @@ def __ne__(f, g):\n             return not f == g\n \n         def __bool__(f):\n-            return f.ex != 0\n+            return not f.ex.is_zero\n \n         def gcd(f, g):\n             from sympy.polys import gcd\n",
+      "semantic_match": 0.15433070866141732,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1549,
+      "output_tokens": 130
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23314",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/lib/mpl_toolkits/mplot3d/axes3d.py\n+++ b/lib/mpl_toolkits/mplot3d/axes3d.py\n@@ -285,6 +285,8 @@\n         # is visible or not.\n         collections_and_patches = (\n             self.collections + self.patches)\n+        if not self.get_visible():\n+            return collections_and_patches\n         if self.voxels:\n             collections_and_patches += self.voxels\n         for artist in collections_and_patches:\n\n</patch>",
+      "expected_patch": "diff --git a/lib/mpl_toolkits/mplot3d/axes3d.py b/lib/mpl_toolkits/mplot3d/axes3d.py\n--- a/lib/mpl_toolkits/mplot3d/axes3d.py\n+++ b/lib/mpl_toolkits/mplot3d/axes3d.py\n@@ -387,6 +387,8 @@ def apply_aspect(self, position=None):\n \n     @martist.allow_rasterization\n     def draw(self, renderer):\n+        if not self.get_visible():\n+            return\n         self._unstale_viewLim()\n \n         # draw the background patch\n",
+      "semantic_match": 0.3989501312335958,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 348,
+      "output_tokens": 152
+    },
+    {
+      "instance_id": "sympy__sympy-19637",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sympy/core/sympify.py\n+++ b/sympy/core/sympify.py\n@@ -471,6 +471,7 @@\n     transformations = transformations or ()\n     if iterable(s):\n         return type(s)([kernS(tmp, locals, transformations) for tmp in s])\n+    kern = None\n     if isinstance(s, str):\n         s = s.strip()\n         if '\\n' in s:\n```",
+      "expected_patch": "diff --git a/sympy/core/sympify.py b/sympy/core/sympify.py\n--- a/sympy/core/sympify.py\n+++ b/sympy/core/sympify.py\n@@ -513,7 +513,9 @@ def kernS(s):\n             while kern in s:\n                 kern += choice(string.ascii_letters + string.digits)\n             s = s.replace(' ', kern)\n-        hit = kern in s\n+            hit = kern in s\n+        else:\n+            hit = False\n \n     for i in range(2):\n         try:\n",
+      "semantic_match": 0.24242424242424243,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 157,
+      "output_tokens": 121
+    },
+    {
+      "instance_id": "pydata__xarray-3677",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/xarray/core/merge.py\n+++ b/xarray/core/merge.py\n@@ -831,7 +831,7 @@\n         fill_value: object = dtypes.NA,\n     ) -> \"Dataset\":\n         \"\"\"Internal method for Dataset.merge.\"\"\"\n-        objs = [self, other]\n+        objs = [self] + (other if isinstance(other, list) else [other])\n         return merge_core(\n             objs, compat, join, priority_arg=priority_arg, fill_value=fill_value\n         )\n\n</patch>",
+      "expected_patch": "diff --git a/xarray/core/dataset.py b/xarray/core/dataset.py\n--- a/xarray/core/dataset.py\n+++ b/xarray/core/dataset.py\n@@ -3604,6 +3604,7 @@ def merge(\n             If any variables conflict (see ``compat``).\n         \"\"\"\n         _check_inplace(inplace)\n+        other = other.to_dataset() if isinstance(other, xr.DataArray) else other\n         merge_result = dataset_merge_method(\n             self,\n             other,\n",
+      "semantic_match": 0.15680880330123798,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 579,
+      "output_tokens": 149
+    },
+    {
+      "instance_id": "django__django-17029",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/apps/registry.py\n+++ b/django/apps/registry.py\n@@ -349,6 +349,7 @@ class Apps:\n         # Call expire cache on each model. This will purge\n         # the relation tree and the fields cache.\n         self.get_models.cache_clear()\n+        self.get_swappable_settings_name.cache_clear()\n         if self.ready:\n             # Circumvent self.get_models() to prevent that the cache is refilled.\n             # This particularly prevents that an empty value is cached while cloning.\n```",
+      "expected_patch": "diff --git a/django/apps/registry.py b/django/apps/registry.py\n--- a/django/apps/registry.py\n+++ b/django/apps/registry.py\n@@ -373,6 +373,7 @@ def clear_cache(self):\n \n         This is mostly used in tests.\n         \"\"\"\n+        self.get_swappable_settings_name.cache_clear()\n         # Call expire cache on each model. This will purge\n         # the relation tree and the fields cache.\n         self.get_models.cache_clear()\n",
+      "semantic_match": 0.2825278810408922,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 373,
+      "output_tokens": 148
+    },
+    {
+      "instance_id": "django__django-11880",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/forms/fields.py\n+++ b/django/forms/fields.py\n@@ -197,6 +197,7 @@\n         obj = copy.copy(self)\n         obj.widget = copy.deepcopy(self.widget, memo)\n         obj.validators = self.validators[:]\n+        obj.error_messages = copy.deepcopy(self.error_messages, memo)\n         memo[id(self)] = obj\n         return obj\n \n```",
+      "expected_patch": "diff --git a/django/forms/fields.py b/django/forms/fields.py\n--- a/django/forms/fields.py\n+++ b/django/forms/fields.py\n@@ -199,6 +199,7 @@ def __deepcopy__(self, memo):\n         result = copy.copy(self)\n         memo[id(self)] = result\n         result.widget = copy.deepcopy(self.widget, memo)\n+        result.error_messages = self.error_messages.copy()\n         result.validators = self.validators[:]\n         return result\n \n",
+      "semantic_match": 0.4555052790346908,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 370,
+      "output_tokens": 123
+    },
+    {
+      "instance_id": "django__django-15863",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/template/defaultfilters.py\n+++ b/django/template/defaultfilters.py\n@@ -106,7 +106,7 @@ def floatformat(text, arg=-1):\n     input_val = repr(text)\n     try:\n         d = Decimal(input_val)\n-    except InvalidOperation:\n+    except (InvalidOperation, TypeError):\n         try:\n             d = Decimal(str(float(text)))\n         except (ValueError, InvalidOperation, TypeError, UnicodeEncodeError):\n@@ -137,7 +137,10 @@ def floatformat(text, arg=-1):\n         # Get the number of digits to the right of the decimal point.\n         number = str(m)\n         number_of_digits = len(number.split('.')[1])\n-        exp = Decimal(input_val) - m\n+        if isinstance(text, Decimal):\n+            exp = text - m\n+        else:\n+            exp = Decimal(input_val) - m\n         # ndigits can be 0 only if we round to the next integer, i.e.\n         # p is 0. Otherwise, convert to a negative number of digits.\n         if ndigits == 0 and p != 0:\n\n```",
+      "expected_patch": "diff --git a/django/template/defaultfilters.py b/django/template/defaultfilters.py\n--- a/django/template/defaultfilters.py\n+++ b/django/template/defaultfilters.py\n@@ -149,7 +149,7 @@ def floatformat(text, arg=-1):\n             use_l10n = False\n             arg = arg[:-1] or -1\n     try:\n-        input_val = repr(text)\n+        input_val = str(text)\n         d = Decimal(input_val)\n     except InvalidOperation:\n         try:\n",
+      "semantic_match": 0.3051681706316653,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 314,
+      "output_tokens": 314
+    },
+    {
+      "instance_id": "sympy__sympy-16886",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sympy/crypto/crypto.py\n+++ b/sympy/crypto/crypto.py\n@@ -242,7 +242,7 @@\n     \"-----\": \"0\",\n-    \"----\": \"1\",\n+    \".----\": \"1\",\n     \"..---\": \"2\",\n     \"...--\": \"3\",\n     \"....-\": \"4\",\n```",
+      "expected_patch": "diff --git a/sympy/crypto/crypto.py b/sympy/crypto/crypto.py\n--- a/sympy/crypto/crypto.py\n+++ b/sympy/crypto/crypto.py\n@@ -1520,7 +1520,7 @@ def decipher_kid_rsa(msg, key):\n     \"..-\": \"U\", \"...-\": \"V\",\n     \".--\": \"W\", \"-..-\": \"X\",\n     \"-.--\": \"Y\", \"--..\": \"Z\",\n-    \"-----\": \"0\", \"----\": \"1\",\n+    \"-----\": \"0\", \".----\": \"1\",\n     \"..---\": \"2\", \"...--\": \"3\",\n     \"....-\": \"4\", \".....\": \"5\",\n     \"-....\": \"6\", \"--...\": \"7\",\n",
+      "semantic_match": 0.54673721340388,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 139,
+      "output_tokens": 100
+    },
+    {
+      "instance_id": "pytest-dev__pytest-6202",
+      "success": true,
+      "generated_patch": "```diff\n--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -289,7 +289,7 @@ class Function(PyobjMixin, nodes.Item):\n                 s += \"[%s]\" % x\n             else:\n                 s += \".\" + x\n-        return s.replace(\".[\", \"[\")\n+        return s\n \n     def _getobj(self):\n         \"\"\"Gets the underlying Python object. May be overwritten by subclasses.\"\"\"\n```",
+      "expected_patch": "diff --git a/src/_pytest/python.py b/src/_pytest/python.py\n--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -285,8 +285,7 @@ def getmodpath(self, stopatmodule=True, includemodule=False):\n                     break\n             parts.append(name)\n         parts.reverse()\n-        s = \".\".join(parts)\n-        return s.replace(\".[\", \"[\")\n+        return \".\".join(parts)\n \n     def reportinfo(self):\n         # XXX caching?\n",
+      "semantic_match": 0.23546944858420268,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 851,
+      "output_tokens": 129
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5262",
+      "success": true,
+      "generated_patch": "```diff\n--- a/src/_pytest/capture.py\n+++ b/src/_pytest/capture.py\n@@ -426,7 +426,12 @@\n         self.encoding = encoding\n \n     def __getattr__(self, name):\n-        return getattr(object.__getattribute__(self, \"buffer\"), name)\n+        # Forward most attributes to the underlying buffer, except for 'mode'\n+        # which should not include 'b' (binary) since this wrapper only\n+        # accepts text (str) for writing, not bytes\n+        if name == \"mode\":\n+            return object.__getattribute__(self, \"buffer\").mode.replace(\"b\", \"\")\n+        return getattr(object.__getattribute__(self, \"buffer\"), name)\n \n     def write(self, obj):\n         if isinstance(obj, six.text_type):\n```",
+      "expected_patch": "diff --git a/src/_pytest/capture.py b/src/_pytest/capture.py\n--- a/src/_pytest/capture.py\n+++ b/src/_pytest/capture.py\n@@ -447,6 +447,10 @@ def name(self):\n         \"\"\"Ensure that file.name is a string.\"\"\"\n         return repr(self.buffer)\n \n+    @property\n+    def mode(self):\n+        return self.buffer.mode.replace(\"b\", \"\")\n+\n     def __getattr__(self, name):\n         return getattr(object.__getattribute__(self, \"buffer\"), name)\n \n",
+      "semantic_match": 0.14149139579349904,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1495,
+      "output_tokens": 212
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7982",
+      "success": true,
+      "generated_patch": "```diff\n--- a/src/_pytest/pathlib.py\n+++ b/src/_pytest/pathlib.py\n@@ -533,7 +533,7 @@\n def visit(\n     path: str, recurse: Callable[[str], bool]\n ) -> Iterator[str]:\n-    for entry in os.scandir(path):\n+    for entry in scandir(path):\n         if entry.is_dir():\n             if recurse(entry.path):\n                 yield from visit(entry.path, recurse)\n@@ -541,6 +541,13 @@\n             yield entry.path\n \n \n+def scandir(path: str) -> Iterator[os.DirEntry]:\n+    \"\"\"Wrapper around os.scandir that follows symlinks.\"\"\"\n+    for entry in os.scandir(path):\n+        yield entry\n+\n+\n def visit(\n     path: str, recurse: Callable[[str], bool]\n ) -> Iterator[str]:\n```\n\nWait, let me reconsider. Looking at the problem description more carefully, it mentions that `follow_symlinks=False` was added in commit b473e515bc57ff1133fe650f1e7e6d7e22e5d841 and needs to be removed. Let me provide the correct patch:\n\n```diff\n--- a/src/_pytest/pathlib.py\n+++ b/src/_pytest/pathlib.py\n@@ -533,9 +533,9 @@\n def visit(\n     path: str, recurse: Callable[[str], bool]\n ) -> Iterator[str]:\n     for entry in os.scandir(path):\n-        if entry.is_dir(follow_symlinks=False):\n+        if entry.is_dir():\n             if recurse(entry.path):\n                 yield from visit(entry.path, recurse)\n-        elif entry.is_file(follow_symlinks=False):\n+        elif entry.is_file():\n             yield entry.path\n```",
+      "expected_patch": "diff --git a/src/_pytest/pathlib.py b/src/_pytest/pathlib.py\n--- a/src/_pytest/pathlib.py\n+++ b/src/_pytest/pathlib.py\n@@ -558,7 +558,7 @@ def visit(\n     entries = sorted(os.scandir(path), key=lambda entry: entry.name)\n     yield from entries\n     for entry in entries:\n-        if entry.is_dir(follow_symlinks=False) and recurse(entry):\n+        if entry.is_dir() and recurse(entry):\n             yield from visit(entry.path, recurse)\n \n \n",
+      "semantic_match": 0.14563106796116504,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 220,
+      "output_tokens": 485
+    },
+    {
+      "instance_id": "sympy__sympy-15349",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sympy/algebras/quaternion.py\n+++ b/sympy/algebras/quaternion.py\n@@ -497,7 +497,7 @@\n \n         m10 = 2*s*(q.b*q.c + q.d*q.a)\n         m11 = 1 - 2*s*(q.b**2 + q.d**2)\n-        m12 = 2*s*(q.c*q.d + q.b*q.a)\n+        m12 = 2*s*(q.c*q.d - q.b*q.a)\n \n         m20 = 2*s*(q.b*q.d - q.c*q.a)\n         m21 = 2*s*(q.c*q.d + q.b*q.a)\n```",
+      "expected_patch": "diff --git a/sympy/algebras/quaternion.py b/sympy/algebras/quaternion.py\n--- a/sympy/algebras/quaternion.py\n+++ b/sympy/algebras/quaternion.py\n@@ -529,7 +529,7 @@ def to_rotation_matrix(self, v=None):\n \n         m10 = 2*s*(q.b*q.c + q.d*q.a)\n         m11 = 1 - 2*s*(q.b**2 + q.d**2)\n-        m12 = 2*s*(q.c*q.d + q.b*q.a)\n+        m12 = 2*s*(q.c*q.d - q.b*q.a)\n \n         m20 = 2*s*(q.b*q.d - q.c*q.a)\n         m21 = 2*s*(q.c*q.d + q.b*q.a)\n",
+      "semantic_match": 0.806966618287373,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 353,
+      "output_tokens": 220
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7521",
+      "success": true,
+      "generated_patch": "```diff\n--- a/src/_pytest/capture.py\n+++ b/src/_pytest/capture.py\n@@ -777,7 +777,7 @@\n         self.tmpfile = tmpfile\n         self._old = os.dup(targetfd)\n         os.dup2(self.tmpfile.fileno(), targetfd)\n-        self._state = \"capturing\"\n+        self._state = \"capturing_fd\"\n \n     def snap(self):\n         self.tmpfile.seek(0)\n@@ -786,7 +786,7 @@\n         self.tmpfile.truncate()\n         return res\n \n-    def writeorg(self, data):\n+    def writeorg(self, data: bytes) -> None:\n         os.write(self._old, data)\n \n     def done(self) -> None:\n@@ -807,13 +807,13 @@\n     def snap(self):\n         self.tmpfile.seek(0)\n         res = self.tmpfile.buffer.read()\n-        self.tmpfile.seek(0)\n-        self.tmpfile.truncate()\n-        enc = getattr(self.tmpfile, \"encoding\", None)\n+        self.tmpfile.buffer.seek(0)\n+        self.tmpfile.buffer.truncate()\n+        enc = self.tmpfile.encoding\n         if enc and res:\n-            res = res.decode(enc, \"replace\")\n+            res = res.decode(enc, \"replace\").replace(\"\\r\\n\", \"\\n\")\n         else:\n-            res = \"\"\n+            res = res.decode(\"utf-8\", \"replace\").replace(\"\\r\\n\", \"\\n\") if res else \"\"\n         return res\n \n     def writeorg(self, data):\n@@ -876,7 +876,7 @@\n \n     def readouterr(self) -> CaptureResult:\n         captured_out, captured_err = self._capture.readouterr()\n-        if self._capture_fixture:\n+        if self._capture_fixture and captured_out is not None:\n             captured_out = captured_out.replace(\"\\r\\n\", \"\\n\")\n+        if self._capture_fixture and captured_err is not None:\n             captured_err = captured_err.replace(\"\\r\\n\", \"\\n\")\n         return CaptureResult(captured_out, captured_err)\n```\n\nWait, let me reconsider. The issue is that `\\r` is being converted to `\\n`. Looking at the code more carefully:\n\n```diff\n--- a/src/_pytest/capture.py\n+++ b/src/_pytest/capture.py\n@@ -878,8 +878,6 @@\n     def readouterr(self) -> CaptureResult:\n         captured_out, captured_err = self._capture.readouterr()\n         if self._capture_fixture:\n-            captured_out = captured_out.replace(\"\\r\\n\", \"\\n\")\n-            captured_err = captured_err.replace(\"\\r\\n\", \"\\n\")\n+            pass\n         return CaptureResult(captured_out, captured_err)\n```\n\nLet me provide the correct fix:\n\n```diff\n--- a/src/_pytest/capture.py\n+++ b/src/_pytest/capture.py\n@@ -876,10 +876,6 @@\n \n     def readouterr(self) -> CaptureResult:\n         captured_out, captured_err = self._capture.readouterr()\n-        if self._capture_fixture:\n-            captured_out = captured_out.replace(\"\\r\\n\", \"\\n\")\n-            captured_err = captured_err.replace(\"\\r\\n\", \"\\n\")\n         return CaptureResult(captured_out, captured_err)\n \n     def _suspend(self) -> None:\n```",
+      "expected_patch": "diff --git a/src/_pytest/capture.py b/src/_pytest/capture.py\n--- a/src/_pytest/capture.py\n+++ b/src/_pytest/capture.py\n@@ -388,6 +388,7 @@ def __init__(self, targetfd: int) -> None:\n                 TemporaryFile(buffering=0),  # type: ignore[arg-type]\n                 encoding=\"utf-8\",\n                 errors=\"replace\",\n+                newline=\"\",\n                 write_through=True,\n             )\n             if targetfd in patchsysdict:\n",
+      "semantic_match": 0.06012884753042233,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1346,
+      "output_tokens": 931
+    },
+    {
+      "instance_id": "django__django-16485",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/template/defaultfilters.py\n+++ b/django/template/defaultfilters.py\n@@ -111,6 +111,10 @@\n     \"\"\"\n     try:\n         input_val = repr(text)\n+        sign, digittuple, exponent = Decimal(input_val).as_tuple()\n+        if set(digittuple) == {0}:\n+            # Special case for zero values to avoid precision issues\n+            return '0'\n         d = Decimal(input_val)\n     except InvalidOperation:\n         try:\n@@ -139,7 +143,7 @@\n         # Get the number of digits to the left of the decimal point\n         digits_left = len(str(int(abs(d))))\n         # Calculate precision needed for rounding\n-        prec = max(1, digits_left + p)\n+        prec = max(digits_left + p, 1) if p != 0 else max(digits_left, 1)\n         # Use quantize for rounding\n         d = d.quantize(Decimal(10) ** -p, context=Context(prec=prec))\n \n```",
+      "expected_patch": "diff --git a/django/template/defaultfilters.py b/django/template/defaultfilters.py\n--- a/django/template/defaultfilters.py\n+++ b/django/template/defaultfilters.py\n@@ -168,7 +168,7 @@ def floatformat(text, arg=-1):\n     except (ValueError, OverflowError, InvalidOperation):\n         return input_val\n \n-    if not m and p < 0:\n+    if not m and p <= 0:\n         return mark_safe(\n             formats.number_format(\n                 \"%d\" % (int(d)),\n",
+      "semantic_match": 0.19139596136962247,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 167,
+      "output_tokens": 288
+    },
+    {
+      "instance_id": "pydata__xarray-6721",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/xarray/core/common.py\n+++ b/xarray/core/common.py\n@@ -1812,7 +1812,7 @@ def get_chunksizes(variables):\n     \"\"\"\n     chunks: dict[Any, tuple[int, ...]] = {}\n     for v in variables:\n-        if hasattr(v.data, \"chunks\"):\n+        if hasattr(v._data, \"chunks\"):\n             for dim, c in v.chunksizes.items():\n                 if dim in chunks and c != chunks[dim]:\n                     raise ValueError(\n</patch>",
+      "expected_patch": "diff --git a/xarray/core/common.py b/xarray/core/common.py\n--- a/xarray/core/common.py\n+++ b/xarray/core/common.py\n@@ -2023,7 +2023,7 @@ def get_chunksizes(\n \n     chunks: dict[Any, tuple[int, ...]] = {}\n     for v in variables:\n-        if hasattr(v.data, \"chunks\"):\n+        if hasattr(v._data, \"chunks\"):\n             for dim, c in v.chunksizes.items():\n                 if dim in chunks and c != chunks[dim]:\n                     raise ValueError(\n",
+      "semantic_match": 0.7316421895861148,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 3328,
+      "output_tokens": 150
+    },
+    {
+      "instance_id": "psf__requests-6028",
+      "success": true,
+      "generated_patch": "```diff\n--- a/requests/auth.py\n+++ b/requests/auth.py\n@@ -99,7 +99,7 @@ class HTTPProxyAuth(HTTPBasicAuth):\n     def __call__(self, r):\n         r.headers['Proxy-Authorization'] = _basic_auth_str(self.username, self.password)\n         return r\n-\n+\n \n class HTTPDigestAuth(AuthBase):\n     \"\"\"Attaches HTTP Digest Authentication to the given Request object.\"\"\"\n--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -234,7 +234,7 @@ class SessionRedirectMixin:\n \n def default_headers():\n     \"\"\"\n-    :rtype: requests.structures.CaseInsensitiveDict\n+    :rtype: CaseInsensitiveDict\n     \"\"\"\n     return CaseInsensitiveDict({\n         'User-Agent': default_user_agent(),\n@@ -473,6 +473,10 @@ class Session(SessionRedirectMixin):\n \n         proxies = proxies or {}\n \n+        # Remove username and password from proxy URLs for urllib3\n+        for scheme in proxies:\n+            proxies[scheme] = self._strip_proxy_auth(proxies[scheme])\n+\n         settings = self.merge_environment_settings(\n             prep.url, proxies, stream, verify, cert\n         )\n@@ -513,6 +517,21 @@ class Session(SessionRedirectMixin):\n \n         return resp\n \n+    def _strip_proxy_auth(self, proxy):\n+        \"\"\"Strip username/password from proxy URL\"\"\"\n+        if proxy is None:\n+            return None\n+        try:\n+            from urllib.parse import urlparse, urlunparse\n+        except ImportError:\n+            from urlparse import urlparse, urlunparse\n+        \n+        parsed = urlparse(proxy)\n+        if parsed.username or parsed.password:\n+            # Rebuild URL without username/password\n+            return urlunparse((parsed.scheme, parsed.hostname + (f':{parsed.port}' if parsed.port else ''), parsed.path, parsed.params, parsed.query, parsed.fragment))\n+        return proxy\n+\n     def merge_environment_settings(self, url, proxies, stream, verify, cert):\n         \"\"\"\n         Check the environment and merge it with some settings.\n\n```",
+      "expected_patch": "diff --git a/requests/utils.py b/requests/utils.py\n--- a/requests/utils.py\n+++ b/requests/utils.py\n@@ -974,6 +974,10 @@ def prepend_scheme_if_needed(url, new_scheme):\n     if not netloc:\n         netloc, path = path, netloc\n \n+    if auth:\n+        # parse_url doesn't provide the netloc with auth\n+        # so we'll add it ourselves.\n+        netloc = '@'.join([auth, netloc])\n     if scheme is None:\n         scheme = new_scheme\n     if path is None:\n",
+      "semantic_match": 0.05184174624829468,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 524,
+      "output_tokens": 590
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7432",
+      "success": true,
+      "generated_patch": "```diff\n--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -235,7 +235,7 @@\n         rep.wasxfail = explanation\n     elif item._store.get(skipped_by_mark_key, True):\n         rep.outcome = \"skipped\"\n-        rep.longrepr = item._store[evaluation_result_key]\n+        rep.longrepr = item._store.get(evaluation_result_key, rep.longrepr)\n     elif not rep.passed:\n         rep.outcome = \"failed\"\n         rep.wasxfail = explanation\n```",
+      "expected_patch": "diff --git a/src/_pytest/skipping.py b/src/_pytest/skipping.py\n--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -291,7 +291,8 @@ def pytest_runtest_makereport(item: Item, call: CallInfo[None]):\n             else:\n                 rep.outcome = \"passed\"\n                 rep.wasxfail = xfailed.reason\n-    elif (\n+\n+    if (\n         item._store.get(skipped_by_mark_key, True)\n         and rep.skipped\n         and type(rep.longrepr) is tuple\n",
+      "semantic_match": 0.2685788787483703,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 322,
+      "output_tokens": 160
+    },
+    {
+      "instance_id": "django__django-15741",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/utils/formats.py\n+++ b/django/utils/formats.py\n@@ -1,6 +1,7 @@\n import datetime\n import decimal\n from importlib import import_module\n+from django.utils.encoding import force_str\n from django.utils.safestring import mark_safe\n \n from . import dateformat, numberformat\n@@ -113,6 +114,7 @@ def get_format(format_type, lang=None, use_l10n=None):\n         use_l10n = settings.USE_L10N\n     if use_l10n and lang is None:\n         lang = get_language()\n+    format_type = force_str(format_type)\n     cache_key = (format_type, lang)\n     try:\n         return _format_cache[cache_key]\n```",
+      "expected_patch": "diff --git a/django/utils/formats.py b/django/utils/formats.py\n--- a/django/utils/formats.py\n+++ b/django/utils/formats.py\n@@ -113,6 +113,7 @@ def get_format(format_type, lang=None, use_l10n=None):\n             use_l10n = settings.USE_L10N\n     if use_l10n and lang is None:\n         lang = get_language()\n+    format_type = str(format_type)  # format_type may be lazy.\n     cache_key = (format_type, lang)\n     try:\n         return _format_cache[cache_key]\n",
+      "semantic_match": 0.671578947368421,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 184,
+      "output_tokens": 216
+    },
+    {
+      "instance_id": "django__django-12209",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -746,7 +746,7 @@\n         # field with a default, we can't know for sure if pk value was\n         # explicitly assigned or it came from a default (e.g. calling\n         # Model(pk=None) would assign pk a default value).\n-        if meta.pk.default is not NOT_PROVIDED:\n+        if meta.pk.default is not NOT_PROVIDED and self.pk is None:\n             force_insert = True\n         # If the PK has been explicitly set, we only need to check if\n         # it is a valid value. If it is, then we need to do an UPDATE.\n\n```",
+      "expected_patch": "diff --git a/django/db/models/base.py b/django/db/models/base.py\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -849,6 +849,7 @@ def _save_table(self, raw=False, cls=None, force_insert=False,\n         updated = False\n         # Skip an UPDATE when adding an instance and primary key has a default.\n         if (\n+            not raw and\n             not force_insert and\n             self._state.adding and\n             self._meta.pk.default and\n",
+      "semantic_match": 0.2050163576881134,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 400,
+      "output_tokens": 182
+    },
+    {
+      "instance_id": "astropy__astropy-12907",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/astropy/modeling/separable.py\n+++ b/astropy/modeling/separable.py\n@@ -124,7 +124,7 @@\n     \"\"\"\n     if isinstance(transform, CompoundModel):\n         sepleft = _separable(transform.left)\n-        sepright = _separable(transform.right)\n+        sepright = _separable(transform.right)\n         return _operators[transform.op](sepleft, sepright)\n     elif isinstance(transform, Model):\n         return _coord_matrix(transform, 'left', transform.n_outputs)\n@@ -235,9 +235,17 @@\n     \"\"\"\n     return np.logical_or(left, right)\n \n+def _separable_and(left, right):\n+    \"\"\"\n+    Compute the separability matrix for a parallel composite model.\n+    \"\"\"\n+    l_shape = left.shape\n+    r_shape = right.shape\n+    out = np.zeros((l_shape[0] + r_shape[0], l_shape[1] + r_shape[1]), dtype=bool)\n+    out[:l_shape[0], :l_shape[1]] = left\n+    out[l_shape[0]:, l_shape[1]:] = right\n+    return out\n \n-def _separable_and(left, right):\n-    return np.logical_and(left, right)\n \n \n _operators = {'&': _separable_and, '|': _separable_or, '+': _separable_add,\n\n</patch>",
+      "expected_patch": "diff --git a/astropy/modeling/separable.py b/astropy/modeling/separable.py\n--- a/astropy/modeling/separable.py\n+++ b/astropy/modeling/separable.py\n@@ -242,7 +242,7 @@ def _cstack(left, right):\n         cright = _coord_matrix(right, 'right', noutp)\n     else:\n         cright = np.zeros((noutp, right.shape[1]))\n-        cright[-right.shape[0]:, -right.shape[1]:] = 1\n+        cright[-right.shape[0]:, -right.shape[1]:] = right\n \n     return np.hstack([cleft, cright])\n \n",
+      "semantic_match": 0.2364394993045897,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 450,
+      "output_tokens": 392
+    },
+    {
+      "instance_id": "pydata__xarray-4629",
+      "success": true,
+      "generated_patch": "```diff\n--- a/xarray/core/merge.py\n+++ b/xarray/core/merge.py\n@@ -501,7 +501,7 @@\n     elif combine_attrs == \"drop\":\n         return {}\n     elif combine_attrs == \"override\":\n-        return variable_attrs[0]\n+        return dict(variable_attrs[0])\n     elif combine_attrs == \"no_conflicts\":\n         result = dict(variable_attrs[0])\n         for attrs in variable_attrs[1:]:\n```",
+      "expected_patch": "diff --git a/xarray/core/merge.py b/xarray/core/merge.py\n--- a/xarray/core/merge.py\n+++ b/xarray/core/merge.py\n@@ -501,7 +501,7 @@ def merge_attrs(variable_attrs, combine_attrs):\n     if combine_attrs == \"drop\":\n         return {}\n     elif combine_attrs == \"override\":\n-        return variable_attrs[0]\n+        return dict(variable_attrs[0])\n     elif combine_attrs == \"no_conflicts\":\n         result = dict(variable_attrs[0])\n         for attrs in variable_attrs[1:]:\n",
+      "semantic_match": 0.8552456839309429,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1062,
+      "output_tokens": 129
+    },
+    {
+      "instance_id": "django__django-13516",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -104,6 +104,9 @@ class OutputWrapper(TextIOBase):\n     def isatty(self):\n         return hasattr(self._out, 'isatty') and self._out.isatty()\n \n+    def flush(self):\n+        if hasattr(self._out, 'flush'):\n+            self._out.flush()\n \n class BaseCommand:\n     \"\"\"\n```",
+      "expected_patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -140,6 +140,10 @@ def __init__(self, out, ending='\\n'):\n     def __getattr__(self, name):\n         return getattr(self._out, name)\n \n+    def flush(self):\n+        if hasattr(self._out, 'flush'):\n+            self._out.flush()\n+\n     def isatty(self):\n         return hasattr(self._out, 'isatty') and self._out.isatty()\n \n",
+      "semantic_match": 0.3145478374836173,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 247,
+      "output_tokens": 136
+    },
+    {
+      "instance_id": "django__django-13670",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/utils/dateformat.py\n+++ b/django/utils/dateformat.py\n@@ -296,7 +296,7 @@ class DateFormat(TimeFormat):\n \n     def y(self):\n         \"Year, 2 digits; e.g. '99'\"\n-        return str(self.data.year)[2:]\n+        return '%02d' % (self.data.year % 100)\n \n     def Y(self):\n         \"Year, 4 digits; e.g. '1999'\"\n```",
+      "expected_patch": "diff --git a/django/utils/dateformat.py b/django/utils/dateformat.py\n--- a/django/utils/dateformat.py\n+++ b/django/utils/dateformat.py\n@@ -325,8 +325,8 @@ def W(self):\n         return self.data.isocalendar()[1]\n \n     def y(self):\n-        \"Year, 2 digits; e.g. '99'\"\n-        return str(self.data.year)[2:]\n+        \"\"\"Year, 2 digits with leading zeros; e.g. '99'.\"\"\"\n+        return '%02d' % (self.data.year % 100)\n \n     def Y(self):\n         \"Year, 4 digits; e.g. '1999'\"\n",
+      "semantic_match": 0.6520547945205479,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 339,
+      "output_tokens": 140
+    },
+    {
+      "instance_id": "django__django-14373",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/utils/dateformat.py\n+++ b/django/utils/dateformat.py\n@@ -284,7 +284,7 @@\n         \"Example: '1999'\"\n         return self.data.year\n \n     def Y(self):\n         \"\"\"Full year, 4 digits with leading zeros; e.g. '1999', '2003', '0013'.\"\"\"\n-        return self.data.year\n+        return \"%04d\" % self.data.year\n \n     def z(self):\n```",
+      "expected_patch": "diff --git a/django/utils/dateformat.py b/django/utils/dateformat.py\n--- a/django/utils/dateformat.py\n+++ b/django/utils/dateformat.py\n@@ -313,8 +313,8 @@ def y(self):\n         return '%02d' % (self.data.year % 100)\n \n     def Y(self):\n-        \"Year, 4 digits; e.g. '1999'\"\n-        return self.data.year\n+        \"\"\"Year, 4 digits with leading zeros; e.g. '1999'.\"\"\"\n+        return '%04d' % self.data.year\n \n     def z(self):\n         \"\"\"Day of the year, i.e. 1 to 366.\"\"\"\n",
+      "semantic_match": 0.4594594594594595,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 147,
+      "output_tokens": 136
+    },
+    {
+      "instance_id": "astropy__astropy-14539",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/astropy/io/fits/diff.py\n+++ b/astropy/io/fits/diff.py\n@@ -1097,7 +1097,7 @@\n                     else:\n                         self._diff_column_values(idx, cola, colb)\n \n-    def _diff_column_values(self, idx, cola, colb):\n+    def _diff_column_values(self, idx, cola, colb, cola_base=None, colb_base=None):\n         \"\"\"\n         Compare the values in two table columns with the same data format.\n \n@@ -1109,6 +1109,12 @@\n         arra = cola.array\n         arrb = colb.array\n \n+        # Use the base arrays if provided (for VLA comparison)\n+        if cola_base is not None:\n+            arra = cola_base\n+        if colb_base is not None:\n+            arrb = colb_base\n+\n         if isinstance(arra, Delayed) or isinstance(arrb, Delayed):\n             # Converting Delayed objects (mixin columns) to ndarrays allows\n             # use of array_equal which is faster than all() for large arrays.\n@@ -1214,17 +1220,19 @@\n             # it makes more sense to find the exact rows where there are\n             # differences and only report those\n             diffs = False\n+            arra_orig = arra\n+            arrb_orig = arrb\n             for idx in range(len(arra)):\n                 if not self._diff_values_verbatim(arra[idx], arrb[idx]):\n                     diffs = True\n                     self._report_diff_values(\n                         cola.name, arra[idx], arrb[idx], idx1=idx\n                     )\n \n             if diffs:\n                 self._diff_total += 1\n-                num_diffs = not_equal(arra, arrb).sum()\n+                num_diffs = not_equal(arra_orig, arrb_orig).sum()\n                 self._report_diff_values(\n                     cola.name,\n                     arra,\n\n</patch>",
+      "expected_patch": "diff --git a/astropy/io/fits/diff.py b/astropy/io/fits/diff.py\n--- a/astropy/io/fits/diff.py\n+++ b/astropy/io/fits/diff.py\n@@ -1449,7 +1449,7 @@ def _diff(self):\n                 arrb.dtype, np.floating\n             ):\n                 diffs = where_not_allclose(arra, arrb, rtol=self.rtol, atol=self.atol)\n-            elif \"P\" in col.format:\n+            elif \"P\" in col.format or \"Q\" in col.format:\n                 diffs = (\n                     [\n                         idx\n",
+      "semantic_match": 0.11778290993071594,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 594,
+      "output_tokens": 539
+    },
+    {
+      "instance_id": "django__django-15569",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -209,6 +209,7 @@ class RegisterLookupMixin:\n     def _unregister_lookup(cls, lookup, lookup_name=None):\n         if lookup_name is None:\n             lookup_name = lookup.lookup_name\n+        cls.get_lookups.cache_clear()\n         del cls._class_lookups[lookup_name]\n \n     @classmethod\n```",
+      "expected_patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -217,6 +217,7 @@ def _unregister_lookup(cls, lookup, lookup_name=None):\n         if lookup_name is None:\n             lookup_name = lookup.lookup_name\n         del cls.class_lookups[lookup_name]\n+        cls._clear_cached_lookups()\n \n \n def select_related_descend(field, restricted, requested, load_fields, reverse=False):\n",
+      "semantic_match": 0.5926892950391645,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 282,
+      "output_tokens": 136
+    },
+    {
+      "instance_id": "django__django-14792",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/backends/postgresql/operations.py\n+++ b/django/db/backends/postgresql/operations.py\n@@ -54,7 +54,7 @@\n \n     def _prepare_tzname_delta(self, tzname):\n         if '+' in tzname or '-' in tzname:\n-            return tzname.replace('Etc/GMT', 'Etc/GMT')\n+            return tzname\n         return tzname\n```\n\nWait, let me reconsider. The issue is that `_prepare_tzname_delta` is reversing the sign when it shouldn't. Let me check the actual implementation:\n\n```diff\n--- a/django/db/backends/postgresql/operations.py\n+++ b/django/db/backends/postgresql/operations.py\n@@ -54,9 +54,13 @@\n \n     def _prepare_tzname_delta(self, tzname):\n         if '+' in tzname or '-' in tzname:\n-            return tzname.replace('Etc/GMT', 'Etc/GMT')\n+            # Etc/GMT zone names have reversed signs\n+            if tzname.startswith('Etc/GMT'):\n+                tzname = tzname.replace('Etc/GMT+', 'Etc/GMT-tmp').replace('Etc/GMT-', 'Etc/GMT+').replace('Etc/GMT-tmp', 'Etc/GMT-')\n+            return tzname\n         return tzname\n```\n\nActually, let me look at this more carefully. The proper fix should be:\n\n```diff\n--- a/django/db/backends/postgresql/operations.py\n+++ b/django/db/backends/postgresql/operations.py\n@@ -54,7 +54,11 @@\n \n     def _prepare_tzname_delta(self, tzname):\n         if '+' in tzname or '-' in tzname:\n-            return tzname.replace('Etc/GMT', 'Etc/GMT')\n+            # Etc/GMT zone names have reversed signs compared to normal offsets\n+            if tzname.startswith('Etc/GMT'):\n+                sign = tzname[7]\n+                tzname = 'Etc/GMT' + ('+' if sign == '-' else '-') + tzname[8:]\n+            return tzname\n         return tzname\n```",
+      "expected_patch": "diff --git a/django/utils/timezone.py b/django/utils/timezone.py\n--- a/django/utils/timezone.py\n+++ b/django/utils/timezone.py\n@@ -72,8 +72,11 @@ def get_current_timezone_name():\n \n \n def _get_timezone_name(timezone):\n-    \"\"\"Return the name of ``timezone``.\"\"\"\n-    return str(timezone)\n+    \"\"\"\n+    Return the offset for fixed offset timezones, or the name of timezone if\n+    not set.\n+    \"\"\"\n+    return timezone.tzname(None) or str(timezone)\n \n # Timezone selection functions.\n \n",
+      "semantic_match": 0.04978038067349927,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 576,
+      "output_tokens": 567
+    },
+    {
+      "instance_id": "django__django-11119",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/template/engine.py\n+++ b/django/template/engine.py\n@@ -169,7 +169,7 @@\n         Like render_to_string but returns a Context instead.\n         \"\"\"\n         context = make_context(context, request, autoescape=self.autoescape)\n-        context = Context(dict_)\n+        context = Context(dict_, autoescape=self.autoescape)\n         if request is not None:\n             context.request = request\n         return context\n```\n\nWait, let me reconsider. Looking at the actual code structure more carefully:\n\n```diff\n--- a/django/template/engine.py\n+++ b/django/template/engine.py\n@@ -174,7 +174,7 @@\n         Return a string by rendering template_name with the given context.\n         \"\"\"\n         template = self.get_template(template_name)\n-        return template.render(context)\n+        return template.render(context, self.autoescape)\n```\n\nActually, let me look at this more carefully. The issue is in render_to_string. Here's the correct patch:\n\n```diff\n--- a/django/template/engine.py\n+++ b/django/template/engine.py\n@@ -160,7 +160,7 @@\n         Return a string by rendering template_name with the given context.\n         \"\"\"\n         template = self.get_template(template_name)\n-        return template.render(context)\n+        return template.render(context, autoescape=self.autoescape)\n```\n\nLet me reconsider the actual implementation. The correct fix should be:\n\n```diff\n--- a/django/template/engine.py\n+++ b/django/template/engine.py\n@@ -171,7 +171,7 @@\n     def render_to_string(self, template_name, context=None):\n         template = self.get_template(template_name)\n         context = self.make_context(context)\n-        return template.render(context)\n+        return template.render(context, autoescape=self.autoescape)\n```\n\nActually, looking more carefully at make_context:\n\n```diff\n--- a/django/template/engine.py\n+++ b/django/template/engine.py\n@@ -169,7 +169,9 @@\n         \"\"\"\n         if context is None:\n             context = {}\n-        return Context(context)\n+        if isinstance(context, Context):\n+            return context\n+        return Context(context, autoescape=self.autoescape)\n```",
+      "expected_patch": "diff --git a/django/template/engine.py b/django/template/engine.py\n--- a/django/template/engine.py\n+++ b/django/template/engine.py\n@@ -160,7 +160,7 @@ def render_to_string(self, template_name, context=None):\n         if isinstance(context, Context):\n             return t.render(context)\n         else:\n-            return t.render(Context(context))\n+            return t.render(Context(context, autoescape=self.autoescape))\n \n     def select_template(self, template_name_list):\n         \"\"\"\n",
+      "semantic_match": 0.12798634812286688,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 184,
+      "output_tokens": 627
+    },
+    {
+      "instance_id": "sympy__sympy-13647",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -1313,7 +1313,7 @@\n         newmat = self.zeros(self.rows, self.cols + other.cols)\n         newmat[:, :pos] = self[:, :pos]\n         newmat[:, pos:pos + other.cols] = other\n-        newmat[:, pos + other.cols:] = self[:, pos:]\n+        newmat[:, pos + other.cols:] = self[:, pos:self.cols]\n         return newmat\n \n     def col_join(self, other):\n</patch>",
+      "expected_patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -86,7 +86,7 @@ def entry(i, j):\n                 return self[i, j]\n             elif pos <= j < pos + other.cols:\n                 return other[i, j - pos]\n-            return self[i, j - pos - other.cols]\n+            return self[i, j - other.cols]\n \n         return self._new(self.rows, self.cols + other.cols,\n                          lambda i, j: entry(i, j))\n",
+      "semantic_match": 0.20628930817610064,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 709,
+      "output_tokens": 167
+    },
+    {
+      "instance_id": "sympy__sympy-15809",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sympy/functions/elementary/miscellaneous.py\n+++ b/sympy/functions/elementary/miscellaneous.py\n@@ -469,8 +469,7 @@\n \n     @classmethod\n     def _new_args_filter(cls, arg_sequence):\n-        if not arg_sequence:\n-            raise ValueError(\"The Max/Min functions must have arguments.\")\n+        # Return empty sequence for zero arguments (handled in __new__)\n         return arg_sequence\n \n     def _eval_derivative(self, s):\n@@ -689,6 +688,10 @@\n         if not args:\n             raise ValueError(\"The Max/Min functions must have arguments.\")\n \n+    def __new__(cls, *args, **assumptions):\n+        if not args:\n+            return S.Infinity\n+        return Function.__new__(cls, *args, **assumptions)\n \n class Min(MinMaxBase, Application):\n     \"\"\"\n@@ -774,6 +777,10 @@\n         if not args:\n             raise ValueError(\"The Max/Min functions must have arguments.\")\n \n+    def __new__(cls, *args, **assumptions):\n+        if not args:\n+            return S.NegativeInfinity\n+        return Function.__new__(cls, *args, **assumptions)\n \n class Rem(Function):\n     \"\"\"\n```",
+      "expected_patch": "diff --git a/sympy/functions/elementary/miscellaneous.py b/sympy/functions/elementary/miscellaneous.py\n--- a/sympy/functions/elementary/miscellaneous.py\n+++ b/sympy/functions/elementary/miscellaneous.py\n@@ -339,8 +339,6 @@ def real_root(arg, n=None, evaluate=None):\n \n class MinMaxBase(Expr, LatticeOp):\n     def __new__(cls, *args, **assumptions):\n-        if not args:\n-            raise ValueError(\"The Max/Min functions must have arguments.\")\n \n         args = (sympify(arg) for arg in args)\n \n",
+      "semantic_match": 0.3009575923392613,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 177,
+      "output_tokens": 337
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8621",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sphinx/roles.py\n+++ b/sphinx/roles.py\n@@ -60,7 +60,13 @@ def emph_literal_role(typ: str, rawtext: str, text: str, lineno: int, inliner:\n \n \n def kbd_role(typ: str, rawtext: str, text: str, lineno: int, inliner: Inliner,\n-             options: Dict = {}, content: List[str] = []) -> Tuple[List[Node], List[system_message]]:\n+             options: Dict = {}, content: List[str] = []) -> Tuple[List[Node], List[system_message]]:  # noqa: B006\n+    \"\"\"Role for keyboard input.\n+    \n+    Handles compound keystrokes separated by -, +, or ^ by splitting them,\n+    but treats these characters as literals when they appear alone or at the end.\n+    \"\"\"\n+    from typing import List as ListType\n     node = nodes.literal(rawtext, '', classes=['kbd'])\n-    parts = re.split(r'(\\+|\\-|\\^)', text)\n-    for part in parts:\n-        if part in ('+', '-', '^'):\n-            node += nodes.Text(part)\n+    parts: ListType[str] = []\n+    current = \"\"\n+    i = 0\n+    while i < len(text):\n+        char = text[i]\n+        if char in ('+', '-', '^'):\n+            # Check if this is a separator (has content before and after)\n+            has_before = current or parts\n+            has_after = i + 1 < len(text)\n+            if has_before and has_after:\n+                # It's a separator\n+                if current:\n+                    parts.append(current)\n+                    current = \"\"\n+                parts.append(char)\n+            else:\n+                # It's part of a keystroke\n+                current += char\n         else:\n-            node += nodes.literal('', part, classes=['kbd'])\n+            current += char\n+        i += 1\n+    if current:\n+        parts.append(current)\n+    \n+    for i, part in enumerate(parts):\n+        if part in ('+', '-', '^'):\n+            node += nodes.Text(part)\n+        else:\n+            node += nodes.literal('', part, classes=['kbd'])\n     return [node], []\n \n \n\n```",
+      "expected_patch": "diff --git a/sphinx/builders/html/transforms.py b/sphinx/builders/html/transforms.py\n--- a/sphinx/builders/html/transforms.py\n+++ b/sphinx/builders/html/transforms.py\n@@ -37,7 +37,7 @@ class KeyboardTransform(SphinxPostTransform):\n     \"\"\"\n     default_priority = 400\n     builders = ('html',)\n-    pattern = re.compile(r'(-|\\+|\\^|\\s+)')\n+    pattern = re.compile(r'(?<=.)(-|\\+|\\^|\\s+)(?=.)')\n \n     def run(self, **kwargs: Any) -> None:\n         matcher = NodeMatcher(nodes.literal, classes=[\"kbd\"])\n",
+      "semantic_match": 0.04015378043571124,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 680,
+      "output_tokens": 612
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13439",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sklearn/pipeline.py\n+++ b/sklearn/pipeline.py\n@@ -114,6 +114,9 @@ class Pipeline(_BaseComposition):\n     def __getitem__(self, ind):\n         \"\"\"Returns a sub-pipeline or a single esimtator in the pipeline\n \n+        Indexing with an integer will return an estimator; using a slice\n+        returns another Pipeline instance which copies a slice of this\n+        Pipeline. This copy is shallow: modifying (or fitting) estimators in\n         the sub-pipeline will affect the larger pipeline and vice-versa.\n         However, replacing a value in `step` will not change a copy.\n         \"\"\"\n@@ -124,6 +127,12 @@ class Pipeline(_BaseComposition):\n             return self.__class__(self.steps[ind])\n \n     def __len__(self):\n+        \"\"\"\n+        Returns the length of the Pipeline\n+        \"\"\"\n+        return len(self.steps)\n+\n+    def _validate_steps(self):\n         \"\"\"\n         Returns the length of the Pipeline\n         \"\"\"\n```\n\nWait, I see there's already a `__len__` method that has the wrong implementation. Let me correct this:\n\n```diff\n--- a/sklearn/pipeline.py\n+++ b/sklearn/pipeline.py\n@@ -114,6 +114,9 @@ class Pipeline(_BaseComposition):\n     def __getitem__(self, ind):\n         \"\"\"Returns a sub-pipeline or a single esimtator in the pipeline\n \n+        Indexing with an integer will return an estimator; using a slice\n+        returns another Pipeline instance which copies a slice of this\n+        Pipeline. This copy is shallow: modifying (or fitting) estimators in\n         the sub-pipeline will affect the larger pipeline and vice-versa.\n         However, replacing a value in `step` will not change a copy.\n         \"\"\"\n@@ -123,6 +126,13 @@ class Pipeline(_BaseComposition):\n         else:\n             return self.__class__(self.steps[ind])\n \n+    def __len__(self):\n+        \"\"\"\n+        Returns the length of the Pipeline\n+        \"\"\"\n+        return len(self.steps)\n+\n+    def _validate_steps(self):\n         \"\"\"\n         Ensure that the transformers of the pipeline implement fit and\n         transform or fit_resample\n```",
+      "expected_patch": "diff --git a/sklearn/pipeline.py b/sklearn/pipeline.py\n--- a/sklearn/pipeline.py\n+++ b/sklearn/pipeline.py\n@@ -199,6 +199,12 @@ def _iter(self, with_final=True):\n             if trans is not None and trans != 'passthrough':\n                 yield idx, name, trans\n \n+    def __len__(self):\n+        \"\"\"\n+        Returns the length of the Pipeline\n+        \"\"\"\n+        return len(self.steps)\n+\n     def __getitem__(self, ind):\n         \"\"\"Returns a sub-pipeline or a single esimtator in the pipeline\n \n",
+      "semantic_match": 0.09114583333333333,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 530,
+      "output_tokens": 570
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-13989",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/lib/matplotlib/axes/_axes.py\n+++ b/lib/matplotlib/axes/_axes.py\n@@ -6609,10 +6609,6 @@\n                         \"range parameter must be finite. Got \"\n                         f\"range={range}\")\n \n-            if density:\n-                # Replace the initial range with the new range\n-                xmin, xmax = range\n-\n             if bins is not None:\n                 m = np.zeros(n)\n                 # Loop through each set of data, calculating the histogram.\n@@ -6634,6 +6630,11 @@\n                     # Validate the computed bin edges\n                     if m.size == 0:\n                         return [], m, []\n+                    \n+                    # Use the original range if density=True\n+                    if density and range is not None:\n+                        m[0] = range[0]\n+                        m[-1] = range[1]\n \n                 # Now the bin edges are assigned, we can check if the range is actually valid.\n                 # If using a log scale, we check whether the range is positive.\n\n</patch>",
+      "expected_patch": "diff --git a/lib/matplotlib/axes/_axes.py b/lib/matplotlib/axes/_axes.py\n--- a/lib/matplotlib/axes/_axes.py\n+++ b/lib/matplotlib/axes/_axes.py\n@@ -6686,7 +6686,7 @@ def hist(self, x, bins=None, range=None, density=None, weights=None,\n \n         density = bool(density) or bool(normed)\n         if density and not stacked:\n-            hist_kwargs = dict(density=density)\n+            hist_kwargs['density'] = density\n \n         # List to store all the top coordinates of the histograms\n         tops = []\n",
+      "semantic_match": 0.16446858029480219,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 553,
+      "output_tokens": 283
+    },
+    {
+      "instance_id": "sympy__sympy-12096",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sympy/core/function.py\n+++ b/sympy/core/function.py\n@@ -572,7 +572,7 @@ class Function(Application, Expr):\n         # If the function has an implementation (_imp_), use it\n         if hasattr(self, '_imp_') and not self.free_symbols:\n             try:\n-                return self._imp_(*[arg.evalf(prec, options) for arg in self.args])\n+                return self._imp_(*[arg.evalf(prec, options) for arg in self.args]).evalf(prec, options)\n             except (AttributeError, TypeError):\n                 pass\n \n```",
+      "expected_patch": "diff --git a/sympy/core/function.py b/sympy/core/function.py\n--- a/sympy/core/function.py\n+++ b/sympy/core/function.py\n@@ -507,7 +507,7 @@ def _eval_evalf(self, prec):\n             func = getattr(mpmath, fname)\n         except (AttributeError, KeyError):\n             try:\n-                return Float(self._imp_(*self.args), prec)\n+                return Float(self._imp_(*[i.evalf(prec) for i in self.args]), prec)\n             except (AttributeError, TypeError, ValueError):\n                 return\n \n",
+      "semantic_match": 0.3016759776536313,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 293,
+      "output_tokens": 172
+    },
+    {
+      "instance_id": "sympy__sympy-17655",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sympy/geometry/point.py\n+++ b/sympy/geometry/point.py\n@@ -217,7 +217,7 @@\n         if not isinstance(other, Point):\n             other = Point(other, evaluate=False)\n         try:\n-            s, o = Point._normalize_dimension(self, Point(other, evaluate=False))\n+            s, o = Point._normalize_dimension(self, other)\n         except TypeError:\n             raise GeometryError(\"Don't know how to add {} and a Point object\".format(other))\n \n@@ -243,6 +243,15 @@\n         \"\"\"The Cartesian product of the Points is a GeometryEntity of dimension equal to the\n         sum of the dimensions of the Points. Returns a sequence of coordinates in the form (x1, y1, z1, ..., x2, y2, z2, ...).\"\"\"\n         return Point(*[x for y in zip(self.args, other.args) for x in y])\n+\n+    def __rmul__(self, other):\n+        \"\"\"Multiply a Point by a scalar (right multiplication).\"\"\"\n+        from sympy.core.mul import Mul\n+        from sympy.core.numbers import Number\n+        if isinstance(other, (Number, Mul)):\n+            return Point(*[simplify(other * x) for x in self.args])\n+        else:\n+            return NotImplemented\n \n     def __contains__(self, item):\n         return item in self.args\n\n</patch>",
+      "expected_patch": "diff --git a/sympy/geometry/point.py b/sympy/geometry/point.py\n--- a/sympy/geometry/point.py\n+++ b/sympy/geometry/point.py\n@@ -278,6 +278,10 @@ def __mul__(self, factor):\n         coords = [simplify(x*factor) for x in self.args]\n         return Point(coords, evaluate=False)\n \n+    def __rmul__(self, factor):\n+        \"\"\"Multiply a factor by point's coordinates.\"\"\"\n+        return self.__mul__(factor)\n+\n     def __neg__(self):\n         \"\"\"Negate the point.\"\"\"\n         coords = [-x for x in self.args]\n",
+      "semantic_match": 0.1306277742549144,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 649,
+      "output_tokens": 373
+    },
+    {
+      "instance_id": "django__django-12304",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/models/enums.py\n+++ b/django/db/models/enums.py\n@@ -11,6 +11,7 @@\n \n \n class Choices(enum.Enum, metaclass=ChoicesMeta):\n+    do_not_call_in_templates = True\n \n     @DynamicClassAttribute\n     def label(self):\n\n```",
+      "expected_patch": "diff --git a/django/db/models/enums.py b/django/db/models/enums.py\n--- a/django/db/models/enums.py\n+++ b/django/db/models/enums.py\n@@ -31,6 +31,7 @@ def __new__(metacls, classname, bases, classdict):\n         # that is passed in as \"self\" as the value to use when looking up the\n         # label in the choices.\n         cls.label = property(lambda self: cls._value2label_map_.get(self.value))\n+        cls.do_not_call_in_templates = True\n         return enum.unique(cls)\n \n     def __contains__(cls, member):\n",
+      "semantic_match": 0.3655274888558692,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 235,
+      "output_tokens": 106
+    },
+    {
+      "instance_id": "django__django-13012",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -1372,6 +1372,9 @@ class ExpressionWrapper(Expression):\n     def get_group_by_cols(self, alias=None):\n         return self.expression.get_group_by_cols(alias=alias)\n \n+    def resolve_expression(self, query=None, allow_joins=True, reuse=None, summarize=False, for_save=False):\n+        return self.expression.resolve_expression(query, allow_joins, reuse, summarize, for_save)\n+\n     def as_sql(self, compiler, connection):\n         return compiler.compile(self.expression)\n \n```",
+      "expected_patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -863,6 +863,9 @@ def set_source_expressions(self, exprs):\n     def get_source_expressions(self):\n         return [self.expression]\n \n+    def get_group_by_cols(self, alias=None):\n+        return self.expression.get_group_by_cols(alias=alias)\n+\n     def as_sql(self, compiler, connection):\n         return self.expression.as_sql(compiler, connection)\n \n",
+      "semantic_match": 0.3927855711422846,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 501,
+      "output_tokens": 189
+    },
+    {
+      "instance_id": "django__django-14672",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/models/fields/reverse_related.py\n+++ b/django/db/models/fields/reverse_related.py\n@@ -318,7 +318,7 @@\n             self.through,\n             self.through_fields,\n             self.db_constraint,\n-        )\n+        ) + (make_hashable(self.through_fields),)\n \n     def get_related_field(self):\n         \"\"\"\n```\n\nWait, let me reconsider. Looking at the error and the description more carefully, the `identity` property needs to have `through_fields` wrapped in `make_hashable`. Let me check the actual implementation:\n\n```diff\n--- a/django/db/models/fields/reverse_related.py\n+++ b/django/db/models/fields/reverse_related.py\n@@ -314,11 +314,11 @@\n     def identity(self):\n         return super().identity + (\n             self.through,\n-            self.through_fields,\n+            make_hashable(self.through_fields),\n             self.db_constraint,\n         )\n \n     def get_related_field(self):\n         \"\"\"\n         Return the field in the 'to' object to which this relationship is tied.\n         Provided for symmetry with ManyToOneRel.\n```",
+      "expected_patch": "diff --git a/django/db/models/fields/reverse_related.py b/django/db/models/fields/reverse_related.py\n--- a/django/db/models/fields/reverse_related.py\n+++ b/django/db/models/fields/reverse_related.py\n@@ -310,7 +310,7 @@ def __init__(self, field, to, related_name=None, related_query_name=None,\n     def identity(self):\n         return super().identity + (\n             self.through,\n-            self.through_fields,\n+            make_hashable(self.through_fields),\n             self.db_constraint,\n         )\n \n",
+      "semantic_match": 0.39589442815249265,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 2435,
+      "output_tokens": 324
+    },
+    {
+      "instance_id": "psf__requests-5414",
+      "success": true,
+      "generated_patch": "```diff\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -398,7 +398,7 @@\n             try:\n                 host = host.encode('idna').decode('utf-8')\n-            except UnicodeError:\n+            except (UnicodeError, UnicodeDecodeError):\n                 raise InvalidURL('URL has an invalid label.')\n         elif host.startswith(u'*'):\n             raise InvalidURL('URL has an invalid label.')\n```\n\nWait, let me check the actual code more carefully. The issue is that the UnicodeError is not being caught. Let me look at where the IDNA encoding happens:\n\n```diff\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -396,9 +396,12 @@\n             raise InvalidURL('URL has an invalid label.')\n         \n         # Carefully reconstruct the network location\n-        netloc = auth or ''\n-        if netloc:\n-            netloc += '@'\n+        try:\n+            netloc = auth or ''\n+            if netloc:\n+                netloc += '@'\n+        except UnicodeError:\n+            raise InvalidURL('URL has an invalid label.')\n         \n         try:\n             netloc += host\n```\n\nActually, looking more carefully at the problem, the IDNA encoding happens when trying to encode the host. Let me trace through the code:\n\n```diff\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -394,11 +394,14 @@\n         # Encode invalid characters per RFC 3986\n         host, port = to_native_string(host), to_native_string(port)\n         \n-        if not host:\n-            raise InvalidURL('URL has an invalid label.')\n-        \n-        # Carefully reconstruct the network location\n         try:\n+            if not host:\n+                raise InvalidURL('URL has an invalid label.')\n+            \n+            # Carefully reconstruct the network location\n             netloc = auth or ''\n             if netloc:\n                 netloc += '@'\n```\n\nLet me look at the actual location where IDNA encoding occurs:\n\n```diff\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -394,7 +394,7 @@\n \n         try:\n             host = host.encode('idna').decode('utf-8')\n-        except UnicodeError:\n+        except (UnicodeError, UnicodeDecodeError, idna.core.IDNAError):\n             raise InvalidURL('URL has an invalid label.')\n```\n\nLet me provide the correct patch based on the traceback showing the IDNA encoding is what's failing:\n\n```diff\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -418,7 +418,7 @@\n \n             try:\n                 netloc = netloc.encode('idna').decode('utf-8')\n-            except UnicodeError:\n+            except (UnicodeError, UnicodeDecodeError):\n                 raise InvalidURL('URL has an invalid label.')\n```\n\nActually, the real issue is that the try-except block isn't catching all UnicodeError types. Let me provide the minimal correct fix:\n\n```diff\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -418,7 +418,7 @@\n \n             try:\n                 netloc = netloc.encode('idna').decode('utf-8')\n-            except UnicodeError:\n+            except (UnicodeError, Exception):\n                 raise InvalidURL('URL has an invalid label.')\n```\n\nLet me be more specific and catch the actual idna errors:\n\n```diff\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -418,7 +418,7 @@\n \n             try:\n                 netloc = netloc.encode('idna').decode('utf-8')\n-            except UnicodeError:\n+            except (UnicodeError, UnicodeDecodeError, Exception):\n                 raise InvalidURL('URL has an invalid label.')\n```\n\nThe cleanest fix is:\n\n```diff\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -418,7 +418,7 @@\n \n             try:\n                 netloc = netloc.encode('idna').decode('utf-8')\n-            except UnicodeError:\n+            except Exception:\n                 raise InvalidURL('URL has an invalid label.')\n```",
+      "expected_patch": "diff --git a/requests/models.py b/requests/models.py\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -403,7 +403,7 @@ def prepare_url(self, url, params):\n                 host = self._get_idna_encoded_host(host)\n             except UnicodeError:\n                 raise InvalidURL('URL has an invalid label.')\n-        elif host.startswith(u'*'):\n+        elif host.startswith((u'*', u'.')):\n             raise InvalidURL('URL has an invalid label.')\n \n         # Carefully reconstruct the network location\n",
+      "semantic_match": 0.11828836195148541,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 579,
+      "output_tokens": 1115
+    },
+    {
+      "instance_id": "sympy__sympy-16450",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sympy/core/sympify.py\n+++ b/sympy/core/sympify.py\n@@ -450,7 +450,14 @@\n     \"\"\"\n     from sympy.core.symbol import Dummy, Symbol\n     \n-    # Create positive dummy symbols for each symbol in the expression\n+    # Collect assumptions to preserve\n+    def _get_assumptions_to_preserve(symbol):\n+        \"\"\"Get assumptions that should be preserved during posify.\"\"\"\n+        preserve = {}\n+        for assumption in ('finite', 'infinite', 'integer', 'rational', 'prime', 'even', 'odd'):\n+            if assumption in symbol._assumptions:\n+                preserve[assumption] = symbol._assumptions[assumption]\n+        return preserve\n     \n     if not isinstance(eq, (list, tuple, set)):\n         eq = [eq]\n@@ -463,7 +470,9 @@\n     \n     for s in reps:\n         if s.is_Symbol:\n-            reps[s] = Dummy(s.name, positive=True, **s._assumptions.generator)\n+            preserved = _get_assumptions_to_preserve(s)\n+            assumptions = {'positive': True, 'commutative': s.is_commutative}\n+            reps[s] = Dummy(s.name, **{**assumptions, **preserved})\n     \n     # Replace symbols with positive dummies\n     eq_new = [e.subs(reps) for e in eq]\n</patch>\n\nWait, I need to check the actual location of the posify function. Let me provide the correct patch:\n\n--- a/sympy/core/sympify.py\n+++ b/sympy/core/sympify.py\n@@ -474,10 +474,19 @@\n     if iterable(eq):\n         f = type(eq)\n     rep = {s: Dummy(s.name, positive=True, **s._assumptions.generator)\n-           for s in eq.atoms(Symbol) if s.is_positive is None}\n+           for s in eq.atoms(Symbol) if s.is_positive is None}\n+    \n+    # Preserve certain assumptions that are independent of positivity\n+    preserve_assumptions = ('finite', 'infinite', 'integer', 'rational', 'prime', 'even', 'odd')\n+    for old_s, new_s in rep.items():\n+        for assumption in preserve_assumptions:\n+            val = old_s._assumptions.get(assumption)\n+            if val is not None:\n+                new_s._assumptions[assumption] = val\n+    \n     rep_sqrt = {s: Dummy(s.name, nonnegative=True, **s._assumptions.generator)\n                 for s in eq.atoms(Symbol) if s.is_nonnegative is None}\n     return f(*[i.subs(rep).subs(rep_sqrt) for i in eq]), {v: k for k, v in rep.items()}\n\nLet me find the actual posify function:\n\n--- a/sympy/core/sympify.py\n+++ b/sympy/core/sympify.py\n@@ -471,9 +471,18 @@\n     eq = sympify(eq)\n     if iterable(eq):\n         f = type(eq)\n+    \n+    # Preserve certain assumptions that are independent of positivity\n+    preserve_assumptions = ('finite', 'infinite', 'integer', 'rational', 'prime', 'even', 'odd')\n+    \n     rep = {s: Dummy(s.name, positive=True, **s._assumptions.generator)\n            for s in eq.atoms(Symbol) if s.is_positive is None}\n+    for old_s, new_s in rep.items():\n+        for assumption in preserve_assumptions:\n+            val = old_s._assumptions.get(assumption)\n+            if val is not None:\n+                new_s._assumptions[assumption] = val\n+    \n     rep_sqrt = {s: Dummy(s.name, nonnegative=True, **s._assumptions.generator)\n                 for s in eq.atoms(Symbol) if s.is_nonnegative is None}\n     return f(*[i.subs(rep).subs(rep_sqrt) for i in eq]), {v: k for k, v in rep.items()}\n\n<patch>\n--- a/sympy/core/sympify.py\n+++ b/sympy/core/sympify.py\n@@ -471,9 +471,18 @@\n     eq = sympify(eq)\n     if iterable(eq):\n         f = type(eq)\n+    \n+    # Preserve certain assumptions that are independent of positivity\n+    preserve_assumptions = ('finite', 'infinite', 'integer', 'rational', 'prime', 'even', 'odd')\n+    \n     rep = {s: Dummy(s.name, positive=True, **s._assumptions.generator)\n            for s in eq.atoms(Symbol) if s.is_positive is None}\n+    for old_s, new_s in rep.items():\n+        for assumption in preserve_assumptions:\n+            val = old_s._assumptions.get(assumption)\n+            if val is not None:\n+                new_s._assumptions[assumption] = val\n+    \n     rep_sqrt = {s: Dummy(s.name, nonnegative=True, **s._assumptions.generator)\n                 for s in eq.atoms(Symbol) if s.is_nonnegative is None}\n     return f(*[i.subs(rep).subs(rep_sqrt) for i in eq]), {v: k for k, v in rep.items()}\n</patch>",
+      "expected_patch": "diff --git a/sympy/simplify/simplify.py b/sympy/simplify/simplify.py\n--- a/sympy/simplify/simplify.py\n+++ b/sympy/simplify/simplify.py\n@@ -251,7 +251,7 @@ def posify(eq):\n             eq[i] = e.subs(reps)\n         return f(eq), {r: s for s, r in reps.items()}\n \n-    reps = {s: Dummy(s.name, positive=True)\n+    reps = {s: Dummy(s.name, positive=True, **s.assumptions0)\n                  for s in eq.free_symbols if s.is_positive is None}\n     eq = eq.subs(reps)\n     return eq, {r: s for s, r in reps.items()}\n",
+      "semantic_match": 0.05509641873278237,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 413,
+      "output_tokens": 1394
+    },
+    {
+      "instance_id": "astropy__astropy-13453",
+      "success": true,
+      "generated_patch": "Looking at this issue, the HTML writer is not respecting the `formats` argument when writing tables. I need to find where the HTML writer is implemented and fix it to use the formatting.\n\nLet me trace through the astropy code:\n\n1. The HTML writer is in `astropy/io/ascii/html.py`\n2. Other ASCII formats like CSV and RST use the `formats` argument correctly\n3. The HTML writer likely needs to apply formatting before writing values\n\nLooking at the HTML writer code, the issue is that the `write` method in the `HTML` class doesn't use the column formats when writing data values. Other writers use `col.str_vals` which applies the format, but HTML writer directly accesses the data.\n\nHere's the patch:\n\n--- a/astropy/io/ascii/html.py\n+++ b/astropy/io/ascii/html.py\n@@ -76,6 +76,9 @@ class HTML(core.BaseReader):\n         from astropy.table import Column\n         from astropy.utils.xml.writer import xml_escape\n \n+        # Apply formats to columns\n+        self._set_col_formats(self.cols)\n+\n         # Use XMLWriter to output HTML to lines\n         w = writer.XMLWriter(ListWriter(lines))\n \n@@ -94,13 +97,18 @@ class HTML(core.BaseReader):\n                 with w.tag('th'):\n                     w.data(xml_escape(col.info.name))\n         for row in self._data_to_write:\n+            formatted_row = []\n+            for col in self.cols:\n+                if hasattr(col, 'info') and col.info.format is not None:\n+                    formatted_row.append(col.info.format(row[col.info.name]))\n+                else:\n+                    formatted_row.append(row[col.info.name])\n             with w.tag('tr'):\n-                for col in self.cols:\n+                for val in formatted_row:\n                     with w.tag('td'):\n-                        if isinstance(row[col.info.name], Column):\n-                            w.data(xml_escape(str(row[col.info.name][0])))\n+                        if isinstance(val, Column):\n+                            w.data(xml_escape(str(val[0])))\n                         else:\n-                            w.data(xml_escape(str(row[col.info.name])))\n+                            w.data(xml_escape(str(val)))\n \n         if htmldict.get('raw_html_attrs', None):\n             warnings.warn(",
+      "expected_patch": "diff --git a/astropy/io/ascii/html.py b/astropy/io/ascii/html.py\n--- a/astropy/io/ascii/html.py\n+++ b/astropy/io/ascii/html.py\n@@ -349,11 +349,13 @@ def write(self, table):\n         cols = list(table.columns.values())\n \n         self.data.header.cols = cols\n+        self.data.cols = cols\n \n         if isinstance(self.data.fill_values, tuple):\n             self.data.fill_values = [self.data.fill_values]\n \n         self.data._set_fill_values(cols)\n+        self.data._set_col_formats()\n \n         lines = []\n \n",
+      "semantic_match": 0.07451923076923077,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 2547,
+      "output_tokens": 628
+    },
+    {
+      "instance_id": "django__django-15851",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/backends/postgresql/client.py\n+++ b/django/db/backends/postgresql/client.py\n@@ -37,11 +37,11 @@\n             args += [\"-p\", str(port)]\n         if dbname:\n             args += [dbname]\n+        args.extend(parameters)\n \n         sigint_handler = signal.getsignal(signal.SIGINT)\n         subprocess_env = os.environ.copy()\n         try:\n             signal.signal(signal.SIGINT, signal.SIG_IGN)\n-            subprocess.run(args + parameters, env=subprocess_env, check=True)\n+            subprocess.run(args, env=subprocess_env, check=True)\n         finally:\n             signal.signal(signal.SIGINT, sigint_handler)\n```",
+      "expected_patch": "diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py\n--- a/django/db/backends/postgresql/client.py\n+++ b/django/db/backends/postgresql/client.py\n@@ -32,9 +32,9 @@ def settings_to_cmd_args_env(cls, settings_dict, parameters):\n             args += [\"-h\", host]\n         if port:\n             args += [\"-p\", str(port)]\n+        args.extend(parameters)\n         if dbname:\n             args += [dbname]\n-        args.extend(parameters)\n \n         env = {}\n         if passwd:\n",
+      "semantic_match": 0.4012409513960703,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 254,
+      "output_tokens": 207
+    },
+    {
+      "instance_id": "pydata__xarray-4094",
+      "success": true,
+      "generated_patch": "<context>\n<document>\nAnalyzing the bug...\n\nThe issue is in the `to_unstacked_dataset` method. When working with single-dimension variables, there's a conflict with the variable 'y' (the stacking dimension) during the merge operation.\n\nLet me trace through the code to understand what's happening:\n\n1. `to_stacked_array` creates a stacked array with a new dimension 'y'\n2. `to_unstacked_dataset` tries to unstack this back to the original dataset\n3. The merge conflict occurs because 'y' appears both as a coordinate and as a variable\n\nLooking at the xarray codebase, the `to_unstacked_dataset` method is in `xarray/core/dataarray.py`. The problem is that when unstacking, the method doesn't properly handle the case where the stacking dimension coordinate should be dropped before merging.\n\nLet me find the exact implementation and create a fix.\n\n</context>\n\n--- a/xarray/core/dataarray.py\n+++ b/xarray/core/dataarray.py\n@@ -2076,7 +2076,7 @@\n             idx = self.indexes[dim]\n             if not isinstance(idx, pd.MultiIndex):\n                 raise ValueError(f\"'{dim}' is not a stacked coordinate\")\n-            level_number = idx._get_level_number(level)\n+            level_number = idx._get_level_number(level) \n             variables = idx.levels[level_number]\n         else:\n             variables = pd.Index(variables)\n@@ -2092,7 +2092,11 @@\n             data_dict[str(name)] = data_array\n \n         coord_names = set(self.coords) - {dim}\n-        return Dataset(data_dict, coords={k: self.coords[k] for k in coord_names})\n+        coords = {k: self.coords[k] for k in coord_names}\n+        # Remove the unstacked dimension from coords if it exists as a scalar\n+        if dim in coords:\n+            del coords[dim]\n+        return Dataset(data_dict, coords=coords)\n \n     def transpose(self, *dims: Hashable, transpose_coords: bool = True) -> \"DataArray\":\n         \"\"\"Return a new DataArray object with transposed dimensions.",
+      "expected_patch": "diff --git a/xarray/core/dataarray.py b/xarray/core/dataarray.py\n--- a/xarray/core/dataarray.py\n+++ b/xarray/core/dataarray.py\n@@ -1961,7 +1961,7 @@ def to_unstacked_dataset(self, dim, level=0):\n         # pull variables out of datarray\n         data_dict = {}\n         for k in variables:\n-            data_dict[k] = self.sel({variable_dim: k}).squeeze(drop=True)\n+            data_dict[k] = self.sel({variable_dim: k}, drop=True).squeeze(drop=True)\n \n         # unstacked dataset\n         return Dataset(data_dict)\n",
+      "semantic_match": 0.09728308501314636,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 714,
+      "output_tokens": 553
+    },
+    {
+      "instance_id": "django__django-13569",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -1,6 +1,7 @@\n from collections import namedtuple\n \n from django.db.models.expressions import OrderBy, Random, RawSQL, Ref\n+from django.db.models.functions import Random as RandomFunc\n \n \n class SQLCompiler:\n@@ -69,7 +70,7 @@\n             if is_ref:\n                 continue\n             expressions.extend(\n-                expr.get_source_expressions()\n+                [e for e in expr.get_source_expressions() if not isinstance(e, (Random, RandomFunc))]\n             )\n \n         for expr in expressions:\n```",
+      "expected_patch": "diff --git a/django/db/models/functions/math.py b/django/db/models/functions/math.py\n--- a/django/db/models/functions/math.py\n+++ b/django/db/models/functions/math.py\n@@ -154,6 +154,9 @@ def as_oracle(self, compiler, connection, **extra_context):\n     def as_sqlite(self, compiler, connection, **extra_context):\n         return super().as_sql(compiler, connection, function='RAND', **extra_context)\n \n+    def get_group_by_cols(self, alias=None):\n+        return []\n+\n \n class Round(Transform):\n     function = 'ROUND'\n",
+      "semantic_match": 0.12313803376365443,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 716,
+      "output_tokens": 196
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23476",
+      "success": true,
+      "generated_patch": "```diff\n--- a/lib/matplotlib/backends/backend_macosx.py\n+++ b/lib/matplotlib/backends/backend_macosx.py\n@@ -29,7 +29,8 @@\n \n     def __init__(self, figure):\n         super().__init__(figure=figure)\n-        width, height = self.get_width_height()\n+        width, height = self.get_width_height(physical=True)\n+        width, height = int(width / self.device_pixel_ratio), int(height / self.device_pixel_ratio)\n         _macosx.FigureCanvas.__init__(self, width, height)\n         self._device_scale = 0.0\n \n```",
+      "expected_patch": "diff --git a/lib/matplotlib/figure.py b/lib/matplotlib/figure.py\n--- a/lib/matplotlib/figure.py\n+++ b/lib/matplotlib/figure.py\n@@ -3023,6 +3023,9 @@ def __getstate__(self):\n         # Set cached renderer to None -- it can't be pickled.\n         state[\"_cachedRenderer\"] = None\n \n+        # discard any changes to the dpi due to pixel ratio changes\n+        state[\"_dpi\"] = state.get('_original_dpi', state['_dpi'])\n+\n         # add version information to the state\n         state['__mpl_version__'] = mpl.__version__\n \n",
+      "semantic_match": 0.06602768903088392,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1309,
+      "output_tokens": 179
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-12585",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sklearn/base.py\n+++ b/sklearn/base.py\n@@ -48,7 +48,7 @@ def clone(estimator, safe=True):\n     estimator_type = type(estimator)\n     # XXX: not handling dictionaries\n     if estimator_type in (list, tuple, set, frozenset):\n         return estimator_type([clone(e, safe=safe) for e in estimator])\n-    elif not hasattr(estimator, 'get_params'):\n+    elif not hasattr(estimator, 'get_params') or isinstance(estimator, type):\n         if not safe:\n             return copy.deepcopy(estimator)\n         else:\n```",
+      "expected_patch": "diff --git a/sklearn/base.py b/sklearn/base.py\n--- a/sklearn/base.py\n+++ b/sklearn/base.py\n@@ -48,7 +48,7 @@ def clone(estimator, safe=True):\n     # XXX: not handling dictionaries\n     if estimator_type in (list, tuple, set, frozenset):\n         return estimator_type([clone(e, safe=safe) for e in estimator])\n-    elif not hasattr(estimator, 'get_params'):\n+    elif not hasattr(estimator, 'get_params') or isinstance(estimator, type):\n         if not safe:\n             return copy.deepcopy(estimator)\n         else:\n",
+      "semantic_match": 0.913232104121475,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 473,
+      "output_tokens": 178
+    },
+    {
+      "instance_id": "django__django-10999",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/utils/dateparse.py\n+++ b/django/utils/dateparse.py\n@@ -15,7 +15,7 @@ date_re = re.compile(\n \n standard_duration_re = re.compile(\n     r'^'\n     r'(?:(?P<days>-?\\d+) (days?, )?)?'\n-    r'((?:(?P<hours>-?\\d+):)(?=\\d+:\\d+))?'\n+    r'((?:(?P<hours>-?\\d+):)(?=-?\\d+:-?\\d+))?'\n     r'(?:(?P<minutes>-?\\d+):)?'\n     r'(?P<seconds>-?\\d+)'\n     r'(?:\\.(?P<microseconds>\\d{1,6})\\d{0,6})?'\n```",
+      "expected_patch": "diff --git a/django/utils/dateparse.py b/django/utils/dateparse.py\n--- a/django/utils/dateparse.py\n+++ b/django/utils/dateparse.py\n@@ -29,9 +29,10 @@\n standard_duration_re = re.compile(\n     r'^'\n     r'(?:(?P<days>-?\\d+) (days?, )?)?'\n-    r'((?:(?P<hours>-?\\d+):)(?=\\d+:\\d+))?'\n-    r'(?:(?P<minutes>-?\\d+):)?'\n-    r'(?P<seconds>-?\\d+)'\n+    r'(?P<sign>-?)'\n+    r'((?:(?P<hours>\\d+):)(?=\\d+:\\d+))?'\n+    r'(?:(?P<minutes>\\d+):)?'\n+    r'(?P<seconds>\\d+)'\n     r'(?:\\.(?P<microseconds>\\d{1,6})\\d{0,6})?'\n     r'$'\n )\n",
+      "semantic_match": 0.3627906976744186,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 349,
+      "output_tokens": 218
+    },
+    {
+      "instance_id": "pylint-dev__pylint-4970",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/pylint/checkers/similar.py\n+++ b/pylint/checkers/similar.py\n@@ -894,6 +894,10 @@ class SimilarChecker(BaseChecker, Similar, MapReduceMixin):\n         \"\"\"\n         if self.linter.config.min_similarity_lines == 0:\n             return\n+        # If min_similarity_lines is 0, disable the check\n+        if self.linter.config.min_similarity_lines == 0:\n+            return\n+\n         Similar.append_stream(\n             self, self.linter.current_name, stream, node.file_encoding\n         )\n\n</patch>\n\nWait, let me reconsider. The issue is that the code treats `min_similarity_lines=0` as a valid threshold, causing every line to match. Let me trace through the code more carefully.\n\n--- a/pylint/checkers/similar.py\n+++ b/pylint/checkers/similar.py\n@@ -891,6 +891,9 @@ class SimilarChecker(BaseChecker, Similar, MapReduceMixin):\n     def open(self) -> None:\n         \"\"\"Init the checkers: reset linesets and statistics information.\"\"\"\n         self.linesets: list[LineSet] = []\n+        # If min_similarity_lines is 0, disable the check\n+        if self.linter.config.min_similarity_lines == 0:\n+            self.linter.config.min_similarity_lines = float('inf')\n \n     def process_module(self, node: nodes.Module) -> None:\n         \"\"\"Process a module.",
+      "expected_patch": "diff --git a/pylint/checkers/similar.py b/pylint/checkers/similar.py\n--- a/pylint/checkers/similar.py\n+++ b/pylint/checkers/similar.py\n@@ -390,6 +390,8 @@ def append_stream(self, streamid: str, stream: TextIO, encoding=None) -> None:\n \n     def run(self) -> None:\n         \"\"\"start looking for similarities and display results on stdout\"\"\"\n+        if self.min_lines == 0:\n+            return\n         self._display_sims(self._compute_sims())\n \n     def _compute_sims(self) -> List[Tuple[int, Set[LinesChunkLimits_T]]]:\n",
+      "semantic_match": 0.10328068043742406,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 247,
+      "output_tokens": 397
+    },
+    {
+      "instance_id": "django__django-12965",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/models/sql/subqueries.py\n+++ b/django/db/models/sql/subqueries.py\n@@ -23,6 +23,10 @@ class DeleteQuery(Query):\n         self.where = self.where_class()\n         self.add_q(Q(pk__in=pk_list))\n \n+    def delete_batch_related(self, pk_list):\n+        # Used when deletion involves related objects\n+        self.delete_batch(pk_list)\n+\n     def do_query(self, table, where, using):\n         self.alias_map = {table: self.alias_map[table]}\n         self.where = where\n@@ -43,10 +47,14 @@ class DeleteQuery(Query):\n         Clear any existing values for related selections.\n         \"\"\"\n         self.related_ids = related_ids\n-        # Setup the query to delete all related objects for the given primary keys.\n-        for offset in range(0, len(self.related_ids), GET_ITERATOR_CHUNK_SIZE):\n-            chunk = self.related_ids[offset:offset + GET_ITERATOR_CHUNK_SIZE]\n-            self.clear_where()\n-            self.add_filter(('pk__in', chunk))\n-            inner_qs = self.clone()\n-            self.do_query(self.get_meta().db_table, self.where, using=using)\n+\n+    def has_results(self):\n+        # Optimize for delete() on a queryset with no filters\n+        q = self.chain()\n+        if self.is_empty():\n+            return False\n+        # Avoid generating subqueries if there are no filters\n+        if not self.where:\n+            return True\n+        q.clear_select_clause()\n+        return q.has_results()\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -408,8 +408,14 @@ class Collector:\n \n         for qs in self.fast_deletes:\n             count = qs._raw_delete(using=self.using)\n-            if count:\n-                deleted_counter[qs.model._meta.label] += count\n+            deleted_counter[qs.model._meta.label] += count\n \n         # update fields\n         for model, instances_for_fieldvalues in self.field_updates.items():\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -752,7 +752,9 @@ class QuerySet:\n         assert self.query.can_filter(), \\\n             \"Cannot use 'limit' or 'offset' with delete.\"\n \n-        if self._fields is not None:\n+        # Optimize: avoid subquery for unfiltered deletes\n+        can_use_simple_delete = not self.query.where and self._fields is None\n+        if self._fields is not None and not can_use_simple_delete:\n             raise TypeError(\"Cannot call delete() after .values() or .values_list()\")\n \n         del_query = self._chain()\n@@ -781,7 +783,11 @@ class QuerySet:\n     _raw_delete.alters_data = True\n \n     def _raw_delete(self, using):\n-        return sql.DeleteQuery(self.model).delete_qs(self, using)\n+        # Use optimized delete path for simple unfiltered queries\n+        if not self.query.where and self._fields is None:\n+            return sql.DeleteQuery(self.model).delete_batch_simple(self, using)\n+        else:\n+            return sql.DeleteQuery(self.model).delete_qs(self, using)\n \n     _raw_delete.alters_data = True\n--- a/django/db/models/sql/subqueries.py\n+++ b/django/db/models/sql/subqueries.py\n@@ -15,21 +15,33 @@ class DeleteQuery(Query):\n     def do_query(self, table, where, using):\n         self.alias_map = {table: self.alias_map[table]}\n         self.where = where\n-        cursor = self.get_compiler(using).execute_sql(CURSOR)\n-        if cursor:\n-            with cursor:\n-                return cursor.rowcount\n-        return 0\n+        return self.get_compiler(using).execute_sql(CURSOR)\n \n     def delete_batch(self, pk_list, using):\n         \"\"\"\n-        Delete the queryset in batches.\n+        Set up and execute delete queries for all the objects in pk_list.\n+\n+        More than one physical query may be executed if there are a\n+        lot of values in pk_list.\n         \"\"\"\n         self.add_filter(('pk__in', pk_list))\n         self.get_compiler(using).execute_sql(NO_RESULTS)\n+\n+    def delete_batch_simple(self, qs, using):\n+        \"\"\"\n+        Delete the queryset without using a subquery (optimized path).\n+        Used when there are no filters on the queryset.\n+        \"\"\"\n+        cursor = self.do_query(\n+            self.get_meta().db_table,\n+            self.where_class(),\n+            using=using,\n+        )\n+        if cursor:\n+            with cursor:\n+                return cursor.rowcount\n+        return 0\n \n     def delete_qs(self, query, using):\n         \"\"\"\n-        Delete the queryset in one SQL query (if possible). For simple queries,\n-        this is done by copying the query.query.where to self.query, for complex\n-        queries by using subquery.\n+        Delete the queryset in one SQL query (if possible).\n         \"\"\"\n```\n\nWait, let me reconsider this. Looking at the actual issue more carefully, the problem is that Django 3.1 started using subqueries for all deletes. I need to find where this was introduced and fix it properly.\n\n```diff\n--- a/django/db/models/sql/subqueries.py\n+++ b/django/db/models/sql/subqueries.py\n@@ -38,12 +38,17 @@ class DeleteQuery(Query):\n         Delete the queryset in one SQL query (if possible). For simple queries,\n         this is done by copying the query.query.where to self.query, for\n         complex queries by using subquery.\n         \"\"\"\n         innerq = query.query\n-        # Make sure the inner query has at least one table in use.\n-        innerq.get_initial_alias()\n-        # The same for our new query.\n-        self.get_initial_alias()\n-        innerq_used_tables = tuple([t for t in innerq.alias_map])\n-        self.add_filter(('pk__in', innerq))\n+        if not innerq.where:\n+            # Optimize DELETE by avoiding subquery when there are no filters\n+            self.where = innerq.where\n+        else:\n+            # Make sure the inner query has at least one table in use.\n+            innerq.get_initial_alias()\n+            # The same for our new query.\n+            self.get_initial_alias()\n+            innerq_used_tables = tuple([t for t in innerq.alias_map])\n+            self.add_filter(('pk__in', innerq))\n         try:\n             return self.get_compiler(using).execute_sql(CURSOR)\n         finally:\n```",
+      "expected_patch": "diff --git a/django/db/models/sql/compiler.py b/django/db/models/sql/compiler.py\n--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -1407,6 +1407,8 @@ def execute_sql(self, returning_fields=None):\n class SQLDeleteCompiler(SQLCompiler):\n     @cached_property\n     def single_alias(self):\n+        # Ensure base table is in aliases.\n+        self.query.get_initial_alias()\n         return sum(self.query.alias_refcount[t] > 0 for t in self.query.alias_map) == 1\n \n     def _as_sql(self, query):\n",
+      "semantic_match": 0.028640386162510058,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 861,
+      "output_tokens": 1862
+    },
+    {
+      "instance_id": "django__django-9296",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/core/paginator.py\n+++ b/django/core/paginator.py\n@@ -75,6 +75,9 @@\n     def __repr__(self):\n         return \"<Paginator object for %d items>\" % self.count\n \n+    def __iter__(self):\n+        for page_num in self.page_range:\n+            yield self.page(page_num)\n+\n     def validate_number(self, number):\n         \"\"\"Validate the given 1-based page number.\"\"\"\n         try:\n```",
+      "expected_patch": "diff --git a/django/core/paginator.py b/django/core/paginator.py\n--- a/django/core/paginator.py\n+++ b/django/core/paginator.py\n@@ -34,6 +34,10 @@ def __init__(self, object_list, per_page, orphans=0,\n         self.orphans = int(orphans)\n         self.allow_empty_first_page = allow_empty_first_page\n \n+    def __iter__(self):\n+        for page_number in self.page_range:\n+            yield self.page(page_number)\n+\n     def validate_number(self, number):\n         \"\"\"Validate the given 1-based page number.\"\"\"\n         try:\n",
+      "semantic_match": 0.23728813559322035,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 199,
+      "output_tokens": 140
+    },
+    {
+      "instance_id": "django__django-12193",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -524,7 +524,7 @@\n             return False\n \n     def get_context(self, name, value, attrs):\n-        if self.check_test(value):\n+        if self.check_test(value) and attrs is not None:\n             attrs = {**(attrs or {}), 'checked': True}\n         return super().get_context(name, value, attrs)\n \n```\n\nWait, let me reconsider. The issue is that the attrs dict is being modified in place. The fix should create a copy of attrs instead:\n\n```diff\n--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -524,7 +524,7 @@\n             return False\n \n     def get_context(self, name, value, attrs):\n-        if self.check_test(value):\n+        if self.check_test(value) and attrs is not None:\n             attrs = {**(attrs or {}), 'checked': True}\n         return super().get_context(name, value, attrs)\n```\n\nActually, looking more carefully, the code already does `attrs = {**(attrs or {}), 'checked': True}` which should create a new dict. But the problem is when `self.check_test(value)` is False, attrs is not reassigned and could still be the original mutable dict. Let me fix this properly:\n\n```diff\n--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -524,8 +524,11 @@\n             return False\n \n     def get_context(self, name, value, attrs):\n-        if self.check_test(value):\n-            attrs = {**(attrs or {}), 'checked': True}\n+        if attrs is not None:\n+            attrs = attrs.copy()\n+        if self.check_test(value):\n+            if attrs is None:\n+                attrs = {}\n+            attrs['checked'] = True\n         return super().get_context(name, value, attrs)\n \n```",
+      "expected_patch": "diff --git a/django/forms/widgets.py b/django/forms/widgets.py\n--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -522,9 +522,7 @@ def format_value(self, value):\n \n     def get_context(self, name, value, attrs):\n         if self.check_test(value):\n-            if attrs is None:\n-                attrs = {}\n-            attrs['checked'] = True\n+            attrs = {**(attrs or {}), 'checked': True}\n         return super().get_context(name, value, attrs)\n \n     def value_from_datadict(self, data, files, name):\n",
+      "semantic_match": 0.2419753086419753,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 273,
+      "output_tokens": 526
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10908",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sklearn/feature_extraction/text.py\n+++ b/sklearn/feature_extraction/text.py\n@@ -1042,6 +1042,7 @@ class CountVectorizer(BaseEstimator, VectorizerMixin):\n         -------\n         feature_names : list\n         \"\"\"\n+        self._check_vocabulary()\n         if not hasattr(self, 'vocabulary_'):\n             self._validate_vocabulary()\n \n\n```",
+      "expected_patch": "diff --git a/sklearn/feature_extraction/text.py b/sklearn/feature_extraction/text.py\n--- a/sklearn/feature_extraction/text.py\n+++ b/sklearn/feature_extraction/text.py\n@@ -971,6 +971,9 @@ def inverse_transform(self, X):\n \n     def get_feature_names(self):\n         \"\"\"Array mapping from feature integer indices to feature name\"\"\"\n+        if not hasattr(self, 'vocabulary_'):\n+            self._validate_vocabulary()\n+\n         self._check_vocabulary()\n \n         return [t for t, i in sorted(six.iteritems(self.vocabulary_),\n",
+      "semantic_match": 0.3033419023136247,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 664,
+      "output_tokens": 116
+    },
+    {
+      "instance_id": "django__django-11211",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/django/contrib/contenttypes/fields.py\n+++ b/django/contrib/contenttypes/fields.py\n@@ -253,7 +253,7 @@\n         # We (possibly) need to convert object IDs to the type of the\n         # instances' PK in order to match up instances:\n         object_id_converter = instances[0]._meta.pk.to_python\n-        content_type_id_field_name = '%s_id' % self.content_type_field_name\n+        content_type_id_field_name = \"%s_id\" % self.content_type_field_name\n         return (\n             queryset.filter(query),\n             lambda relobj: (\n@@ -262,7 +262,7 @@\n             ),\n             lambda obj: (\n                 getattr(obj, content_type_id_field_name),\n-                object_id_converter(getattr(obj, self.object_id_field_name)),\n+                obj._meta.pk.to_python(getattr(obj, self.object_id_field_name)),\n             ),\n             False,\n             self.prefetch_cache_name,\n@@ -289,10 +289,10 @@\n         ret_val = []\n         for ct_id, fkeys in fk_dict.items():\n             ct = self.get_content_type(id=ct_id, using=instance._state.db)\n-            ct_model = ct.model_class()\n-            ret_val.extend(\n-                ct_model._base_manager.using(instance._state.db).filter(pk__in=fkeys)\n-            )\n+            if ct_model := ct.model_class():\n+                pk_type = ct_model._meta.pk\n+                fkeys = [pk_type.to_python(fk) for fk in fkeys]\n+                ret_val.extend(ct_model._base_manager.using(instance._state.db).filter(pk__in=fkeys))\n         return ret_val\n \n     def _apply_rel_filters(self, queryset):\n\n</patch>",
+      "expected_patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -2325,6 +2325,10 @@ def deconstruct(self):\n     def get_internal_type(self):\n         return \"UUIDField\"\n \n+    def get_prep_value(self, value):\n+        value = super().get_prep_value(value)\n+        return self.to_python(value)\n+\n     def get_db_prep_value(self, value, connection, prepared=False):\n         if value is None:\n             return None\n",
+      "semantic_match": 0.053418803418803416,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 370,
+      "output_tokens": 525
+    },
+    {
+      "instance_id": "django__django-16667",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -1157,7 +1157,11 @@\n             d = datadict.get(self.day_field % name)\n             if y == m == d == \"0\":\n                 return None\n-            if y is not None and m is not None and d is not None:\n+            if y is not None and m is not None and d is not None:\n+                try:\n+                    input_format = self.format\n+                    date_value = datetime.date(int(y), int(m), int(d))\n+                except (ValueError, OverflowError):\n+                    pass\n+                else:\n+                    return date_value.strftime(input_format)\n-                input_format = self.format\n-                try:\n-                    date_value = datetime.date(int(y), int(m), int(d))\n-                except ValueError:\n-                    pass\n-                else:\n-                    return date_value.strftime(input_format)\n         return datadict.get(name)\n```",
+      "expected_patch": "diff --git a/django/forms/widgets.py b/django/forms/widgets.py\n--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -1161,6 +1161,8 @@ def value_from_datadict(self, data, files, name):\n                 # Return pseudo-ISO dates with zeros for any unselected values,\n                 # e.g. '2017-0-23'.\n                 return \"%s-%s-%s\" % (y or 0, m or 0, d or 0)\n+            except OverflowError:\n+                return \"0-0-0\"\n             return date_value.strftime(input_format)\n         return data.get(name)\n \n",
+      "semantic_match": 0.15723732549595884,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 618,
+      "output_tokens": 279
+    },
+    {
+      "instance_id": "pydata__xarray-2905",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/xarray/core/variable.py\n+++ b/xarray/core/variable.py\n@@ -638,7 +638,8 @@\n             value = np.asarray(value)\n \n         # broadcast turn value into an array\n-        if not hasattr(value, 'ndim') and (\n+        if (not isinstance(value, np.ndarray) and\n+                not hasattr(value, 'ndim') and (\n                 getattr(value, 'dims', (dims,)) == dims):\n             value = np.asarray(value)\n \n</patch>",
+      "expected_patch": "diff --git a/xarray/core/variable.py b/xarray/core/variable.py\n--- a/xarray/core/variable.py\n+++ b/xarray/core/variable.py\n@@ -218,7 +218,8 @@ def as_compatible_data(data, fastpath=False):\n         data = np.timedelta64(getattr(data, \"value\", data), \"ns\")\n \n     # we don't want nested self-described arrays\n-    data = getattr(data, \"values\", data)\n+    if isinstance(data, (pd.Series, pd.Index, pd.DataFrame)):\n+        data = data.values\n \n     if isinstance(data, np.ma.MaskedArray):\n         mask = np.ma.getmaskarray(data)\n",
+      "semantic_match": 0.2140391254315305,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 802,
+      "output_tokens": 153
+    },
+    {
+      "instance_id": "django__django-14493",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/contrib/staticfiles/storage.py\n+++ b/django/contrib/staticfiles/storage.py\n@@ -239,6 +239,7 @@ class ManifestFilesMixin(HashedFilesMixin):\n \n         # Store the processed paths\n         self.hashed_files.update(hashed_files)\n+        substitutions = False\n \n         # Yield adjustable files with final, hashed name.\n         yield from processed_adjustable_paths.values()\n\n```",
+      "expected_patch": "diff --git a/django/contrib/staticfiles/storage.py b/django/contrib/staticfiles/storage.py\n--- a/django/contrib/staticfiles/storage.py\n+++ b/django/contrib/staticfiles/storage.py\n@@ -260,6 +260,7 @@ def post_process(self, paths, dry_run=False, **options):\n                 processed_adjustable_paths[name] = (name, hashed_name, processed)\n \n         paths = {path: paths[path] for path in adjustable_paths}\n+        substitutions = False\n \n         for i in range(self.max_post_process_passes):\n             substitutions = False\n",
+      "semantic_match": 0.33292831105710813,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 543,
+      "output_tokens": 127
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-9230",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sphinx/domains/python.py\n+++ b/sphinx/domains/python.py\n@@ -52,7 +52,7 @@\n     # a signature that might be interpreted as a signature directive.\n     # This should prevent that.\n     return re.sub(r'^\\s*[*:]', r'\\\\\\g<0>', s)\n \n \n-py_sig_re = re.compile(r'''^ ([\\w.]*\\.)?            # class names\n+py_sig_re = re.compile(r'''^ ([\\w.]*\\.)?            # class names\n                               (\\w+)  \\s*             # thing name\n                          (?: \\((.*)\\)           # optional: arguments\n                            (?:\\s* -> \\s* (.*))?  #           return annotation\n@@ -115,7 +115,7 @@\n _pseudo_parse_arglist = re.compile(\n     r'(?:([^,)]+)\\s*,?\\s*(?=$|\\)))|\\s*(?=$|\\))'  # argument\n )\n-_separate_sig_re = re.compile(r'(\\S+)\\s*\\(([^)]*)\\)\\s*(.*)$')\n+_separate_sig_re = re.compile(r'(\\S+)\\s*\\(([^)]*)\\)\\s*(.*)')\n \n \n def _parse_annotation(annotation: str, env: BuildEnvironment = None) -> List[Node]:\n@@ -363,7 +363,7 @@\n         return arg, annotation\n \n     def _parse_arglist(self, arglist: str) -> addnodes.desc_parameterlist:\n-        \"\"\"Parse a list of arguments using AST parser\"\"\"\n+        \"\"\"Parse a list of arguments using AST parser\"\"\"\n         params = addnodes.desc_parameterlist(arglist)\n         sig = '(%s)' % arglist\n         try:\n@@ -437,7 +437,7 @@\n                 annotation = paramlist[1][:-1].strip()\n             else:\n                 annotation = paramlist[1].strip()\n-            arg = nodes.Text(nametail[0])\n+            arg = nodes.Text(nametail[0] + ')')\n             annotation_nodes = self._parse_annotation(annotation, self.env)\n         else:\n             arg = nodes.Text(nametail)\n\n</patch>",
+      "expected_patch": "diff --git a/sphinx/util/docfields.py b/sphinx/util/docfields.py\n--- a/sphinx/util/docfields.py\n+++ b/sphinx/util/docfields.py\n@@ -298,7 +298,7 @@ def transform(self, node: nodes.field_list) -> None:\n             # also support syntax like ``:param type name:``\n             if typedesc.is_typed:\n                 try:\n-                    argtype, argname = fieldarg.split(None, 1)\n+                    argtype, argname = fieldarg.rsplit(None, 1)\n                 except ValueError:\n                     pass\n                 else:\n",
+      "semantic_match": 0.06601731601731602,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 510,
+      "output_tokens": 588
+    },
+    {
+      "instance_id": "django__django-11163",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -94,7 +94,7 @@ def model_to_dict(instance, fields=None, exclude=None):\n     for f in chain(opts.concrete_fields, opts.private_fields, opts.many_to_many):\n         if not getattr(f, \"editable\", False):\n             continue\n-        if fields and f.name not in fields:\n+        if fields is not None and f.name not in fields:\n             continue\n         if exclude and f.name in exclude:\n             continue\n```",
+      "expected_patch": "diff --git a/django/forms/models.py b/django/forms/models.py\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -83,7 +83,7 @@ def model_to_dict(instance, fields=None, exclude=None):\n     for f in chain(opts.concrete_fields, opts.private_fields, opts.many_to_many):\n         if not getattr(f, 'editable', False):\n             continue\n-        if fields and f.name not in fields:\n+        if fields is not None and f.name not in fields:\n             continue\n         if exclude and f.name in exclude:\n             continue\n",
+      "semantic_match": 0.9171396140749148,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 195,
+      "output_tokens": 153
+    },
+    {
+      "instance_id": "django__django-14580",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -269,7 +269,12 @@ class TypeSerializer(BaseSerializer):\n         else:\n             imports.add(\"import %s\" % module)\n             return \"%s.%s\" % (module, self.value.__name__), imports\n-        return self.value.__name__, imports\n+        # If it's models.Model, we need to import it from django.db\n+        if self.value.__module__ == 'django.db.models.base' and self.value.__name__ == 'Model':\n+            imports.add(\"from django.db import models\")\n+            return \"models.Model\", imports\n+        else:\n+            return self.value.__name__, imports\n \n \n class UUIDSerializer(BaseSerializer):\n```",
+      "expected_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -273,7 +273,7 @@ def _format(self):\n class TypeSerializer(BaseSerializer):\n     def serialize(self):\n         special_cases = [\n-            (models.Model, \"models.Model\", []),\n+            (models.Model, \"models.Model\", ['from django.db import models']),\n             (type(None), 'type(None)', []),\n         ]\n         for case, string, imports in special_cases:\n",
+      "semantic_match": 0.2513181019332162,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 555,
+      "output_tokens": 215
+    },
+    {
+      "instance_id": "django__django-16255",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/contrib/sitemaps/__init__.py\n+++ b/django/contrib/sitemaps/__init__.py\n@@ -167,7 +167,7 @@ class Sitemap:\n             return None\n         if callable(self.lastmod):\n             try:\n                 return max([self.lastmod(item) for item in self.items()])\n-            except TypeError:\n+            except (TypeError, ValueError):\n                 return None\n         else:\n             return self.lastmod\n```",
+      "expected_patch": "diff --git a/django/contrib/sitemaps/__init__.py b/django/contrib/sitemaps/__init__.py\n--- a/django/contrib/sitemaps/__init__.py\n+++ b/django/contrib/sitemaps/__init__.py\n@@ -167,7 +167,7 @@ def get_latest_lastmod(self):\n             return None\n         if callable(self.lastmod):\n             try:\n-                return max([self.lastmod(item) for item in self.items()])\n+                return max([self.lastmod(item) for item in self.items()], default=None)\n             except TypeError:\n                 return None\n         else:\n",
+      "semantic_match": 0.568922305764411,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 591,
+      "output_tokens": 128
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-9591",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -2163,7 +2163,8 @@ class PropertyDocumenter(DocstringStubDocumenter):  # type: ignore\n \n     def add_directive_header(self, sig: str) -> None:\n         super().add_directive_header(sig)\n-        sourcename = self.get_sourcename()\n+        if not self.options.annotation:\n+            sourcename = self.get_sourcename()\n \n         if inspect.isabstractmethod(self.object):\n             self.add_line('   :abstractmethod:', sourcename)\n@@ -2174,10 +2175,11 @@ class PropertyDocumenter(DocstringStubDocumenter):  # type: ignore\n             self.add_line('   :classmethod:', sourcename)\n \n         # copy source name of the entry before the annotation\n-        sourcename = self.get_sourcename()\n+        if not self.options.annotation:\n+            sourcename = self.get_sourcename()\n \n-        if not self.options.annotation:\n-            # obtain type annotation for this property\n+        # obtain type annotation for this property\n+        if not self.options.annotation:\n             try:\n                 annotations = get_type_hints(self.parent)\n             except TypeError:\n\n</patch>",
+      "expected_patch": "diff --git a/sphinx/domains/python.py b/sphinx/domains/python.py\n--- a/sphinx/domains/python.py\n+++ b/sphinx/domains/python.py\n@@ -861,7 +861,8 @@ def handle_signature(self, sig: str, signode: desc_signature) -> Tuple[str, str]\n \n         typ = self.options.get('type')\n         if typ:\n-            signode += addnodes.desc_annotation(typ, ': ' + typ)\n+            annotations = _parse_annotation(typ, self.env)\n+            signode += addnodes.desc_annotation(typ, '', nodes.Text(': '), *annotations)\n \n         return fullname, prefix\n \n",
+      "semantic_match": 0.0648854961832061,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 624,
+      "output_tokens": 348
+    },
+    {
+      "instance_id": "sympy__sympy-21612",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sympy/parsing/latex/_parse_latex_antlr.py\n+++ b/sympy/parsing/latex/_parse_latex_antlr.py\n@@ -405,11 +405,11 @@\n         denom_nested_div = denom_arg.getRuleContext() == LaTeXParser.DivideContext\n         numr_nested_div = numr_arg.getRuleContext() == LaTeXParser.DivideContext\n         if denom_nested_div and numr_nested_div:\n-            return sympy.Mul(convert_expr(numr), sympy.Pow(convert_expr(denom), -1, evaluate=False), evaluate=False)\n+            return sympy.Mul(convert_expr(numr), sympy.Pow(convert_expr(denom), -1), evaluate=False)\n         elif denom_nested_div:\n-            return sympy.Mul(convert_expr(numr), sympy.Pow(convert_expr(denom), -1, evaluate=False), evaluate=False)\n+            return sympy.Mul(convert_expr(numr), sympy.Pow(convert_expr(denom), -1), evaluate=False)\n         elif numr_nested_div:\n-            return sympy.Mul(convert_expr(numr), sympy.Pow(convert_expr(denom), -1, evaluate=False), evaluate=False)\n+            return sympy.Mul(convert_expr(numr), sympy.Pow(convert_expr(denom), -1), evaluate=False)\n         else:\n             return sympy.Mul(convert_expr(numr), sympy.Pow(convert_expr(denom), -1), evaluate=False)\n \n\n</patch>",
+      "expected_patch": "diff --git a/sympy/printing/str.py b/sympy/printing/str.py\n--- a/sympy/printing/str.py\n+++ b/sympy/printing/str.py\n@@ -333,7 +333,7 @@ def apow(i):\n                     b.append(apow(item))\n                 else:\n                     if (len(item.args[0].args) != 1 and\n-                            isinstance(item.base, Mul)):\n+                            isinstance(item.base, (Mul, Pow))):\n                         # To avoid situations like #14160\n                         pow_paren.append(item)\n                     b.append(item.base)\n",
+      "semantic_match": 0.06131767775603392,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 361,
+      "output_tokens": 435
+    },
+    {
+      "instance_id": "django__django-12125",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -296,7 +296,14 @@\n         if module == builtins.__name__:\n             return self.value.__name__, set()\n         else:\n-            return \"%s.%s\" % (module, self.value.__name__), {\"import %s\" % module}\n+            # Check if this is a nested class by looking at __qualname__\n+            if hasattr(self.value, '__qualname__') and '.' in self.value.__qualname__:\n+                # Use __qualname__ which includes the full path for nested classes\n+                qualname = self.value.__qualname__\n+            else:\n+                # For top-level classes, use __name__\n+                qualname = self.value.__name__\n+            return \"%s.%s\" % (module, qualname), {\"import %s\" % module}\n \n \n class EnumSerializer(BaseSerializer):\n\n</patch>",
+      "expected_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -269,7 +269,7 @@ def serialize(self):\n             if module == builtins.__name__:\n                 return self.value.__name__, set()\n             else:\n-                return \"%s.%s\" % (module, self.value.__name__), {\"import %s\" % module}\n+                return \"%s.%s\" % (module, self.value.__qualname__), {\"import %s\" % module}\n \n \n class UUIDSerializer(BaseSerializer):\n",
+      "semantic_match": 0.45740598618572526,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 556,
+      "output_tokens": 256
+    },
+    {
+      "instance_id": "django__django-17087",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -125,12 +125,20 @@\n \n \n class FunctionTypeSerializer(BaseSerializer):\n+    def _get_class_path(self, klass):\n+        # Handle nested classes by traversing up the chain\n+        module = klass.__module__\n+        qualname = klass.__qualname__\n+        return f\"{module}.{qualname}\"\n+\n     def serialize(self):\n         if getattr(self.value, \"__self__\", None) and isinstance(\n             self.value.__self__, type\n         ):\n             klass = self.value.__self__\n-            module = klass.__module__\n+            # Use qualname to properly handle nested classes\n+            module_and_qualname = self._get_class_path(klass)\n+            module = klass.__module__\n+            qualname = klass.__qualname__\n             return (\n                 \"%s.%s.%s\"\n                 % (\n@@ -138,7 +146,7 @@\n                     klass.__name__,\n                     self.value.__name__,\n                 ),\n-                {\"import %s\" % module},\n+                {\"from %s import %s\" % (module, qualname.split(\".\")[0])},\n             )\n         # Further error checking\n         if self.value.__name__ == \"<lambda>\":\n@@ -148,7 +156,16 @@\n         if \"<locals>\" in self.value.__qualname__:\n             raise ValueError(\"Cannot serialize local function %r\" % self.value)\n \n-        module_name = self.value.__module__\n+        # For unbound methods, check if the function belongs to a nested class\n+        if \".\" in self.value.__qualname__:\n+            module_name = self.value.__module__\n+            qualname_parts = self.value.__qualname__.rsplit(\".\", 1)\n+            if len(qualname_parts) == 2:\n+                class_path = qualname_parts[0]\n+                return (\n+                    f\"{module_name}.{self.value.__qualname__}\",\n+                    {f\"import {module_name}\"},\n+                )\n         return (\n             self.value.__module__ + \".\" + self.value.__qualname__,\n             {\"import %s\" % self.value.__module__},\n```",
+      "expected_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -168,7 +168,7 @@ def serialize(self):\n         ):\n             klass = self.value.__self__\n             module = klass.__module__\n-            return \"%s.%s.%s\" % (module, klass.__name__, self.value.__name__), {\n+            return \"%s.%s.%s\" % (module, klass.__qualname__, self.value.__name__), {\n                 \"import %s\" % module\n             }\n         # Further error checking\n",
+      "semantic_match": 0.11603188662533215,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 424,
+      "output_tokens": 603
+    },
+    {
+      "instance_id": "sympy__sympy-13480",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sympy/functions/elementary/hyperbolic.py\n+++ b/sympy/functions/elementary/hyperbolic.py\n@@ -586,7 +586,7 @@\n                 return coth(arg)\n \n             i_coeff = arg.as_coefficient(S.ImaginaryUnit)\n-            if i_coeff is not None:\n+            if i_coeff is not None:\n                 if cotm is S.ComplexInfinity:\n                     return -S.ImaginaryUnit * cot(i_coeff)\n                 else:\n@@ -596,6 +596,7 @@\n                 return S.ComplexInfinity\n             if arg.is_zero:\n                 return S.ComplexInfinity\n+            cotm = cot(i_coeff)\n \n         if arg.is_Add:\n             x, m = _peeloff_ipi(arg)\n\n</patch>\n\nWait, let me re-analyze the code more carefully. The issue is that `cotm` is used before being defined. Let me look at the actual code structure:\n\n<patch>\n--- a/sympy/functions/elementary/hyperbolic.py\n+++ b/sympy/functions/elementary/hyperbolic.py\n@@ -587,6 +587,7 @@\n \n             i_coeff = arg.as_coefficient(S.ImaginaryUnit)\n             if i_coeff is not None:\n+                cotm = cot(i_coeff)\n                 if cotm is S.ComplexInfinity:\n                     return -S.ImaginaryUnit * cot(i_coeff)\n                 else:\n\n</patch>",
+      "expected_patch": "diff --git a/sympy/functions/elementary/hyperbolic.py b/sympy/functions/elementary/hyperbolic.py\n--- a/sympy/functions/elementary/hyperbolic.py\n+++ b/sympy/functions/elementary/hyperbolic.py\n@@ -587,7 +587,7 @@ def eval(cls, arg):\n                 x, m = _peeloff_ipi(arg)\n                 if m:\n                     cothm = coth(m)\n-                    if cotm is S.ComplexInfinity:\n+                    if cothm is S.ComplexInfinity:\n                         return coth(x)\n                     else: # cothm == 0\n                         return tanh(x)\n",
+      "semantic_match": 0.23326133909287258,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 260,
+      "output_tokens": 419
+    },
+    {
+      "instance_id": "pylint-dev__pylint-6903",
+      "success": true,
+      "generated_patch": "```diff\n--- a/pylint/lint/run.py\n+++ b/pylint/lint/run.py\n@@ -57,7 +57,7 @@\n             return int(quota / period)\n         # https://docs.oracle.com/en/operating-systems/oracle-linux/6/admin/ol_about_cgroups.html\n         cpu_shares = int(cgroup_path.read_text(encoding=\"utf-8\"))\n-        return int(cpu_shares / 1024)\n+        return max(int(cpu_shares / 1024), 1)\n     except (FileNotFoundError, ValueError):\n         # FileNotFoundError: the paths don't exist\n         # ValueError: the files exist but we cannot parse the content\n```",
+      "expected_patch": "diff --git a/pylint/lint/run.py b/pylint/lint/run.py\n--- a/pylint/lint/run.py\n+++ b/pylint/lint/run.py\n@@ -58,6 +58,13 @@ def _query_cpu() -> int | None:\n             cpu_shares = int(file.read().rstrip())\n         # For AWS, gives correct value * 1024.\n         avail_cpu = int(cpu_shares / 1024)\n+\n+    # In K8s Pods also a fraction of a single core could be available\n+    # As multiprocessing is not able to run only a \"fraction\" of process\n+    # assume we have 1 CPU available\n+    if avail_cpu == 0:\n+        avail_cpu = 1\n+\n     return avail_cpu\n \n \n",
+      "semantic_match": 0.2101010101010101,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1036,
+      "output_tokens": 184
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14053",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sklearn/tree/export.py\n+++ b/sklearn/tree/export.py\n@@ -849,7 +849,7 @@ def export_text(decision_tree, feature_names=None, max_depth=10,\n     tree_ = decision_tree.tree_\n     class_names = decision_tree.classes_\n     right_child_fmt = \"{} {} <= {}\\n\"\n-    left_child_fmt = \"{} {} >  {}\\n\"\n+    left_child_fmt = \"{} {} > {}\\n\"\n     truncation_fmt = \"{} {}\\n\"\n \n     if max_depth < 0:\n@@ -863,7 +863,7 @@ def export_text(decision_tree, feature_names=None, max_depth=10,\n \n     if feature_names is not None and len(feature_names) != tree_.n_features:\n         raise ValueError(\"feature_names must contain {} elements, got {}\"\n-                         .format(tree_.n_features, len(feature_names)))\n+                        .format(tree_.n_features, len(feature_names)))\n \n     if feature_names is None:\n         feature_names = [\"feature_{}\".format(i) for i in range(tree_.n_features)]\n@@ -901,10 +901,10 @@ def export_text(decision_tree, feature_names=None, max_depth=10,\n             else:\n                 info_fmt_right = info_fmt_left = \"\"\n \n-            if spacing_fmt[depth][0] == '|':\n-                left_range = bounds[depth, right_child, 0]\n-            else:\n-                left_range = bounds[depth - 1, stack[depth - 1][0], 0]\n+            if depth > 0 and spacing_fmt[depth][0] == '|':\n+                left_range = bounds[depth, right_child, 0]\n+            elif depth > 0:\n+                left_range = bounds[depth - 1, stack[depth - 1][0], 0]\n \n             # right child message\n             out += right_child_fmt.format(spacing,\n</patch>",
+      "expected_patch": "diff --git a/sklearn/tree/export.py b/sklearn/tree/export.py\n--- a/sklearn/tree/export.py\n+++ b/sklearn/tree/export.py\n@@ -890,7 +890,8 @@ def export_text(decision_tree, feature_names=None, max_depth=10,\n         value_fmt = \"{}{} value: {}\\n\"\n \n     if feature_names:\n-        feature_names_ = [feature_names[i] for i in tree_.feature]\n+        feature_names_ = [feature_names[i] if i != _tree.TREE_UNDEFINED\n+                          else None for i in tree_.feature]\n     else:\n         feature_names_ = [\"feature_{}\".format(i) for i in tree_.feature]\n \n",
+      "semantic_match": 0.17676767676767677,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1046,
+      "output_tokens": 540
+    },
+    {
+      "instance_id": "django__django-11964",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -174,7 +174,10 @@ class Field(RegisterLookupMixin):\n                 )\n         if value is None:\n             return value\n-        return self.choices_dict.get(value, value)\n+        choice_value = self.choices_dict.get(value, value)\n+        # Return the raw value for enum types to avoid inconsistent types\n+        if hasattr(choice_value, 'value'):\n+            return choice_value.value\n+        return choice_value\n \n     def value_to_string(self, obj):\n         \"\"\"\n```",
+      "expected_patch": "diff --git a/django/db/models/enums.py b/django/db/models/enums.py\n--- a/django/db/models/enums.py\n+++ b/django/db/models/enums.py\n@@ -60,7 +60,13 @@ def values(cls):\n \n class Choices(enum.Enum, metaclass=ChoicesMeta):\n     \"\"\"Class for creating enumerated choices.\"\"\"\n-    pass\n+\n+    def __str__(self):\n+        \"\"\"\n+        Use value when cast to str, so that Choices set as model instance\n+        attributes are rendered as expected in templates and similar contexts.\n+        \"\"\"\n+        return str(self.value)\n \n \n class IntegerChoices(int, Choices):\n",
+      "semantic_match": 0.06660323501427212,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 764,
+      "output_tokens": 178
+    },
+    {
+      "instance_id": "pydata__xarray-4695",
+      "success": true,
+      "generated_patch": "<thinking>\nLet me analyze this bug. The issue is that when a dimension is named \"method\", calling `.loc` with a dictionary containing `method='a'` throws an error about invalid fill method. This suggests that somewhere in the code, the `method` key in the dictionary is being interpreted as a keyword argument for a fill method rather than as a dimension name.\n\nLet me trace through how `.loc` works in xarray:\n\n1. `.loc` is likely a property that returns a locator object\n2. When you call `.loc[dict(...)]`, it's calling `__getitem__` on that locator object\n3. The locator object needs to distinguish between dimension names and other keyword arguments\n\nThe error message \"Invalid fill method. Expecting pad (ffill), backfill (bfill) or nearest.\" suggests that somewhere the code is treating the `method` key as a parameter for filling/interpolation.\n\nLooking at xarray's indexing code, the `.loc` accessor is typically implemented through classes like `_LocIndexer`. When a dictionary is passed, it needs to separate out actual dimensions from keyword arguments like `method`, `tolerance`, etc.\n\nThe bug is likely in how the indexing code handles dictionaries passed to `.loc`. It probably passes `**kwargs` somewhere and doesn't properly separate dimension names from actual keyword arguments.\n\nLet me look for where this might occur. The indexing logic in xarray is typically in `xarray/core/indexing.py` or similar files. The `.loc` accessor is likely defined in the DataArray or Variable classes.\n\nThe key issue is that when using `.loc[dict(...)]`, the dictionary keys should ALL be treated as dimension names, not as keyword arguments. However, if the code is doing something like:\n\n```python\ndef some_method(self, indexers, method=None, tolerance=None, ...):\n    # ...\n    result = self._do_indexing(**indexers)\n```\n\nThen if `indexers` contains a key named \"method\", it will override the `method` parameter.\n\nThe fix would be to ensure that when processing indexers from `.loc`, we explicitly separate dimension indexers from keyword arguments. This is likely in a method that processes the indexers dictionary.\n\nLet me search for where this happens. The error about \"Invalid fill method\" suggests this is related to reindexing or selection with filling. The method that validates fill methods would be checking if the method is one of 'pad', 'ffill', 'backfill', 'bfill', or 'nearest'.\n\nLooking at typical xarray code structure, the `.loc` indexer likely calls something like `sel()` or `isel()` internally, and these methods have a `method` parameter for fill methods.\n\nThe fix should be in the code that handles `.loc` indexing. When a dictionary is passed to `.loc[dict(...)]`, all keys should be treated as dimension names, not as keyword arguments.\n\nLet me think about where this code would be. The `_LocIndexer` class likely has a `__getitem__` method that processes the indexing request. This method probably needs to be fixed to not pass dimension names as keyword arguments to underlying methods.\n\nBased on typical xarray structure, the file would be something like `xarray/core/indexing.py` or `xarray/core/dataarray.py`.\n\nThe likely issue is in code like:\n\n```python\nclass _LocIndexer:\n    def __getitem__(self, key):\n        if isinstance(key, dict):\n            return self.obj.sel(**key)  # BUG: this passes all dict keys as kwargs\n```\n\nThe fix would be:\n\n```python\nclass _LocIndexer:\n    def __getitem__(self, key):\n        if isinstance(key, dict):\n            return self.obj.sel(indexers=key)  # FIX: pass as indexers argument\n```\n\nOr alternatively, the bug might be in the `sel()` method itself if it's not properly handling the `indexers` parameter vs other kwargs.\n\nLet me look at what the actual code structure might be. In xarray, the typical pattern for `sel()` is:\n\n```python\ndef sel(self, indexers=None, method=None, tolerance=None, **indexers_kwargs):\n    indexers = either_dict_or_kwargs(indexers, indexers_kwargs, 'sel')\n    # ...\n```\n\nThe `either_dict_or_kwargs` function combines the `indexers` dict with `indexers_kwargs`. If `.loc` is calling `sel(**key)` where `key` is a dict, then a key named \"method\" in the dict would override the `method` parameter.\n\nThe fix is to ensure `.loc` calls `sel(indexers=key)` instead of `sel(**key)`, or calls `sel(key)` if it's a positional parameter.\n\nLet me create a patch. I need to find the actual file and location. Based on typical xarray structure, this would be in `xarray/core/dataarray.py` or `xarray/core/dataset.py` where the `_LocIndexer` class is defined.\n\nLooking at xarray source code structure, the indexing classes are typically defined inline in the main classes. So `DataArray.loc` would be defined in `xarray/core/dataarray.py`.\n\nLet me create a patch for the most likely location:\n\n```python\n# In the _LocIndexer class\ndef __getitem__(self, key):\n    if isinstance(key, dict):\n        # OLD: return self.data_array.sel(**key)\n        # NEW: return self.data_array.sel(key)\n        return self.data_array.sel(key)\n```\n\nOr if sel doesn't accept positional dict:\n```python\ndef __getitem__(self, key):\n    if isinstance(key, dict):\n        return self.data_array.sel(indexers=key)\n```\n\nLet me write a proper patch. I'll assume the file is `xarray/core/dataarray.py` and that there's a `_LocIndexer` class with a `__getitem__` method that currently does `sel(**key)`.\n</thinking>\n\nLooking at this bug, the issue is that when `.loc` is called with a dictionary containing a key named \"method\", it's being incorrectly interpreted as a keyword argument for fill method rather than as a dimension name.\n\nThe problem is in how the `.loc` indexer passes the dictionary to the underlying selection method. It should pass the dictionary as the `indexers` parameter rather than unpacking it as keyword arguments.\n\n--- a/xarray/core/dataarray.py\n+++ b/xarray/core/dataarray.py\n@@ -189,7 +189,7 @@ class _LocIndexer:\n \n     def __getitem__(self, key):\n         if isinstance(key, dict):\n-            return self.data_array.sel(**key)\n+            return self.data_array.sel(key)\n         else:\n             # expand the indexer so we can handle Ellipsis\n             labels = indexing.expanded_indexer(key, self.data_array.ndim)",
+      "expected_patch": "diff --git a/xarray/core/dataarray.py b/xarray/core/dataarray.py\n--- a/xarray/core/dataarray.py\n+++ b/xarray/core/dataarray.py\n@@ -196,7 +196,7 @@ def __getitem__(self, key) -> \"DataArray\":\n             # expand the indexer so we can handle Ellipsis\n             labels = indexing.expanded_indexer(key, self.data_array.ndim)\n             key = dict(zip(self.data_array.dims, labels))\n-        return self.data_array.sel(**key)\n+        return self.data_array.sel(key)\n \n     def __setitem__(self, key, value) -> None:\n         if not utils.is_dict_like(key):\n",
+      "semantic_match": 0.054003724394785846,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1479,
+      "output_tokens": 1639
+    },
+    {
+      "instance_id": "django__django-10097",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -74,7 +74,7 @@ class URLValidator(RegexValidator):\n     hostname_re = r'[a-z' + ul + r'0-9](?:[a-z' + ul + r'0-9-]{0,61}[a-z' + ul + r'0-9])?'\n     # Max length for domain name labels is 63 characters per RFC 1034 sec. 3.1\n     domain_re = r'(?:\\.(?!-)[a-z' + ul + r'0-9-]{1,63}(?<!-))*'\n-    tld_re = (\n+    tld_re = ( \n         r'\\.'                                # dot\n         r'(?!-)'                             # can't start with a dash\n         r'(?:[a-z' + ul + '-]{2,63}'         # domain label\n@@ -86,7 +86,7 @@ class URLValidator(RegexValidator):\n     host_re = '(' + hostname_re + domain_re + tld_re + '|localhost)'\n \n     regex = _lazy_re_compile(\n-        r'^(?:[a-z0-9\\.\\-\\+]*)://'  # scheme is validated separately\n+        r'^(?:[a-z0-9\\.\\-\\+]*)://'                          # scheme is validated separately\n         r'(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?'  # user:pass authentication\n         r'(?:' + ipv4_re + '|' + ipv6_re + '|' + host_re + ')'\n         r'(?::\\d{2,5})?'                   # port\n```\n\nWait, let me reconsider. The issue is that the user:pass part allows invalid characters. According to RFC 1738, characters like \":\", \"@\", or \"/\" must be encoded in the username and password fields. The current regex `(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?` is the user:pass part.\n\nLet me look at this more carefully:\n- `[^\\s:@/]+` - username (anything except whitespace, :, @, /)\n- `(?::[^\\s:@/]*)?` - optional password with colon prefix (anything except whitespace, :, @, /)\n- `@` - the @ separator\n\nThe problem mentioned is that `http://foo/bar@example.com` should be invalid. In this URL, there's a \"/\" in what appears to be the username part (between \"foo\" and \"bar\"), but actually this is being parsed incorrectly because the current regex does exclude \"/\" from the username.\n\nLet me re-read the issue. The issue states that \":\", \"@\", or \"/\" must be encoded but are currently accepted without being %-encoded. Looking at the regex more carefully, the character class `[^\\s:@/]` actually DOES exclude these characters. So what's the actual bug?\n\nThe bug is that the regex allows these characters when they are %-encoded, but it also needs to ensure ONLY %-encoded versions are allowed. The current regex uses `[^\\s:@/]` which allows any character except whitespace, :, @, /. But it should only allow valid URL characters.\n\nLet me create the proper fix:\n\n```diff\n--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -86,7 +86,7 @@ class URLValidator(RegexValidator):\n     host_re = '(' + hostname_re + domain_re + tld_re + '|localhost)'\n \n     regex = _lazy_re_compile(\n-        r'^(?:[a-z0-9\\.\\-\\+]*)://'  # scheme is validated separately\n+        r'^(?:[a-z0-9\\.\\-\\+]*)://'                          # scheme is validated separately\n         r'(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?'  # user:pass authentication\n         r'(?:' + ipv4_re + '|' + ipv6_re + '|' + host_re + ')'\n         r'(?::\\d{2,5})?'                   # port\n```\n\nActually, I need to look at what valid characters are allowed. According to RFC 1738, the userinfo part should only contain unreserved characters plus percent-encoded characters. Let me fix the user:pass part properly:\n\n```diff\n--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -87,7 +87,7 @@ class URLValidator(RegexValidator):\n \n     regex = _lazy_re_compile(\n         r'^(?:[a-z0-9\\.\\-\\+]*)://'  # scheme is validated separately\n-        r'(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?'  # user:pass authentication\n+        r'(?:(?:[a-z0-9\\-._~!$&\\'()*+,;=%]|%[0-9a-f]{2})+(?::(?:[a-z0-9\\-._~!$&\\'()*+,;=%]|%[0-9a-f]{2})*)?@)?'  # user:pass authentication\n         r'(?:' + ipv4_re + '|' + ipv6_re + '|' + host_re + ')'\n         r'(?::\\d{2,5})?'                   # port\n         r'(?:[/?#][^\\s]*)?'                # resource path\n```",
+      "expected_patch": "diff --git a/django/core/validators.py b/django/core/validators.py\n--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -94,7 +94,7 @@ class URLValidator(RegexValidator):\n \n     regex = _lazy_re_compile(\n         r'^(?:[a-z0-9\\.\\-\\+]*)://'  # scheme is validated separately\n-        r'(?:\\S+(?::\\S*)?@)?'  # user:pass authentication\n+        r'(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?'  # user:pass authentication\n         r'(?:' + ipv4_re + '|' + ipv6_re + '|' + host_re + ')'\n         r'(?::\\d{2,5})?'  # port\n         r'(?:[/?#][^\\s]*)?'  # resource path\n",
+      "semantic_match": 0.18107784431137725,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 713,
+      "output_tokens": 1372
+    },
+    {
+      "instance_id": "django__django-12273",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -763,7 +763,10 @@\n         meta = cls._meta\n         if meta.pk is None:\n             return True\n-        if not meta.parents:\n+        # For child models in inheritance, we need to check the parent's pk field\n+        # to determine if this is a new instance, not just the local pk field\n+        parent_models = [p for p in meta.parents if isinstance(self, p)]\n+        if not parent_models:\n             return self.pk is None\n         if (meta.auto_created and parent_model and\n                 self.pk == parent_model.pk):\n@@ -779,6 +782,11 @@\n                     # our parent already existed.\n                     return True\n                 continue\n+            # For inherited models, check if the parent's pk is None\n+            parent_pk_field = parent_meta.pk\n+            parent_pk_val = self._get_pk_val(parent_meta)\n+            if parent_pk_val is None:\n+                return True\n             if meta.pk != parent_meta.pk and self.pk == parent_model.pk:\n                 return True\n         return False\n\n</patch>\n\nWait, let me reconsider. The issue is that when we set `self.uid = None` on a derived object, the `_state.adding` flag doesn't get updated properly. Let me look at this more carefully.\n\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -455,6 +455,13 @@\n \n     def __setattr__(self, name, value):\n         try:\n+            # If setting a primary key field to None, mark instance as adding\n+            field = self._meta.get_field(name)\n+            if field.primary_key and value is None and not self._state.adding:\n+                # Check parent models in case of inheritance\n+                if self._meta.pk == field or any(parent._meta.pk == field for parent in self._meta.parents):\n+                    self._state.adding = True\n+        except FieldDoesNotExist:\n             field = self._meta.get_field(name)\n         except FieldDoesNotExist:\n             pass\n\nHmm, that has duplication. Let me fix this properly:\n\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -455,6 +455,11 @@\n \n     def __setattr__(self, name, value):\n         try:\n+            field = self._meta.get_field(name)\n+            # If setting a primary key field to None, mark instance as adding\n+            if field.primary_key and value is None and not self._state.adding:\n+                self._state.adding = True\n+        except FieldDoesNotExist:\n             field = self._meta.get_field(name)\n         except FieldDoesNotExist:\n             pass",
+      "expected_patch": "diff --git a/django/db/models/base.py b/django/db/models/base.py\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -569,6 +569,9 @@ def _get_pk_val(self, meta=None):\n         return getattr(self, meta.pk.attname)\n \n     def _set_pk_val(self, value):\n+        for parent_link in self._meta.parents.values():\n+            if parent_link and parent_link != self._meta.pk:\n+                setattr(self, parent_link.target_field.attname, value)\n         return setattr(self, self._meta.pk.attname, value)\n \n     pk = property(_get_pk_val, _set_pk_val)\n",
+      "semantic_match": 0.07901234567901234,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 385,
+      "output_tokens": 754
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13779",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sklearn/ensemble/_voting.py\n+++ b/sklearn/ensemble/_voting.py\n@@ -88,7 +88,7 @@ class _BaseVoting(_BaseComposition, metaclass=ABCMeta):\n     def _fit(self, X, y, sample_weight=None):\n         \"\"\"Fit the estimators.\"\"\"\n         if sample_weight is not None:\n-            estimators = Parallel(n_jobs=self.n_jobs)(\n+            estimators = [est for est in self.estimators if est[1] is not None]\n+            fitted_estimators = Parallel(n_jobs=self.n_jobs)(\n                 delayed(_parallel_fit_estimator)(\n                     clone(est), X, y, sample_weight=sample_weight\n                 )\n-                for est in self.estimators\n+                for est in estimators\n             )\n         else:\n-            estimators = Parallel(n_jobs=self.n_jobs)(\n+            estimators = [est for est in self.estimators if est[1] is not None]\n+            fitted_estimators = Parallel(n_jobs=self.n_jobs)(\n                 delayed(_parallel_fit_estimator)(clone(est), X, y)\n-                for est in self.estimators\n+                for est in estimators\n             )\n \n         self.estimators_ = [\n             est\n-            for est, fitted_est in zip(self.estimators, estimators)\n+            for est, fitted_est in zip(self.estimators, fitted_estimators)\n             if fitted_est is not None\n         ]\n```\n\nWait, let me reconsider. Looking at the code more carefully:\n\n```diff\n--- a/sklearn/ensemble/_voting.py\n+++ b/sklearn/ensemble/_voting.py\n@@ -87,17 +87,19 @@ class _BaseVoting(_BaseComposition, metaclass=ABCMeta):\n \n     def _fit(self, X, y, sample_weight=None):\n         \"\"\"Fit the estimators.\"\"\"\n+        names, clfs = zip(*self.estimators)\n+        self._validate_estimators()\n+\n         if sample_weight is not None:\n             estimators = Parallel(n_jobs=self.n_jobs)(\n                 delayed(_parallel_fit_estimator)(\n                     clone(est), X, y, sample_weight=sample_weight\n                 )\n-                for est in self.estimators\n+                for est in self.estimators if est[1] is not None\n             )\n         else:\n             estimators = Parallel(n_jobs=self.n_jobs)(\n                 delayed(_parallel_fit_estimator)(clone(est), X, y)\n-                for est in self.estimators\n+                for est in self.estimators if est[1] is not None\n             )\n \n         self.estimators_ = [\n\n```",
+      "expected_patch": "diff --git a/sklearn/ensemble/voting.py b/sklearn/ensemble/voting.py\n--- a/sklearn/ensemble/voting.py\n+++ b/sklearn/ensemble/voting.py\n@@ -78,6 +78,8 @@ def fit(self, X, y, sample_weight=None):\n \n         if sample_weight is not None:\n             for name, step in self.estimators:\n+                if step is None:\n+                    continue\n                 if not has_fit_parameter(step, 'sample_weight'):\n                     raise ValueError('Underlying estimator \\'%s\\' does not'\n                                      ' support sample weights.' % name)\n",
+      "semantic_match": 0.08032454361054767,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 281,
+      "output_tokens": 706
+    },
+    {
+      "instance_id": "sympy__sympy-15017",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/sympy/tensor/array/ndim_array.py\n+++ b/sympy/tensor/array/ndim_array.py\n@@ -189,7 +189,7 @@\n         return self._loop_size\n \n     def __len__(self):\n-        return self._loop_size\n+        return self._loop_size if self._loop_size > 0 else 1\n \n     @property\n     def shape(self):\n\n</patch>",
+      "expected_patch": "diff --git a/sympy/tensor/array/dense_ndim_array.py b/sympy/tensor/array/dense_ndim_array.py\n--- a/sympy/tensor/array/dense_ndim_array.py\n+++ b/sympy/tensor/array/dense_ndim_array.py\n@@ -149,7 +149,7 @@ def _new(cls, iterable, shape, **kwargs):\n         self._shape = shape\n         self._array = list(flat_list)\n         self._rank = len(shape)\n-        self._loop_size = functools.reduce(lambda x,y: x*y, shape) if shape else 0\n+        self._loop_size = functools.reduce(lambda x,y: x*y, shape, 1)\n         return self\n \n     def __setitem__(self, index, value):\n",
+      "semantic_match": 0.2528160200250313,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 407,
+      "output_tokens": 122
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7205",
+      "success": true,
+      "generated_patch": "```diff\n--- a/src/_pytest/setuponly.py\n+++ b/src/_pytest/setuponly.py\n@@ -1,5 +1,6 @@\n from typing import Optional\n \n+from _pytest._io.saferepr import saferepr\n from _pytest.config import Config\n from _pytest.config import ExitCode\n from _pytest.config.argparsing import Parser\n@@ -66,7 +67,7 @@ def _show_fixture_action(fixturedef, msg):\n             tw.write(\" (fixtures used: {})\".format(\", \".join(deps)))\n \n     if hasattr(fixturedef, \"cached_param\"):\n-        tw.write(\"[{}]\".format(fixturedef.cached_param))\n+        tw.write(\"[{}]\".format(saferepr(fixturedef.cached_param, maxsize=42)))\n \n     tw.flush()\n \n```",
+      "expected_patch": "diff --git a/src/_pytest/setuponly.py b/src/_pytest/setuponly.py\n--- a/src/_pytest/setuponly.py\n+++ b/src/_pytest/setuponly.py\n@@ -1,4 +1,5 @@\n import pytest\n+from _pytest._io.saferepr import saferepr\n \n \n def pytest_addoption(parser):\n@@ -66,7 +67,7 @@ def _show_fixture_action(fixturedef, msg):\n             tw.write(\" (fixtures used: {})\".format(\", \".join(deps)))\n \n     if hasattr(fixturedef, \"cached_param\"):\n-        tw.write(\"[{}]\".format(fixturedef.cached_param))\n+        tw.write(\"[{}]\".format(saferepr(fixturedef.cached_param, maxsize=42)))\n \n     tw.flush()\n \n",
+      "semantic_match": 0.6690777576853526,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1530,
+      "output_tokens": 234
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8721",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sphinx/ext/viewcode.py\n+++ b/sphinx/ext/viewcode.py\n@@ -172,6 +172,8 @@\n \n \n def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], None, None]:\n+    if app.builder.name.startswith('epub') and not app.config.viewcode_enable_epub:\n+        return\n     env = app.builder.env\n     if not hasattr(env, '_viewcode_modules'):\n         return\n\n```",
+      "expected_patch": "diff --git a/sphinx/ext/viewcode.py b/sphinx/ext/viewcode.py\n--- a/sphinx/ext/viewcode.py\n+++ b/sphinx/ext/viewcode.py\n@@ -182,6 +182,10 @@ def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], Non\n     env = app.builder.env\n     if not hasattr(env, '_viewcode_modules'):\n         return\n+    if app.builder.name == \"singlehtml\":\n+        return\n+    if app.builder.name.startswith(\"epub\") and not env.config.viewcode_enable_epub:\n+        return\n     highlighter = app.builder.highlighter  # type: ignore\n     urito = app.builder.get_relative_uri\n \n",
+      "semantic_match": 0.5113636363636364,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 248,
+      "output_tokens": 142
+    },
+    {
+      "instance_id": "django__django-11451",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/contrib/auth/backends.py\n+++ b/django/contrib/auth/backends.py\n@@ -29,6 +29,8 @@ class ModelBackend(BaseBackend):\n     def authenticate(self, request, username=None, password=None, **kwargs):\n         if username is None:\n             username = kwargs.get(UserModel.USERNAME_FIELD)\n+        if username is None or password is None:\n+            return\n         try:\n             user = UserModel._default_manager.get_by_natural_key(username)\n         except UserModel.DoesNotExist:\n```",
+      "expected_patch": "diff --git a/django/contrib/auth/backends.py b/django/contrib/auth/backends.py\n--- a/django/contrib/auth/backends.py\n+++ b/django/contrib/auth/backends.py\n@@ -39,6 +39,8 @@ class ModelBackend(BaseBackend):\n     def authenticate(self, request, username=None, password=None, **kwargs):\n         if username is None:\n             username = kwargs.get(UserModel.USERNAME_FIELD)\n+        if username is None or password is None:\n+            return\n         try:\n             user = UserModel._default_manager.get_by_natural_key(username)\n         except UserModel.DoesNotExist:\n",
+      "semantic_match": 0.912906610703043,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 615,
+      "output_tokens": 154
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11578",
+      "success": true,
+      "generated_patch": "```diff\n--- a/sklearn/linear_model/logistic.py\n+++ b/sklearn/linear_model/logistic.py\n@@ -919,7 +919,8 @@ def _log_reg_scoring_path(X, y, train, test, pos_class=None, Cs=10,\n         raise ValueError(\"Penalty %s not supported for the multinomial \"\n                          \"loss.\" % penalty)\n \n-    log_reg = LogisticRegression(fit_intercept=fit_intercept)\n+    log_reg = LogisticRegression(fit_intercept=fit_intercept,\n+                                  multi_class=multi_class)\n \n     # The score method of Logistic Regression has a classes_ attribute.\n     if multi_class == 'ovr':\n```",
+      "expected_patch": "diff --git a/sklearn/linear_model/logistic.py b/sklearn/linear_model/logistic.py\n--- a/sklearn/linear_model/logistic.py\n+++ b/sklearn/linear_model/logistic.py\n@@ -922,7 +922,7 @@ def _log_reg_scoring_path(X, y, train, test, pos_class=None, Cs=10,\n         check_input=False, max_squared_sum=max_squared_sum,\n         sample_weight=sample_weight)\n \n-    log_reg = LogisticRegression(fit_intercept=fit_intercept)\n+    log_reg = LogisticRegression(multi_class=multi_class)\n \n     # The score method of Logistic Regression has a classes_ attribute.\n     if multi_class == 'ovr':\n",
+      "semantic_match": 0.5850467289719626,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 2351,
+      "output_tokens": 198
+    },
+    {
+      "instance_id": "django__django-11179",
+      "success": true,
+      "generated_patch": "```diff\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -277,6 +277,8 @@\n                 if model._meta.auto_created:\n                     continue\n                 for obj in instances:\n+                    if model._meta.pk.attname in getattr(obj, '_state', {}).fields_cache:\n+                        del obj._state.fields_cache[model._meta.pk.attname]\n                     setattr(obj, model._meta.pk.attname, None)\n         for model, instances_for_fieldvalues in self.field_updates.items():\n             for (field, value), instances in instances_for_fieldvalues.items():\n```",
+      "expected_patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -277,6 +277,7 @@ def delete(self):\n             if self.can_fast_delete(instance):\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)\n+                setattr(instance, model._meta.pk.attname, None)\n                 return count, {model._meta.label: count}\n \n         with transaction.atomic(using=self.using, savepoint=False):\n",
+      "semantic_match": 0.27738693467336684,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 157,
+      "output_tokens": 183
+    },
+    {
+      "instance_id": "django__django-12663",
+      "success": true,
+      "generated_patch": "<patch>\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -965,7 +965,7 @@\n         if value is None:\n             return None\n         try:\n-            return int(value)\n+            return int(self.to_python(value))\n         except (TypeError, ValueError) as e:\n             raise e.__class__(\n                 \"Field '%s' expected a number but got %r.\" % (self.name, value),\n</patch>",
+      "expected_patch": "diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py\n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -233,7 +233,8 @@ def __init__(self, model, where=WhereNode, alias_cols=True):\n     @property\n     def output_field(self):\n         if len(self.select) == 1:\n-            return self.select[0].field\n+            select = self.select[0]\n+            return getattr(select, 'target', None) or select.field\n         elif len(self.annotation_select) == 1:\n             return next(iter(self.annotation_select.values())).output_field\n \n",
+      "semantic_match": 0.15056179775280898,
+      "model": "claude-sonnet-4-5-20250929",
+      "input_tokens": 1077,
+      "output_tokens": 135
+    }
+  ]
+}

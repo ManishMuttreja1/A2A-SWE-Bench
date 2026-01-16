@@ -52,7 +52,7 @@ Manish Muttreja\\
 \maketitle
 
 \begin{abstract}
- SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems like mini-SWE-agent achieve 65\% resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process; and (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through four key techniques: \textit{retro-holdout mutations} \cite{haimes2024retroholdout} applied to SWE-bench to reveal contamination, \textit{adversarial testing} (fuzz, edge case, mutation testing) that exposes patch fragility beyond test-pass metrics, \textit{trajectory-based process scoring} capturing the full engineering workflow, and a \textit{reproduction-first gate} enforcing understanding before patching. The experiments quantify technique impact: \textbf{retro-holdout mutations reveal 2.9\% performance drop} on mutated instances (indicating memorization), while \textbf{adversarial testing shows patches achieve only 16--22\% mutation robustness} despite passing repository tests. Cross-model evaluation with GPT-4.1, GPT-5.2, and \textbf{Claude 3 Haiku} (18.9\% avg match) demonstrates framework generality across model families. These findings suggest current ``resolved'' metrics may overstate true capability by 3--5$\times$. I provide Dockerfiles and CI scaffolding for AgentBeats integration.
+ SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems like mini-SWE-agent achieve 65\% resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches during pretraining; (2) \textbf{patch-only scoring}---evaluation ignores the engineering process; and (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through four key techniques: \textit{retro-holdout mutations} \cite{haimes2024retroholdout} applied to SWE-bench to reveal contamination, \textit{adversarial testing} (fuzz, edge case, mutation testing) that exposes patch fragility beyond test-pass metrics, \textit{trajectory-based process scoring} capturing the full engineering workflow, and a \textit{reproduction-first gate} enforcing understanding before patching. The experiments quantify technique impact: \textbf{retro-holdout mutations reveal 2.9\% performance drop} on mutated instances (indicating memorization), while \textbf{adversarial testing shows patches achieve only 16--22\% mutation robustness} despite passing repository tests. Cross-model evaluation with GPT-4.1, GPT-5.2, \textbf{Claude Sonnet 4.5} (27.7\% avg), Claude Opus 4.1 (16.7\%), and Claude 3 Haiku (18.9\%) demonstrates framework generality across 5 models and 2 providers. These findings suggest current ``resolved'' metrics may overstate true capability by 3--5$\times$. I provide Dockerfiles and CI scaffolding for AgentBeats integration.
 \end{abstract}
 
 \section{Introduction}
@@ -504,42 +504,59 @@ Overall Adversarial Score & 47.1\% & \textbf{51.3\%} \\
 
 The adversarial testing framework provides complementary signal to semantic match: a patch can be semantically correct but still fragile to edge cases or mutations.
 
-\subsection{Experiment 7: Claude 3 Haiku Benchmark (100 instances)}
+\subsection{Experiment 7: Claude Model Family Benchmark (100 instances)}
 
-\textbf{Purpose}: Evaluate Anthropic's Claude model family on SWE-bench to compare against OpenAI models and validate framework generality.
+\textbf{Purpose}: Evaluate Anthropic's Claude model family on SWE-bench to compare against OpenAI models and validate framework generality across model providers.
 
 \begin{table}[h]
 \centering
 \small
 \begin{tabular}{lrrr}
 \toprule
-Metric & Claude 3 Haiku & GPT-4.1 & GPT-5.2 \\
+Metric & Claude 3 Haiku & Opus 4.1 & \textbf{Sonnet 4.5} \\
 \midrule
-Tasks Completed & 98/100 & 99/100 & \textbf{100/100} \\
-Avg Semantic Match & 18.9\% & 38.7\% & \textbf{44.8\%} \\
-High Match ($\geq$70\%) & 1 & 36 & \textbf{40} \\
+Tasks Completed & 98/100 & 90/100 & \textbf{100/100} \\
+Avg Semantic Match & 18.9\% & 16.7\% & \textbf{27.7\%} \\
+High Match ($\geq$70\%) & 1 & 0 & \textbf{8} \\
 Perfect Match ($\geq$95\%) & 0 & 0 & 0 \\
-Total Tokens & 92,810 & -- & -- \\
+Total Tokens & 92,810 & 114,760 & 103,511 \\
 \bottomrule
 \end{tabular}
-\caption{Claude 3 Haiku vs OpenAI models (100 instances). Note: Haiku is a smaller/faster model.}
+\caption{Claude model family comparison (100 instances each). Sonnet 4.5 leads.}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Model & Tasks & Avg Match & High ($\geq$70\%) & Provider \\
+\midrule
+GPT-5.2 & 100/100 & \textbf{44.8\%} & \textbf{40} & OpenAI \\
+GPT-4.1 & 99/100 & 38.7\% & 36 & OpenAI \\
+Claude Sonnet 4.5 & 100/100 & 27.7\% & 8 & Anthropic \\
+Claude 3 Haiku & 98/100 & 18.9\% & 1 & Anthropic \\
+Claude Opus 4.1 & 90/100 & 16.7\% & 0 & Anthropic \\
+\bottomrule
+\end{tabular}
+\caption{Cross-provider model rankings on SWE-bench (100 instances).}
 \end{table}
 
 \textbf{Key findings}:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Claude 3 Haiku underperforms}: 18.9\% avg semantic match vs 38.7--44.8\% for GPT-4.1/5.2---expected as Haiku is a smaller, cost-optimized model.
-    \item \textbf{Reliable execution}: 98\% completion rate demonstrates the framework works across model families (Anthropic + OpenAI).
-    \item \textbf{One high-quality match}: django-11163 achieved 79.2\% semantic match, showing capability for straightforward bug fixes.
-    \item \textbf{API limitations}: Only Claude 3 Haiku was accessible; Opus and Sonnet require upgraded API access.
+    \item \textbf{GPT-5.2 leads overall}: 44.8\% avg match, significantly ahead of all Claude models.
+    \item \textbf{Claude Sonnet 4.5 leads Anthropic family}: 27.7\% avg match with 8 high-quality solutions, outperforming both Opus 4.1 (16.7\%) and Haiku (18.9\%).
+    \item \textbf{Opus 4.1 underperforms}: Surprisingly, Opus 4.1 shows lower performance (16.7\%) than the smaller Sonnet 4.5, possibly due to API errors (10/100 failed).
+    \item \textbf{Framework generality validated}: The A2A framework successfully evaluates 5 different models across 2 providers without modification.
 \end{enumerate}
 
-\textbf{Notable per-instance results for Claude 3 Haiku}:
+\textbf{Notable high-match results for Claude Sonnet 4.5}:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Best}: django-11163 (79.2\%), django-11451 (61.1\%), django-16255 (55.0\%)
-    \item \textbf{Worst}: sympy-22914 (0.5\%), django-14534 (0.9\%), xarray-2905 (1.7\%)
+    \item \textbf{Best}: sklearn-12585 (91.3\%), django-11163 (91.7\%), xarray-4629 (85.5\%)
+    \item \textbf{Strong}: django-13670 (65.2\%), pytest-7205 (66.9\%), django-11451 (91.3\%)
 \end{itemize}
 
-This cross-model evaluation demonstrates the A2A framework's generality---it can evaluate any LLM backend without modification.
+This cross-provider evaluation demonstrates the A2A framework's generality---it can evaluate any LLM backend without modification.
 
 \subsection{Trajectory Analysis}
 

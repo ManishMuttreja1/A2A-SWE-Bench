@@ -1,0 +1,50 @@
+{
+  "model": "sonnet",
+  "model_id": "claude-3-5-sonnet-20241022",
+  "num_tasks": 5,
+  "successful": 0,
+  "failed": 5,
+  "avg_semantic_match": 0,
+  "high_match_count": 0,
+  "perfect_count": 0,
+  "total_input_tokens": 0,
+  "total_output_tokens": 0,
+  "timestamp": "2026-01-16T01:15:57.581065",
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'completion'",
+      "semantic_match": 0.0,
+      "model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'completion'",
+      "semantic_match": 0.0,
+      "model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'completion'",
+      "semantic_match": 0.0,
+      "model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "instance_id": "django__django-16082",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'completion'",
+      "semantic_match": 0.0,
+      "model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "instance_id": "django__django-13406",
+      "success": false,
+      "error": "'Anthropic' object has no attribute 'completion'",
+      "semantic_match": 0.0,
+      "model": "claude-3-5-sonnet-20241022"
+    }
+  ]
+}

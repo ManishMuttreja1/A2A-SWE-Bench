@@ -1,0 +1,36 @@
+{
+  "model": "sonnet",
+  "model_id": "claude-3-5-sonnet-20241022",
+  "num_tasks": 3,
+  "successful": 0,
+  "failed": 3,
+  "avg_semantic_match": 0,
+  "high_match_count": 0,
+  "perfect_count": 0,
+  "total_input_tokens": 0,
+  "total_output_tokens": 0,
+  "timestamp": "2026-01-16T01:16:22.644941",
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "success": false,
+      "error": "Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-3-5-sonnet-20241022'}, 'request_id': 'req_011CXAZtUq7GVF41EmRStbtb'}",
+      "semantic_match": 0.0,
+      "model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "success": false,
+      "error": "Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-3-5-sonnet-20241022'}, 'request_id': 'req_011CXAZtXHh8ZASN4vFMrxAR'}",
+      "semantic_match": 0.0,
+      "model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "success": false,
+      "error": "Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-3-5-sonnet-20241022'}, 'request_id': 'req_011CXAZtZgZZfbSVryM35zfU'}",
+      "semantic_match": 0.0,
+      "model": "claude-3-5-sonnet-20241022"
+    }
+  ]
+}
