@@ -14,7 +14,7 @@
 \maketitle
 
 \begin{abstract}
-SWE-bench provides real GitHub issues and tests, but is vulnerable to contamination, static test overfitting, and patch-only scoring. We propose SWEbench-A2A, adding (1) reproduction-first gating, (2) trajectory-based process scoring, (3) anti-memorization via mutation and fresh harvested issues, and (4) dynamic/adversarial testing. A partially implemented reference system includes Green--Purple A2A services, reproduction gating, Docker orchestration, and scoring scaffolds; dynamic testing and robust mutation remain to be completed. We outline the design, current status, and a roadmap to deliver a contamination-resistant, process-aware, adversarially hardened benchmark.
+SWE-bench provides real GitHub issues and tests, but is vulnerable to contamination, static test overfitting, and patch-only scoring. We propose SWEbench-A2A, adding (1) reproduction-first gating, (2) trajectory-based process scoring, (3) anti-memorization via mutation and fresh harvested issues, and (4) dynamic/adversarial testing. A reference system includes Green--Purple A2A services, reproduction gating, Docker orchestration, and scoring scaffolds. Anti-contamination reruns on 100 instances show a 19.3\%$\to$12.9\% drop (6.4\% absolute; $\sim$33\% relative), with 19 instances showing $>$30\% drop. Adversarial robustness remains heuristic-only pending execution-based probes.
 \end{abstract}
 
 \section*{Summary}
@@ -46,8 +46,8 @@ SWE-bench \cite{swebench_iclr2024} evaluates patches via repo tests. The compani
 
 \section{Current Implementation Status}
 \begin{itemize}[leftmargin=*]
-\item \textbf{Implemented}: Green--Purple dispatch; reproduction gate; Docker env provisioning; patch apply + test run; trajectory scaffolding; advanced metrics scaffold; Purple emits ordered artifacts (repro then patch); LLM solver hook (OpenAI/Anthropic) with fallbacks; verification supports timeouts, flaky retries, optional fuzz/adversarial command lists.
-\item \textbf{Missing}: default fuzz/adversarial generators; live retro-holdout integration with semantic checks; harvester wired into scenario selection; persistence of trajectories/scores to DB/leaderboard; visual/multimodal signals.
+\item \textbf{Implemented}: Green--Purple dispatch; reproduction gate; Docker env provisioning; patch apply + test run; trajectory scaffolding; advanced metrics scaffold; Purple emits ordered artifacts (repro then patch); LLM solver hook (OpenAI/Anthropic) with fallbacks; verification supports timeouts, flaky retries, optional fuzz/adversarial command lists; retro-holdout pipeline with semantic equivalence checks.
+\item \textbf{Missing}: default fuzz/adversarial generators; harvester wired into scenario selection; persistence of trajectories/scores to DB/leaderboard; visual/multimodal signals; execution-based adversarial probes.
 \end{itemize}
 
 \section{Dynamic Test Generation Plan}
@@ -67,7 +67,7 @@ SWE-bench \cite{swebench_iclr2024} evaluates patches via repo tests. The compani
 \section{Roadmap}
 \begin{enumerate}[leftmargin=*]
 \item Wire trajectory persistence and scoring emission in final artifacts.
-\item Enable retro-holdout in live flow with semantic equivalence guard.
+\item Scale retro-holdout pipeline and expand mutation coverage.
 \item Integrate harvester for fresh scenarios; add ``secret-in-time'' flag.
 \item Ship default fuzz/adversarial command packs; add red-team generator.
 \item Add resource limits and optional no-Docker mode for smoke tests.

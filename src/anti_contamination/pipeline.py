@@ -1,6 +1,8 @@
 """Anti-Contamination Pipeline - Orchestrates mutation and slice management"""
 
 import logging
+import shutil
+import tempfile
 import random
 from typing import Dict, Any, Optional, List
 from pathlib import Path
@@ -156,7 +158,13 @@ class AntiContaminationPipeline:
         metadata: TaskMetadata,
     ) -> tuple[Dict[str, Any], TaskMetadata]:
         """Apply retro-holdout mutations to an instance"""
+        original_repo_copy = None
         try:
+            if self.config.verify_semantic_equivalence:
+                tmp_dir = tempfile.mkdtemp(prefix="retro_holdout_original_")
+                original_repo_copy = Path(tmp_dir)
+                shutil.copytree(repo_path, original_repo_copy, dirs_exist_ok=True)
+
             mutated_instance = await self.retro_holdout.generate_retro_holdout(
                 instance=instance,
                 repo_path=repo_path,
@@ -173,7 +181,7 @@ class AntiContaminationPipeline:
                 test_commands = instance.get("test_commands", [])
                 if test_commands:
                     is_equivalent = await self.retro_holdout.verify_semantic_equivalence(
-                        original_path=repo_path,
+                        original_path=original_repo_copy or repo_path,
                         mutated_path=repo_path,  # In-place mutation
                         test_commands=test_commands,
                     )
@@ -187,6 +195,9 @@ class AntiContaminationPipeline:
         except Exception as e:
             logger.error(f"Mutation failed for {instance['instance_id']}: {e}")
             return instance, metadata
+        finally:
+            if original_repo_copy and original_repo_copy.exists():
+                shutil.rmtree(original_repo_copy, ignore_errors=True)
     
     def get_task_metadata(self, instance_id: str) -> Optional[TaskMetadata]:
         """Get metadata for a processed task"""

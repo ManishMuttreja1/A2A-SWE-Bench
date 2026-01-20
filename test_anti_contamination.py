@@ -5,28 +5,57 @@ import asyncio
 import json
 import os
 import sys
+import shutil
+import tempfile
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from openai import AsyncOpenAI
 
+from src.scoring.semantic_patch import semantic_match_score
+from src.anti_contamination import (
+    AntiContaminationPipeline,
+    AntiContaminationConfig,
+    EvaluationSlice,
+)
+from git import Repo
+
 
 class AntiContaminationTester:
     """Test anti-contamination features with real models"""
     
-    def __init__(self, model: str = "gpt-5.2"):
+    def __init__(
+        self,
+        model: str = "gpt-5.2",
+        mutation_level: str = "medium",
+        mutation_seed: Optional[int] = None,
+    ):
         self.model = model
         self.client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.results = {
             "verified": [],
             "mutated": [],
             "timestamp": datetime.now().strftime("%Y%m%d_%H%M%S"),
-            "model": model
+            "model": model,
+            "metric": "semantic_patch_f1",
+            "reproduction_gate_enforced": False,
+            "heuristics_allowed": False,
         }
+        self.repo_cache_dir = Path("data/repo_cache")
+        self.repo_cache_dir.mkdir(parents=True, exist_ok=True)
+        self.pipeline = AntiContaminationPipeline(
+            config=AntiContaminationConfig(
+                enable_mutations=True,
+                mutation_level=mutation_level,
+                mutation_seed=mutation_seed,
+                verify_semantic_equivalence=True,
+                allow_heuristics=False,
+            )
+        )
         
     async def load_swebench_instances(self, num_instances: int = 10) -> List[Dict]:
         """Load SWE-bench verified instances"""
@@ -45,58 +74,29 @@ class AntiContaminationTester:
         
         return sorted_instances
     
-    def apply_mutation(self, instance: Dict, level: str = "medium") -> Dict:
-        """Apply retro-holdout mutation to an instance"""
-        import random
-        import re
-        import hashlib
-        
-        mutated = instance.copy()
-        mutation_hash = hashlib.md5(
-            f"{instance['instance_id']}_{level}_{datetime.now().isoformat()}".encode()
-        ).hexdigest()[:8]
-        
-        mutated["instance_id"] = f"{instance['instance_id']}_mutated_{mutation_hash}"
-        mutated["is_mutated"] = True
-        mutated["original_instance_id"] = instance["instance_id"]
-        mutated["mutation_level"] = level
-        
-        # Mutation mappings
-        var_mappings = {
-            "data": "payload", "result": "output", "user": "account",
-            "item": "element", "config": "settings", "request": "query",
-            "response": "reply", "error": "issue", "cache": "buffer",
-            "index": "position", "count": "total", "list": "array",
-            "key": "identifier", "value": "content", "model": "schema"
-        }
-        
-        func_mappings = {
-            "get_": "fetch_", "set_": "assign_", "create_": "make_",
-            "delete_": "remove_", "update_": "modify_", "process_": "handle_",
-            "validate_": "check_", "parse_": "analyze_"
-        }
-        
-        # Mutation probability based on level
-        prob = {"light": 0.3, "medium": 0.5, "heavy": 0.8}[level]
-        
-        # Mutate problem statement
-        problem = mutated.get("problem_statement", "")
-        for old, new in var_mappings.items():
-            if random.random() < prob:
-                problem = re.sub(r'\b' + old + r'\b', new, problem, flags=re.IGNORECASE)
-        mutated["problem_statement"] = problem
-        
-        # Mutate patch (for comparison scoring)
-        patch = mutated.get("patch", "")
-        for old, new in var_mappings.items():
-            if random.random() < prob:
-                patch = re.sub(r'\b' + old + r'\b', new, patch)
-        for old, new in func_mappings.items():
-            if random.random() < prob:
-                patch = patch.replace(old, new)
-        mutated["patch"] = patch
-        
-        return mutated
+    def _repo_cache_path(self, repo_name: str) -> Path:
+        safe_name = repo_name.replace("/", "__")
+        return self.repo_cache_dir / f"{safe_name}.git"
+
+    def _ensure_repo_cache(self, repo_url: str, cache_path: Path) -> None:
+        if cache_path.exists():
+            return
+        Repo.clone_from(repo_url, cache_path, bare=True)
+
+    def _checkout_repo(self, instance: Dict) -> Path:
+        repo_name = instance.get("repo", "")
+        repo_url = instance.get("repo_url") or f"https://github.com/{repo_name}.git"
+        cache_path = self._repo_cache_path(repo_name)
+        self._ensure_repo_cache(repo_url, cache_path)
+        workdir = Path(tempfile.mkdtemp(prefix="swebench_ac_"))
+        repo = Repo.clone_from(cache_path.as_posix(), workdir)
+        base_commit = instance.get("base_commit")
+        if base_commit:
+            repo.git.checkout(base_commit)
+        return workdir
+
+    def _cleanup_repo(self, repo_path: Path) -> None:
+        shutil.rmtree(repo_path, ignore_errors=True)
     
     async def solve_instance(self, instance: Dict) -> Dict:
         """Use LLM to generate a patch for an instance"""
@@ -149,30 +149,7 @@ Format:
     
     def calculate_similarity(self, generated: str, expected: str) -> float:
         """Calculate semantic similarity between patches"""
-        if not generated or not expected:
-            return 0.0
-        
-        # Extract meaningful lines (not headers or context markers)
-        def extract_changes(patch: str) -> set:
-            changes = set()
-            for line in patch.split('\n'):
-                line = line.strip()
-                if line.startswith('+') and not line.startswith('+++'):
-                    changes.add(line[1:].strip())
-                elif line.startswith('-') and not line.startswith('---'):
-                    changes.add(line[1:].strip())
-            return changes
-        
-        gen_changes = extract_changes(generated)
-        exp_changes = extract_changes(expected)
-        
-        if not exp_changes:
-            return 0.0
-        
-        intersection = gen_changes & exp_changes
-        recall = len(intersection) / len(exp_changes) if exp_changes else 0
-        
-        return recall
+        return semantic_match_score(generated, expected)
     
     async def test_verified_vs_mutated(self, num_instances: int = 10):
         """Compare performance on verified vs mutated instances"""
@@ -191,7 +168,31 @@ Format:
         print(f"\n--- Testing VERIFIED instances ---")
         for i, instance in enumerate(instances, 1):
             print(f"[{i}/{num_instances}] {instance['instance_id'][:40]}...", end=" ")
-            result = await self.solve_instance(instance)
+            repo_path = None
+            prepared_instance = instance
+            metadata = None
+            try:
+                repo_path = self._checkout_repo(instance)
+                prepared_instance, metadata = await self.pipeline.prepare_task(
+                    instance=instance,
+                    repo_path=repo_path,
+                    evaluation_slice=EvaluationSlice.VERIFIED,
+                    force_heuristics=False,
+                )
+            except Exception as e:
+                print(f"✗ Repo prep failed: {e}")
+                result = {
+                    "instance_id": instance["instance_id"],
+                    "success": False,
+                    "error": f"repo_prep_failed: {e}",
+                    "similarity": 0,
+                }
+                self.results["verified"].append(result)
+                if repo_path:
+                    self._cleanup_repo(repo_path)
+                continue
+
+            result = await self.solve_instance(prepared_instance)
             
             if result["success"]:
                 similarity = self.calculate_similarity(
@@ -199,35 +200,66 @@ Format:
                     result["expected_patch"]
                 )
                 result["similarity"] = similarity
+                if metadata:
+                    result["metadata"] = metadata.to_dict()
                 print(f"✓ {similarity*100:.0f}%")
             else:
                 result["similarity"] = 0
                 print(f"✗ Error")
             
             self.results["verified"].append(result)
+            if repo_path:
+                self._cleanup_repo(repo_path)
         
         # Create MUTATED versions and test
         print(f"\n--- Testing MUTATED instances ---")
         for i, instance in enumerate(instances, 1):
-            mutated = self.apply_mutation(instance, level="medium")
-            print(f"[{i}/{num_instances}] {mutated['instance_id'][:40]}...", end=" ")
+            repo_path = None
+            prepared_instance = instance
+            metadata = None
+            try:
+                repo_path = self._checkout_repo(instance)
+                prepared_instance, metadata = await self.pipeline.prepare_task(
+                    instance=instance,
+                    repo_path=repo_path,
+                    evaluation_slice=EvaluationSlice.MUTATED,
+                    force_heuristics=False,
+                )
+            except Exception as e:
+                print(f"✗ Repo prep failed: {e}")
+                result = {
+                    "instance_id": instance["instance_id"],
+                    "success": False,
+                    "error": f"repo_prep_failed: {e}",
+                    "similarity": 0,
+                }
+                self.results["mutated"].append(result)
+                if repo_path:
+                    self._cleanup_repo(repo_path)
+                continue
+
+            print(f"[{i}/{num_instances}] {prepared_instance['instance_id'][:40]}...", end=" ")
             
-            result = await self.solve_instance(mutated)
-            result["original_instance_id"] = instance["instance_id"]
+            result = await self.solve_instance(prepared_instance)
+            result["original_instance_id"] = prepared_instance.get("original_instance_id", instance["instance_id"])
             
             if result["success"]:
-                # Compare to ORIGINAL expected patch
+                # Compare to MUTATED expected patch
                 similarity = self.calculate_similarity(
                     result["generated_patch"],
-                    instance["patch"]  # Compare to original, not mutated
+                    result["expected_patch"]
                 )
                 result["similarity"] = similarity
+                if metadata:
+                    result["metadata"] = metadata.to_dict()
                 print(f"✓ {similarity*100:.0f}%")
             else:
                 result["similarity"] = 0
                 print(f"✗ Error")
             
             self.results["mutated"].append(result)
+            if repo_path:
+                self._cleanup_repo(repo_path)
         
         # Calculate contamination scores
         self._calculate_contamination()

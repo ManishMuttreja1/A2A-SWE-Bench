@@ -16,6 +16,7 @@ from typing import Dict, Any, List, Optional
 
 # Setup path
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 # Check for OpenAI
 try:
@@ -23,6 +24,8 @@ try:
 except ImportError:
     print("❌ OpenAI not installed. Run: pip install openai")
     sys.exit(1)
+
+from src.scoring.semantic_patch import compute_patch_metrics
 
 
 class GPT4oSWEBenchSolver:
@@ -194,48 +197,6 @@ Important:
         }
 
 
-def compare_patches(generated: str, expected: str) -> Dict[str, Any]:
-    """Simple comparison of generated vs expected patches"""
-    
-    # Basic metrics
-    gen_lines = set(line.strip() for line in generated.split('\n') if line.strip())
-    exp_lines = set(line.strip() for line in expected.split('\n') if line.strip())
-    
-    # Find modifications (lines starting with + or -)
-    gen_mods = set(line for line in gen_lines if line.startswith(('+', '-')) and not line.startswith(('+++', '---')))
-    exp_mods = set(line for line in exp_lines if line.startswith(('+', '-')) and not line.startswith(('+++', '---')))
-    
-    overlap = gen_mods & exp_mods
-    
-    if exp_mods:
-        recall = len(overlap) / len(exp_mods)
-    else:
-        recall = 0.0
-    
-    if gen_mods:
-        precision = len(overlap) / len(gen_mods)
-    else:
-        precision = 0.0
-    
-    if precision + recall > 0:
-        f1 = 2 * precision * recall / (precision + recall)
-    else:
-        f1 = 0.0
-    
-    # Check if same files modified
-    gen_files = set(line.split()[1] if len(line.split()) > 1 else '' for line in gen_lines if line.startswith('---') or line.startswith('+++'))
-    exp_files = set(line.split()[1] if len(line.split()) > 1 else '' for line in exp_lines if line.startswith('---') or line.startswith('+++'))
-    files_match = len(gen_files & exp_files) > 0
-    
-    return {
-        "precision": precision,
-        "recall": recall,
-        "f1_score": f1,
-        "files_match": files_match,
-        "generated_modifications": len(gen_mods),
-        "expected_modifications": len(exp_mods),
-        "overlapping_modifications": len(overlap)
-    }
 
 
 async def run_benchmark(num_tasks: int = 5, easy_first: bool = True):
@@ -302,13 +263,13 @@ async def run_benchmark(num_tasks: int = 5, easy_first: bool = True):
             expected_patch = instance.get('patch', '')
             generated_patch = result.get('patch', '')
             
-            comparison = compare_patches(generated_patch, expected_patch)
+            comparison = compute_patch_metrics(generated_patch, expected_patch)
             
             print(f"\n📊 Patch Comparison:")
             print(f"   F1 Score: {comparison['f1_score']:.2%}")
             print(f"   Precision: {comparison['precision']:.2%}")
             print(f"   Recall: {comparison['recall']:.2%}")
-            print(f"   Files Match: {'✅' if comparison['files_match'] else '❌'}")
+            print(f"   Files Match: {'✅' if comparison['files_correct'] == 1.0 else '❌'}")
             
             # Show a snippet of the generated patch
             if generated_patch:
@@ -345,7 +306,7 @@ async def run_benchmark(num_tasks: int = 5, easy_first: bool = True):
         avg_f1 = sum(r['comparison']['f1_score'] for r in successful) / len(successful)
         avg_precision = sum(r['comparison']['precision'] for r in successful) / len(successful)
         avg_recall = sum(r['comparison']['recall'] for r in successful) / len(successful)
-        files_matched = sum(1 for r in successful if r['comparison']['files_match'])
+        files_matched = sum(1 for r in successful if r['comparison']['files_correct'] == 1.0)
         
         print(f"\n📈 Average Metrics (across successful tasks):")
         print(f"   Average F1 Score: {avg_f1:.2%}")
@@ -374,6 +335,9 @@ async def run_benchmark(num_tasks: int = 5, easy_first: bool = True):
             "num_tasks": len(results),
             "successful": len(successful),
             "failed": len(failed),
+            "metric": "semantic_patch_f1",
+            "reproduction_gate_enforced": False,
+            "heuristics_allowed": False,
             "metrics": metrics,
             "results": results
         }, f, indent=2, default=str)

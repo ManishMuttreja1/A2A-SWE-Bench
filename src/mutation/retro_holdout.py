@@ -205,12 +205,16 @@ class RetroHoldoutGenerator:
     ) -> bool:
         """Mutate a single Python file"""
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                 content = f.read()
-            
-            # Parse AST
-            tree = ast.parse(content)
-            
+
+            # Parse AST (skip files with intentional syntax errors)
+            try:
+                tree = ast.parse(content)
+            except (SyntaxError, ValueError) as e:
+                logger.debug(f"Skipping non-parseable file {file_path}: {e}")
+                return False
+
             # Create transformer
             transformer = SemanticRenameTransformer(
                 mutation_prob,
@@ -219,23 +223,28 @@ class RetroHoldoutGenerator:
                 self.function_transformations,
                 global_mutations
             )
-            
+
             # Transform AST
             new_tree = transformer.visit(tree)
-            
+
             # Convert back to source
             import astor
-            new_content = astor.to_source(new_tree)
-            
+            try:
+                new_content = astor.to_source(new_tree)
+            except Exception as e:
+                # astor doesn't support all newer AST nodes (e.g., Match)
+                logger.debug(f"Skipping unparsable AST for {file_path}: {e}")
+                return False
+
             # Write back if changed
             if new_content != content:
-                with open(file_path, 'w') as f:
+                with open(file_path, "w", encoding="utf-8", errors="ignore") as f:
                     f.write(new_content)
                 return True
-                
+
         except Exception as e:
             logger.error(f"Failed to mutate {file_path}: {e}")
-        
+
         return False
     
     async def _paraphrase_description(

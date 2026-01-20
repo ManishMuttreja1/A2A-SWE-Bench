@@ -16,137 +16,13 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any, List
 import re
-import difflib
 
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from openai import AsyncOpenAI
 
-
-def semantic_patch_comparison(generated: str, expected: str) -> Dict[str, Any]:
-    """
-    Semantically compare patches - looks for the same modifications
-    regardless of exact line numbers or context
-    """
-    
-    def extract_modifications(patch: str) -> List[Dict]:
-        """Extract the actual code changes from a patch"""
-        modifications = []
-        current_file = None
-        additions = []
-        deletions = []
-        
-        for line in patch.split('\n'):
-            # Track file
-            if line.startswith('--- a/') or line.startswith('--- '):
-                if current_file and (additions or deletions):
-                    modifications.append({
-                        'file': current_file,
-                        'additions': additions.copy(),
-                        'deletions': deletions.copy()
-                    })
-                    additions = []
-                    deletions = []
-                # Extract file path
-                parts = line.split()
-                if len(parts) >= 2:
-                    current_file = parts[1].replace('a/', '').replace('b/', '')
-            elif line.startswith('+++ b/') or line.startswith('+++ '):
-                parts = line.split()
-                if len(parts) >= 2:
-                    current_file = parts[1].replace('a/', '').replace('b/', '')
-            elif line.startswith('+') and not line.startswith('+++'):
-                # Addition line
-                additions.append(line[1:].strip())
-            elif line.startswith('-') and not line.startswith('---'):
-                # Deletion line
-                deletions.append(line[1:].strip())
-        
-        # Don't forget last file
-        if current_file and (additions or deletions):
-            modifications.append({
-                'file': current_file,
-                'additions': additions.copy(),
-                'deletions': deletions.copy()
-            })
-        
-        return modifications
-    
-    gen_mods = extract_modifications(generated)
-    exp_mods = extract_modifications(expected)
-    
-    # Compare files modified
-    gen_files = set(m['file'] for m in gen_mods)
-    exp_files = set(m['file'] for m in exp_mods)
-    
-    files_correct = len(gen_files & exp_files) / max(len(exp_files), 1)
-    
-    # Compare actual code changes
-    gen_additions = set()
-    gen_deletions = set()
-    exp_additions = set()
-    exp_deletions = set()
-    
-    for m in gen_mods:
-        gen_additions.update(m['additions'])
-        gen_deletions.update(m['deletions'])
-    
-    for m in exp_mods:
-        exp_additions.update(m['additions'])
-        exp_deletions.update(m['deletions'])
-    
-    # Calculate overlap
-    add_overlap = len(gen_additions & exp_additions)
-    del_overlap = len(gen_deletions & exp_deletions)
-    
-    total_exp = len(exp_additions) + len(exp_deletions)
-    total_gen = len(gen_additions) + len(gen_deletions)
-    total_overlap = add_overlap + del_overlap
-    
-    if total_exp > 0:
-        recall = total_overlap / total_exp
-    else:
-        recall = 0.0
-    
-    if total_gen > 0:
-        precision = total_overlap / total_gen
-    else:
-        precision = 0.0
-    
-    if precision + recall > 0:
-        f1 = 2 * precision * recall / (precision + recall)
-    else:
-        f1 = 0.0
-    
-    # Semantic similarity using fuzzy matching
-    all_gen = list(gen_additions) + list(gen_deletions)
-    all_exp = list(exp_additions) + list(exp_deletions)
-    
-    fuzzy_matches = 0
-    for exp_line in all_exp:
-        if exp_line in all_gen:
-            fuzzy_matches += 1
-        else:
-            # Try fuzzy match
-            matches = difflib.get_close_matches(exp_line, all_gen, n=1, cutoff=0.8)
-            if matches:
-                fuzzy_matches += 0.8  # Partial credit for fuzzy match
-    
-    fuzzy_recall = fuzzy_matches / max(len(all_exp), 1)
-    
-    return {
-        "files_correct": files_correct,
-        "precision": precision,
-        "recall": recall,
-        "f1_score": f1,
-        "fuzzy_recall": fuzzy_recall,
-        "generated_files": list(gen_files),
-        "expected_files": list(exp_files),
-        "gen_additions": len(gen_additions),
-        "exp_additions": len(exp_additions),
-        "gen_deletions": len(gen_deletions),
-        "exp_deletions": len(exp_deletions)
-    }
+from src.scoring.semantic_patch import compute_patch_metrics
 
 
 class GPT4oPurpleAgent:
@@ -276,7 +152,7 @@ async def run_a2a_test(num_tasks: int = 5, model: str = "gpt-4o"):
             generated = result.get('patch', '')
             
             # Semantic comparison
-            comparison = semantic_patch_comparison(generated, expected)
+            comparison = compute_patch_metrics(generated, expected)
             
             status = "✅" if comparison['files_correct'] > 0 else "⚠️"
             score_status = "✅" if comparison['fuzzy_recall'] > 0.5 else "⚠️" if comparison['fuzzy_recall'] > 0 else "❌"
@@ -335,6 +211,9 @@ async def run_a2a_test(num_tasks: int = 5, model: str = "gpt-4o"):
             "timestamp": timestamp,
             "model": "gpt-4o",
             "num_tasks": len(results),
+            "metric": "semantic_patch_f1",
+            "reproduction_gate_enforced": False,
+            "heuristics_allowed": False,
             "stats": agent.stats,
             "results": results
         }, f, indent=2)

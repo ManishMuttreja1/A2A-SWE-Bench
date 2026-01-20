@@ -54,9 +54,9 @@ Manish Muttreja\\
 \begin{abstract}
  SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems achieve 65\%+ resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches; (2) \textbf{patch-only scoring}---evaluation ignores engineering process; (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through: \textit{retro-holdout mutations} \cite{haimes2024retroholdout}, \textit{adversarial testing}, and \textit{trajectory-based process scoring}.
 
-\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows 2.9\% overall performance drop (verified$\to$mutated), with 7 instances showing $>$50\% drop---including \texttt{sklearn-14141} dropping 100\%$\to$0\%, proving memorization. (2) \textit{Robustness}: Adversarial testing reveals 51.3\% overall robustness vs 60\% semantic pass rate---patches that ``pass'' are 22\% resilient to code mutations. (3) \textit{Cross-provider}: GPT-4o (20.7\%), Claude Sonnet 4.5 (27.7\%), Opus 4.1 (18.8\%), Haiku (18.5\%) on 100 tasks each.
+\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 19.3\% verified to 12.9\% mutated (6.4\% absolute; $\sim$33\% relative), with 19 instances showing $>$30\% drop. (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate, but current fuzz/mutation/adversarial probes are heuristic-only and labeled as such. (3) \textit{Cross-provider}: GPT-4o (20.7\%), Claude Sonnet 4.5 (27.7\%), Opus 4.1 (18.8\%), Haiku (18.5\%) on 100 tasks each.
 
-\textbf{Limitations}: Metrics are \textit{semantic similarity}, not execution-based pass/fail. Process scoring defined but not computed. Results suggest standard metrics overstate capability by $\sim$14--15\% due to contamination and robustness gaps.
+\textbf{Limitations}: Metrics are \textit{semantic similarity}, not execution-based pass/fail. Process scoring defined but not computed. Results suggest standard metrics may overstate capability by $\sim$33\% due to contamination and $\sim$15\% due to robustness gaps (heuristic-only).
 \end{abstract}
 
 \section{Introduction}
@@ -93,9 +93,9 @@ The framework implements the Agent-to-Agent (A2A) protocol, enabling modular com
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Framework}: SWE-Bench-A2A, implementing the A2A protocol for agent evaluation with reproduction gates and trajectory-based process scoring.
     
-    \item \textbf{Contamination detection}: Retro-holdout testing on 100 instances showing 2.9\% contamination gap (20.2\%$\to$17.2\%), with 7 instances exhibiting $>$50\% performance drops---including \texttt{sklearn-14141} dropping 100\%$\to$0\%, proving memorization.
+    \item \textbf{Contamination detection}: Retro-holdout testing on 100 instances shows a 6.4\% absolute drop (19.3\%$\to$12.9\%), with 19 instances showing $>$30\% drop.
     
-    \item \textbf{Robustness analysis}: Adversarial testing (10 instances) revealing 51.3\% overall robustness vs 60\% semantic pass rate, with only 22\% mutation resilience---demonstrating that patches matching expected text are brittle.
+    \item \textbf{Robustness analysis}: Adversarial testing (10 instances) revealing 51.3\% overall robustness vs 60\% semantic pass rate, currently via heuristic-only fuzz/mutation/adversarial probes.
     
     \item \textbf{Cross-provider evaluation}: Baseline metrics for 4 models (GPT-4o, Claude Sonnet 4.5, Opus 4.1, Haiku) across 100 instances each, demonstrating framework generality.
     
@@ -436,7 +436,7 @@ Avg F1 Score & 20.7\% & 19.3\% \\
 
 \textbf{Purpose}: Test whether retro-holdout mutations detect memorization by comparing model performance on original (``verified'') vs. semantically-mutated versions of identical tasks.
 
-\textbf{Methodology}: The anti-contamination pipeline applies semantic-preserving transformations (variable/function/class renaming, docstring rephrasing) to create ``mutated'' versions of SWE-bench instances. Performance drops between original and mutated versions indicate memorization rather than reasoning.
+\textbf{Methodology}: The anti-contamination pipeline applies semantic-preserving transformations (variable/function/class renaming, docstring rephrasing) to create ``mutated'' versions of SWE-bench instances. Performance drops between original and mutated versions indicate memorization rather than reasoning. The mutation engine now skips non-parseable files (e.g., intentionally invalid test fixtures) to avoid spurious failures.
 
 \begin{table}[h]
 \centering
@@ -446,29 +446,21 @@ Avg F1 Score & 20.7\% & 19.3\% \\
 Metric & Verified & Mutated \\
 \midrule
 Tasks Tested & 100 & 100 \\
-Avg Semantic Match & 20.2\% & 17.2\% \\
-Performance Drop & \multicolumn{2}{c}{\textbf{-2.9\%}} \\
-High Contamination ($>$50\% drop) & \multicolumn{2}{c}{7 instances} \\
+Avg Semantic Match & 19.3\% & 12.9\% \\
+Performance Drop & \multicolumn{2}{c}{\textbf{-6.4\%}} \\
+High Contamination ($>$30\% drop) & \multicolumn{2}{c}{19 instances} \\
 \bottomrule
 \end{tabular}
-\caption{Anti-contamination results: GPT-4o on verified vs. mutated instances.}
+\caption{Anti-contamination results: GPT-5.2 on verified vs. mutated instances.}
 \end{table}
 
-\textbf{Key contamination cases} (verified $\to$ mutated):
-\begin{itemize}[leftmargin=*]
-    \item \texttt{sklearn-14141}: 100\% $\to$ 0\% (\textbf{complete memorization})
-    \item \texttt{django-14534}: 50\% $\to$ 0\%
-    \item \texttt{xarray-6721}: 50\% $\to$ 0\%
-    \item \texttt{pytest-7432}: 33\% $\to$ 0\%
-    \item \texttt{sympy-14711}: 100\% $\to$ 50\% (partial)
-\end{itemize}
+\textbf{Key contamination cases} are reported in the per-instance appendix of the results JSON; the overall distribution shows 19/100 instances with $>$30\% drop.
 
 \textbf{Key findings}:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Contamination confirmed}: 7/100 instances showed $>$50\% performance drop when mutated, proving memorization on specific tasks.
-    \item \textbf{sklearn-14141 fully memorized}: This task dropped from 100\% to 0\%, confirming the model memorized the exact patch rather than reasoning about the problem.
-    \item \textbf{Most tasks unaffected}: 93/100 instances showed $<$10\% drop, suggesting genuine reasoning rather than memorization for the majority.
-    \item \textbf{Autocomplete vs. engineering}: The 2.9\% overall drop suggests standard semantic match metrics overestimate capability by $\sim$14\% relative (2.9/20.2) due to contamination.
+    \item \textbf{Contamination confirmed}: 19/100 instances showed $>$30\% performance drop when mutated, indicating memorization on a substantial subset.
+    \item \textbf{Most tasks partially impacted}: The distribution shows a non-trivial tail of large drops, while many instances show small or zero drop.
+    \item \textbf{Autocomplete vs. engineering}: The 6.4\% overall drop suggests standard semantic match metrics overestimate capability by $\sim$33\% relative (6.4/19.3) due to contamination.
 \end{enumerate}
 
 \textbf{Implication for ``autocomplete'' criticism}: These results partially address the concern that semantic match measures ``autocomplete capability'' rather than engineering. While semantic match remains imperfect, the retro-holdout comparison provides a contamination-adjusted view: models that rely on memorization show significant drops on mutated instances.
@@ -477,7 +469,7 @@ High Contamination ($>$50\% drop) & \multicolumn{2}{c}{7 instances} \\
 
 \textbf{Purpose}: Test patch robustness beyond repository test suites using fuzz testing, adversarial edge cases, and mutation testing.
 
-\textbf{Methodology}: The adversarial evaluator applies three testing strategies to generated patches:
+\textbf{Methodology}: The adversarial evaluator applies three testing strategies to generated patches. Current results are heuristic-only (pattern-based) and do not execute patches in containerized environments:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Fuzz Testing}: Property-based tests with random inputs
     \item \textbf{Adversarial Edge Cases}: LLM-generated edge cases (null, boundary, malformed)
@@ -504,7 +496,7 @@ Mutation Score & 22.0\% \\
 \caption{Adversarial testing results: robustness breakdown by test type.}
 \end{table}
 
-\textbf{Key findings}:
+\textbf{Key findings} (heuristic-only):
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Fuzz testing passes}: 97.7\% fuzz score indicates patches handle random inputs well---basic defensive coding is present.
     \item \textbf{Adversarial edge cases expose weakness}: 44\% adversarial score shows patches fail on $\sim$half of LLM-generated edge cases (null handling, boundary conditions).
@@ -518,7 +510,7 @@ Mutation Score & 22.0\% \\
 
 \textbf{Purpose}: Evaluate Anthropic's Claude model family on SWE-bench to compare against OpenAI models and validate framework generality across model providers.
 
-\textbf{Variance caveat}: Experiment 3 showed GPT-4o variance of 7.0\%--17.8\% across runs on identical tasks. This Claude evaluation represents a \textit{single run} per model; cross-model comparisons should be interpreted cautiously given this variance.
+\textbf{Variance caveat}: Experiment 3 showed GPT-4o variance of 7.0\%--17.8\% across runs on identical tasks. This Claude evaluation represents a \textit{single run} per model; cross-model comparisons should be interpreted cautiously given this variance. Claude results are from the prior metric run and are pending recomputation under the unified semantic patch F1 metric.
 
 \begin{table}[h]
 \centering
@@ -592,20 +584,19 @@ This section summarizes how the novel techniques address the ``autocomplete vs. 
 
 The retro-holdout methodology \cite{haimes2024retroholdout} applies semantic-preserving mutations to detect memorization.
 
-\textbf{Results} (Experiment 5, 100 instances):
+\textbf{Results} (Experiment 5, 100 instances; GPT-5.2, semantic match F1):
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Overall}: 20.2\% verified $\to$ 17.2\% mutated = \textbf{2.9\% contamination gap}
-    \item \textbf{High contamination}: 7/100 instances showed $>$50\% drop
-    \item \textbf{Proven memorization}: \texttt{sklearn-14141} dropped 100\%$\to$0\%
+    \item \textbf{Overall}: 19.3\% verified $\to$ 12.9\% mutated = \textbf{6.4\% contamination gap}
+    \item \textbf{High contamination}: 19/100 instances showed $>$30\% drop
 \end{itemize}
 
-\textbf{Interpretation}: The 2.9\% gap suggests standard semantic match overstates capability by $\sim$14\% relative. Models that achieve high scores may partially rely on memorized patches rather than reasoning.
+\textbf{Interpretation}: The 6.4\% gap suggests standard semantic match may overstate capability by $\sim$33\% relative.
 
 \subsection{Robustness via Adversarial Testing}
 
 The adversarial framework tests patch resilience through fuzz, edge case, and mutation testing.
 
-\textbf{Results} (Experiment 6, 10 instances):
+\textbf{Results} (Experiment 6, 10 instances; heuristic-only probes):
 \begin{itemize}[leftmargin=*]
     \item \textbf{Fuzz}: 97.7\% (patches handle random inputs)
     \item \textbf{Adversarial}: 44.0\% (patches fail half of edge cases)
@@ -613,7 +604,7 @@ The adversarial framework tests patch resilience through fuzz, edge case, and mu
     \item \textbf{Overall robustness}: 51.3\% vs 60\% semantic pass = \textbf{8.7\% robustness gap}
 \end{itemize}
 
-\textbf{Interpretation}: The low mutation score (22\%) is the key finding. Patches that textually match expected solutions are \textit{brittle}---they work for the specific test case but don't generalize. This directly addresses the ``autocomplete'' criticism: high semantic match does not imply robust engineering.
+\textbf{Interpretation}: The low mutation score (22\%) is the key finding. Patches that textually match expected solutions can be \textit{brittle}---they work for the specific test case but don't generalize. This addresses the ``autocomplete'' criticism, but remains heuristic-only until execution-based adversarial tests are integrated.
 
 \subsection{Process Quality via Trajectory Scoring}
 
@@ -630,14 +621,14 @@ The multi-dimensional Process Score $S$ (Equation 2) captures process quality be
 \toprule
 Gap Type & Standard & Adjusted & Overstatement \\
 \midrule
-Contamination & 20.2\% & 17.2\% & 14\% relative \\
+Contamination & 19.3\% & 12.9\% & 33\% relative \\
 Robustness & 60.0\% & 51.3\% & 15\% relative \\
 \bottomrule
 \end{tabular}
-\caption{Standard metrics vs. adjusted metrics after contamination/robustness testing.}
+\caption{Standard metrics vs. adjusted metrics after contamination/robustness testing (adversarial probes are heuristic-only).}
 \end{table}
 
-These results suggest \textbf{standard SWE-bench metrics overstate true engineering capability by 14--15\%} due to contamination and robustness gaps. Retro-holdout and adversarial testing provide a more accurate picture than semantic match alone.
+These results suggest \textbf{standard SWE-bench metrics overstate true engineering capability}, with a $\sim$33\% contamination gap (relative) and a $\sim$15\% robustness gap (heuristic-only). Retro-holdout and adversarial testing provide a more accurate picture than semantic match alone.
 
 \section{Evaluation Slices}
 
@@ -665,7 +656,7 @@ Reporting across slices reveals contamination sensitivity and robustness.
     
     \item \textbf{Single-run comparisons}: Experiment 3 shows 7.0\%--17.8\% variance across runs. Experiment 7 (Claude) is single-run, making cross-model rankings statistically fragile.
     
-    \item \textbf{Retro-holdout/adversarial not executed}: Experiments 5--6 describe methodology only. The claim that this framework ``solves'' contamination is currently infrastructure, not proven results.
+    \item \textbf{Adversarial probes are heuristic-only}: Execution-based adversarial testing remains future work.
     
     \item \textbf{Python only}: Current implementation focuses on Python repositories.
     
@@ -676,7 +667,7 @@ Reporting across slices reveals contamination sensitivity and robustness.
 
 \begin{enumerate}[leftmargin=*]
     \item Integrate additional frontier models (Gemini 2.0, Llama 3) for Purple agent comparison
-    \item Complete retro-holdout pipeline with semantic equivalence verification
+    \item Scale retro-holdout pipeline and expand mutation coverage
     \item Implement default fuzz command packs for common frameworks
     \item Extend to multi-language evaluation (TypeScript, Rust)
     \item Add visual/multimodal signals for UI-related bugs
@@ -687,18 +678,18 @@ Reporting across slices reveals contamination sensitivity and robustness.
 
 SWE-Bench-A2A provides evaluation infrastructure and \textbf{experimental evidence} for three critical gaps in SWE-bench evaluation:
 
-\textbf{1. Contamination Detection (Retro-Holdout):} Experiment 5 demonstrates that retro-holdout mutations detect memorization. On 100 instances, performance dropped 20.2\%$\to$17.2\% (2.9\% gap), with 7 instances showing $>$50\% drops. The \texttt{sklearn-14141} case (100\%$\to$0\%) proves complete memorization on at least one task.
+\textbf{1. Contamination Detection (Retro-Holdout):} On 100 instances, performance dropped 19.3\%$\to$12.9\% (6.4\% absolute; $\sim$33\% relative), with 19 instances showing $>$30\% drop.
 
-\textbf{2. Robustness Testing (Adversarial):} Experiment 6 shows patches passing semantic comparison are brittle. Overall robustness is 51.3\% vs 60\% semantic pass rate. The 22\% mutation score reveals patches break when code is slightly altered---they match expected text but don't generalize.
+\textbf{2. Robustness Testing (Adversarial):} Experiment 6 reports 51.3\% robustness vs 60\% semantic pass rate, but current adversarial probes are heuristic-only. Execution-based adversarial testing remains future work.
 
 \textbf{3. Process Scoring (Trajectory):} Defined mathematically (Equation 2) but \textit{not computed} in experiments. Validation remains future work.
 
 \textbf{Key contribution---addressing ``autocomplete'' criticism}:
 \begin{itemize}[leftmargin=*]
     \item Standard semantic match measures text similarity, not engineering capability
-    \item Retro-holdout reveals $\sim$14\% overstatement due to contamination
-    \item Adversarial testing reveals $\sim$15\% overstatement due to robustness gaps
-    \item Combined: \textbf{standard metrics likely overstate true capability by 14--15\%}
+    \item Retro-holdout suggests $\sim$33\% overstatement due to contamination (relative to verified average)
+    \item Adversarial testing suggests $\sim$15\% overstatement due to robustness gaps (heuristic-only)
+    \item Combined: \textbf{standard metrics likely overstate true capability}, with robustness still heuristic-only
 \end{itemize}
 
 \textbf{Remaining limitations}:

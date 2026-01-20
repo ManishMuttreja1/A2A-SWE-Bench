@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -11,14 +11,14 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
+# Copy requirements first for better caching
+COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
 # Copy project files
-COPY pyproject.toml .
 COPY src/ ./src/
 COPY main.py .
-
-# Install Python dependencies
-RUN pip install --upgrade pip && \
-    pip install -e .
 
 # Create data directories
 RUN mkdir -p /app/data /app/logs

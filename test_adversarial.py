@@ -89,7 +89,7 @@ async def run_adversarial_tests(
 ):
     """Run adversarial tests on generated patches"""
     print(f"\n{'='*70}")
-    print(f"ADVERSARIAL TESTING")
+    print("ADVERSARIAL TESTING (HEURISTIC-ONLY)")
     print(f"{'='*70}")
     print(f"Model: {model}")
     print(f"Instances: {num_tasks}")
@@ -203,6 +203,10 @@ async def run_adversarial_tests(
         "num_tasks": num_tasks,
         "seed": seed,
         "timestamp": timestamp,
+        "heuristic_only": True,
+        "metric": "heuristic_robustness_score",
+        "reproduction_gate_enforced": False,
+        "heuristics_allowed": False,
         "summary": {
             "total": total,
             "passed": passed,

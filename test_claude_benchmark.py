@@ -7,9 +7,11 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 from typing import Dict, List, Any
-import difflib
 import httpx
+
+from src.scoring.semantic_patch import semantic_match_score
 
 
 class ClaudeBenchmarkAgent:
@@ -88,7 +90,7 @@ Return ONLY the patch in unified diff format (starting with --- and +++), nothin
                 
                 # Calculate semantic similarity with expected patch
                 expected_patch = instance.get("patch", "")
-                similarity = self._calculate_similarity(generated_patch, expected_patch)
+                similarity = semantic_match_score(generated_patch, expected_patch)
                 
                 usage = data.get("usage", {})
                 
@@ -112,18 +114,6 @@ Return ONLY the patch in unified diff format (starting with --- and +++), nothin
                 "model": self.model,
             }
     
-    def _calculate_similarity(self, generated: str, expected: str) -> float:
-        """Calculate semantic similarity between patches"""
-        # Normalize patches
-        gen_lines = [l.strip() for l in generated.split('\n') if l.strip() and not l.startswith('```')]
-        exp_lines = [l.strip() for l in expected.split('\n') if l.strip()]
-        
-        if not gen_lines or not exp_lines:
-            return 0.0
-        
-        # Use difflib sequence matcher
-        matcher = difflib.SequenceMatcher(None, '\n'.join(gen_lines), '\n'.join(exp_lines))
-        return matcher.ratio()
 
 
 async def run_claude_benchmark(model: str, num_tasks: int = 100):
@@ -203,6 +193,9 @@ async def run_claude_benchmark(model: str, num_tasks: int = 100):
         "total_input_tokens": total_input_tokens,
         "total_output_tokens": total_output_tokens,
         "timestamp": datetime.now().isoformat(),
+        "metric": "semantic_patch_f1",
+        "reproduction_gate_enforced": False,
+        "heuristics_allowed": False,
         "results": results,
     }
     
