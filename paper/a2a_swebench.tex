@@ -56,7 +56,7 @@ Manish Muttreja\\
 
 \textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: GPT-4o (40.3\% avg across 4 runs), GPT-5.2 (18.5\%), Claude Sonnet 4.5 (27.7\%), Haiku (18.9\%), Opus 4.1 (16.7\%) on 100 tasks each. \textit{Notably, GPT-5.2 underperforms GPT-4o by 21.8\% absolute.}
 
-\textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (GPT-4o: 40.3\% $\pm$ 3.6\% std dev across 4 runs; Claude: single runs only).
+\textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (GPT-4o: 40.3\% $\pm$ 3.6\% std dev across 4 runs; GPT-5.2, Claude: single runs only).
 
 \textbf{Code update (post-experiments)}: The codebase now includes execution-based infrastructure (\texttt{PatchExecutor}, \texttt{EnforcedWorkflow}, \texttt{DynamicAdversarialTester}) that addresses all four limitations. \textit{Experiments have not yet been rerun with this infrastructure.} This paper presents a \textit{framework and methodology}; production-ready execution-based results require future work.
 \end{abstract}
@@ -555,7 +555,7 @@ Model & Tasks & Avg Match & High ($\geq$70\%) & Provider \\
 \textbf{GPT-4o} & 100/100 & \textbf{40.3\%} & \textbf{33} & OpenAI (4 runs avg) \\
 Claude Sonnet 4.5 & 100/100 & 27.7\% & 8 & Anthropic \\
 Claude 3 Haiku & 100/100 & 18.9\% & 1 & Anthropic \\
-GPT-5.2 & 100/100 & 18.5\% & 7 & OpenAI \\
+GPT-5.2 & 100/100 & 18.5\% & 7 & OpenAI (single run) \\
 Claude Opus 4.1 & 100/100 & 16.7\% & 0 & Anthropic \\
 \bottomrule
 \end{tabular}

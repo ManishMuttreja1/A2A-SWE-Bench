@@ -21,7 +21,7 @@ An evaluation framework for software engineering agents that quantifies **contam
 1. **Framework**: SWE-Bench-A2A implementing A2A protocol with reproduction gates and process scoring
 2. **Contamination Detection**: Retro-holdout testing on 100 instances (7 with >50% drops)
 3. **Robustness Analysis**: Adversarial testing revealing 51.3% overall robustness vs 60% semantic
-4. **Cross-Provider Evaluation**: GPT-4o, Claude Sonnet 4.5, Opus 4.1, Haiku (100 instances each)
+4. **Cross-Provider Evaluation**: GPT-4o, GPT-5.2, Claude Sonnet 4.5, Opus 4.1, Haiku (100 instances each)
 5. **Open Infrastructure**: Dockerfiles, CI scaffolding, anti-contamination pipeline
 
 ## Quick Start
@@ -48,12 +48,13 @@ python test_gpt4o_a2a_full.py --tasks 10
 
 | Model | Avg Semantic Match | High Match (≥70%) | Provider |
 |-------|-------------------|-------------------|----------|
-| **GPT-4o** | **38.7%** | **31** | OpenAI |
+| **GPT-4o** | **40.3%** | **33** | OpenAI (4 runs avg) |
 | Claude Sonnet 4.5 | 27.7% | 8 | Anthropic |
 | Claude 3 Haiku | 18.9% | 1 | Anthropic |
+| GPT-5.2 | 18.5% | 7 | OpenAI (single run) |
 | Claude Opus 4.1 | 16.7% | 0 | Anthropic |
 
-*Note: GPT-4o shows variance across runs (36-45%), 38.7% is Run 2 of 3.*
+*Note: GPT-4o shows variance across runs (36-45%); GPT-5.2 and Claude results are single runs. Surprisingly, GPT-5.2 underperforms GPT-4o by 21.8% absolute.*
 
 ## Anti-Contamination Testing
 
