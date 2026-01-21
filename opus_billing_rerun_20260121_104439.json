@@ -1,0 +1,67 @@
+{
+  "timestamp": "20260121_104439",
+  "model": "claude-opus-4-20250514",
+  "purpose": "rerun_billing_error_tasks",
+  "results": [
+    {
+      "instance_id": "django__django-10097",
+      "success": false,
+      "error": "'AsyncAnthropic' object has no attribute 'messages'",
+      "semantic_match": 0
+    },
+    {
+      "instance_id": "django__django-11179",
+      "success": false,
+      "error": "'AsyncAnthropic' object has no attribute 'messages'",
+      "semantic_match": 0
+    },
+    {
+      "instance_id": "django__django-11451",
+      "success": false,
+      "error": "'AsyncAnthropic' object has no attribute 'messages'",
+      "semantic_match": 0
+    },
+    {
+      "instance_id": "django__django-12273",
+      "success": false,
+      "error": "'AsyncAnthropic' object has no attribute 'messages'",
+      "semantic_match": 0
+    },
+    {
+      "instance_id": "django__django-12663",
+      "success": false,
+      "error": "'AsyncAnthropic' object has no attribute 'messages'",
+      "semantic_match": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7205",
+      "success": false,
+      "error": "'AsyncAnthropic' object has no attribute 'messages'",
+      "semantic_match": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11578",
+      "success": false,
+      "error": "'AsyncAnthropic' object has no attribute 'messages'",
+      "semantic_match": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13779",
+      "success": false,
+      "error": "'AsyncAnthropic' object has no attribute 'messages'",
+      "semantic_match": 0
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8721",
+      "success": false,
+      "error": "'AsyncAnthropic' object has no attribute 'messages'",
+      "semantic_match": 0
+    },
+    {
+      "instance_id": "sympy__sympy-15017",
+      "success": false,
+      "error": "'AsyncAnthropic' object has no attribute 'messages'",
+      "semantic_match": 0
+    }
+  ]
+}

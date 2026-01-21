@@ -561,14 +561,14 @@ GPT-5.2 & 100/100 & 18.5\% & 7 & OpenAI (single run) \\
 Claude 3 Haiku & 100/100 & 18.5\% & 1 & Anthropic \\
 \bottomrule
 \end{tabular}
-\caption{Cross-provider model rankings on SWE-bench (100 instances). All models except GPT-5.2 tested on same easy task set (avg 477 char patches). GPT-5.2 tested on harder random set (avg 1538 chars). $^*$Opus had 10/100 billing errors recovered via retry; recovered tasks averaged 37.9\%.}
+\caption{Cross-provider model rankings on SWE-bench (100 instances). All models except GPT-5.2 tested on same easy task set (avg 477 char patches). GPT-5.2 tested on harder random set (avg 1538 chars). $^*$Opus had 10/100 billing errors recovered via retry; rerun (2026-01-21) showed 13.4\% run-to-run variance (24.5\% vs 37.9\%).}
 \end{table}
 
 \textbf{Key findings}:
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Claude Sonnet 4.5 leads}: 27.7\% average F1---significantly outperforming all other models on the same 100 tasks.
     \item \textbf{GPT-4o in second}: 19.6\% average F1 (across 4 runs, range 17.9-20.9\%).
-    \item \textbf{Claude Opus and Haiku}: 18.8\% and 18.5\% respectively---competitive but below Sonnet. \textit{Note}: Opus originally had 10/100 billing errors (API credit issues) which were recovered via retry; the recovered tasks averaged 37.9\%, significantly above overall average.
+    \item \textbf{Claude Opus and Haiku}: 18.8\% and 18.5\% respectively---competitive but below Sonnet. \textit{Note}: Opus originally had 10/100 billing errors (API credit issues) which were recovered via retry. \textbf{Rerun analysis}: The same 10 tasks were re-run (2026-01-21) with no billing errors; new average was 24.5\% vs original recovery 37.9\% (13.4\% run-to-run variance), demonstrating the statistical fragility noted in Section~\ref{sec:limitations}.
     \item \textbf{GPT-5.2 (separate evaluation)}: 18.5\% on harder random tasks, but 26.5\% on 22 common tasks vs GPT-4o's 19.8\%---suggesting GPT-5.2 may outperform GPT-4o on equal difficulty.
     \item \textbf{Framework generality validated}: The A2A framework successfully evaluates 4 different models across 2 providers without modification.
 \end{enumerate}

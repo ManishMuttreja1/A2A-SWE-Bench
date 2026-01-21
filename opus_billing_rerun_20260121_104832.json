@@ -1,0 +1,77 @@
+{
+  "timestamp": "20260121_104832",
+  "model": "claude-opus-4-20250514",
+  "purpose": "rerun_billing_error_tasks",
+  "results": [
+    {
+      "instance_id": "django__django-10097",
+      "success": true,
+      "semantic_match": 0.24,
+      "input_tokens": 706,
+      "output_tokens": 1330
+    },
+    {
+      "instance_id": "django__django-11179",
+      "success": true,
+      "semantic_match": 0.14634146341463417,
+      "input_tokens": 150,
+      "output_tokens": 728
+    },
+    {
+      "instance_id": "django__django-11451",
+      "success": true,
+      "semantic_match": 0.5208333333333334,
+      "input_tokens": 608,
+      "output_tokens": 204
+    },
+    {
+      "instance_id": "django__django-12273",
+      "success": true,
+      "semantic_match": 0.1164021164021164,
+      "input_tokens": 378,
+      "output_tokens": 424
+    },
+    {
+      "instance_id": "django__django-12663",
+      "success": true,
+      "semantic_match": 0.10256410256410257,
+      "input_tokens": 1070,
+      "output_tokens": 696
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7205",
+      "success": true,
+      "semantic_match": 0.3185840707964602,
+      "input_tokens": 1123,
+      "output_tokens": 299
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11578",
+      "success": true,
+      "semantic_match": 0.29230769230769227,
+      "input_tokens": 1011,
+      "output_tokens": 378
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13779",
+      "success": true,
+      "semantic_match": 0.18749999999999997,
+      "input_tokens": 274,
+      "output_tokens": 275
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8721",
+      "success": true,
+      "semantic_match": 0.3013698630136986,
+      "input_tokens": 241,
+      "output_tokens": 803
+    },
+    {
+      "instance_id": "sympy__sympy-15017",
+      "success": true,
+      "semantic_match": 0.22660098522167485,
+      "input_tokens": 400,
+      "output_tokens": 714
+    }
+  ]
+}
