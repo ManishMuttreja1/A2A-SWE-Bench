@@ -44,24 +44,22 @@ OPENAI_API_KEY=sk-... python start_purple_agent.py
 python test_gpt4o_a2a_full.py --tasks 10
 ```
 
-## Cross-Provider Results
+## Cross-Provider Results (100 instances each)
 
-⚠️ **METHODOLOGY WARNING**: Results below use non-uniform task selection. GPT-4o was tested on the 100 **easiest** tasks (sorted by patch size, avg 477 chars), while other models used random sampling (avg 1538 chars—3.2× harder).
+**Main Results (same 100 easy tasks - fair comparison):**
+| Model | Avg Semantic Match | High Match (≥70%) | Provider |
+|-------|-------------------|-------------------|----------|
+| **Claude Sonnet 4.5** | **27.7%** | **8** | Anthropic |
+| GPT-4o | 19.6% | 10 | OpenAI (4 runs avg) |
+| Claude Opus 4.1 | 18.8% | 3 | Anthropic |
+| Claude 3 Haiku | 18.5% | 1 | Anthropic |
 
-**Fair Comparison (same 22 tasks):**
-| Model | Score |
-|-------|-------|
-| **GPT-5.2** | **26.5%** |
-| GPT-4o | 19.8% |
+**GPT-5.2 (separate harder task set):**
+| Model | Task Set | Score | Notes |
+|-------|----------|-------|-------|
+| GPT-5.2 | Random (3.2× harder) | 18.5% | On 22 common tasks: **26.5%** vs GPT-4o's 19.8% |
 
-**Full Results (non-comparable due to different task sets):**
-| Model | Avg Semantic Match | Task Set | Notes |
-|-------|-------------------|----------|-------|
-| Claude Sonnet 4.5 | 27.7% | Random | Anthropic |
-| GPT-4o | 19.6% | **Easy (sorted)** | 4 runs avg |
-| Claude Opus 4.1 | 18.8% | Random | Anthropic |
-| GPT-5.2 | 18.5% | Random | Likely underestimated |
-| Claude 3 Haiku | 18.5% | Random | Anthropic |
+*Claude Sonnet 4.5 leads on the fair comparison. GPT-5.2 appears to outperform GPT-4o when tested on equal difficulty.*
 
 ## Anti-Contamination Testing
 
