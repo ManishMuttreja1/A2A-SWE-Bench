@@ -56,7 +56,7 @@ Manish Muttreja\\
 
 \textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: GPT-4o (40.3\% avg across 4 runs, range 36-45\%), Claude Sonnet 4.5 (27.7\%), Haiku (18.9\%), Opus 4.1 (16.7\%) on 100 tasks each.
 
-\textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (single runs despite 36-45\% observed variance).
+\textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (GPT-4o: 40.3\% $\pm$ 3.6\% std dev across 4 runs; Claude: single runs only).
 
 \textbf{Code update (post-experiments)}: The codebase now includes execution-based infrastructure (\texttt{PatchExecutor}, \texttt{EnforcedWorkflow}, \texttt{DynamicAdversarialTester}) that addresses all four limitations. \textit{Experiments have not yet been rerun with this infrastructure.} This paper presents a \textit{framework and methodology}; production-ready execution-based results require future work.
 \end{abstract}
@@ -114,7 +114,7 @@ The framework implements the Agent-to-Agent (A2A) protocol, enabling modular com
     
     \item \textbf{Adversarial probes are heuristic-only}: The 51.3\% robustness score comes from \textit{pattern matching}, not actual execution of fuzz tests or mutation testing. This is static analysis, not runtime verification.
     
-    \item \textbf{High variance, single-run comparisons}: GPT-4o showed 36-45\% variance across runs, yet cross-model rankings use single runs. Rankings are statistically fragile.
+    \item \textbf{High variance, single-run comparisons}: GPT-4o showed 40.3\% $\pm$ 3.6\% (std dev) across 4 runs (range: 36-45\%), yet Claude rankings use single runs. Cross-model rankings are statistically fragile without multi-run evaluation.
 \end{enumerate}
 
 \section{Related Work}
