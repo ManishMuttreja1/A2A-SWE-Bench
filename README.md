@@ -34,13 +34,19 @@ cd A2A-SWE-Bench
 # Install
 pip install -r requirements.txt
 
-# Run Green Agent (assessor)
-python start_green_agent.py
+# Run PROPER benchmark (execution-based, reproduction enforced)
+OPENAI_API_KEY=sk-... python run_proper_benchmark.py --model gpt-4o --tasks 100 --runs 3
 
-# Run Purple Agent (solver) - in another terminal
-OPENAI_API_KEY=sk-... python start_purple_agent.py
+# Features:
+# ✓ Execution-based metrics (NOT semantic F1)
+# ✓ Reproduction gate ENFORCED
+# ✓ Docker-based adversarial testing
+# ✓ Multi-run statistical analysis
+```
 
-# Or run benchmark directly
+### Legacy Scripts (use with caution)
+```bash
+# Old semantic-based benchmark (NOT RECOMMENDED for publication)
 python test_gpt4o_a2a_full.py --tasks 10
 ```
 

@@ -58,7 +58,7 @@ Manish Muttreja\\
 
 \textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (GPT-4o: 19.6\% $\pm$ 1.3\% std dev across 4 runs; GPT-5.2, Claude: single runs only).
 
-\textbf{Code update (post-experiments)}: The codebase now includes execution-based infrastructure (\texttt{PatchExecutor}, \texttt{EnforcedWorkflow}, \texttt{DynamicAdversarialTester}) that addresses all four limitations. \textit{Experiments have not yet been rerun with this infrastructure.} This paper presents a \textit{framework and methodology}; production-ready execution-based results require future work.
+\textbf{Code update (post-experiments)}: The codebase now includes execution-based infrastructure (\texttt{PatchExecutor}, \texttt{EnforcedWorkflow}, \texttt{DynamicAdversarialTester}, \texttt{run\_proper\_benchmark.py}) that addresses all limitations. The new benchmark script enforces: (1) execution-based pass/fail metrics, (2) mandatory reproduction gate, (3) Docker-based adversarial testing, (4) multi-run statistical analysis. \textit{Experiments have not yet been rerun with this infrastructure.}
 \end{abstract}
 
 \section{Introduction}
