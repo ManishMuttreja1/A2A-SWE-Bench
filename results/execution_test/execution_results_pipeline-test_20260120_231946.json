@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-01-20T23:19:46.997224",
+  "model": "pipeline-test",
+  "num_tasks": 3,
+  "execution_pass_rate": 0.6666666666666666,
+  "total_passed": 2,
+  "total_failed": 1,
+  "total_tests_passed": 12,
+  "total_tests_failed": 3,
+  "avg_execution_time": 1.5,
+  "results": [
+    {
+      "instance_id": "test__simple-1",
+      "execution_pass": true,
+      "exit_code": 0,
+      "tests_passed": 5,
+      "tests_failed": 0,
+      "execution_time": 1.5,
+      "error": null,
+      "stdout": "MOCK: Tests passed",
+      "stderr": "",
+      "repo": "",
+      "base_commit": ""
+    },
+    {
+      "instance_id": "test__python-math",
+      "execution_pass": true,
+      "exit_code": 0,
+      "tests_passed": 5,
+      "tests_failed": 0,
+      "execution_time": 1.5,
+      "error": null,
+      "stdout": "MOCK: Tests passed",
+      "stderr": "",
+      "repo": "",
+      "base_commit": ""
+    },
+    {
+      "instance_id": "test__invalid",
+      "execution_pass": false,
+      "exit_code": 1,
+      "tests_passed": 2,
+      "tests_failed": 3,
+      "execution_time": 1.5,
+      "error": "mock_test_failure",
+      "stdout": "MOCK: Tests failed",
+      "stderr": "",
+      "repo": "",
+      "base_commit": ""
+    }
+  ],
+  "metric_type": "execution"
+}

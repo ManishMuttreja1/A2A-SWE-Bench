@@ -1,0 +1,56 @@
+{
+  "model": "workflow-test",
+  "num_runs": 3,
+  "timestamp": "2026-01-20T23:43:01.676558",
+  "mean_pass_rate": 0.0,
+  "std_dev_pass_rate": 0.0,
+  "min_pass_rate": 0.0,
+  "max_pass_rate": 0.0,
+  "confidence_interval_95": [
+    0,
+    0.0
+  ],
+  "variance": 0.0,
+  "coefficient_of_variation": 0,
+  "runs": [
+    {
+      "run_id": 0,
+      "timestamp": "2026-01-20T23:42:40.031728",
+      "seed": 42,
+      "pass_rate": 0.0,
+      "total_tasks": 2,
+      "tasks_passed": 0,
+      "tasks_failed": 2,
+      "avg_execution_time": 1.0,
+      "task_results": []
+    },
+    {
+      "run_id": 1,
+      "timestamp": "2026-01-20T23:42:47.241999",
+      "seed": 43,
+      "pass_rate": 0.0,
+      "total_tasks": 2,
+      "tasks_passed": 0,
+      "tasks_failed": 2,
+      "avg_execution_time": 1.0,
+      "task_results": []
+    },
+    {
+      "run_id": 2,
+      "timestamp": "2026-01-20T23:43:01.675749",
+      "seed": 44,
+      "pass_rate": 0.0,
+      "total_tasks": 2,
+      "tasks_passed": 0,
+      "tasks_failed": 2,
+      "avg_execution_time": 1.0,
+      "task_results": []
+    }
+  ],
+  "statistical_validity": {
+    "sufficient_runs": true,
+    "low_variance": true,
+    "reliable_mean": true,
+    "recommendation": "STATISTICALLY VALID: Results are stable enough for model comparisons"
+  }
+}

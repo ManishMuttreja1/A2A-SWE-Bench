@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-01-20T23:19:35.715148",
+  "model": "test-model",
+  "num_tasks": 3,
+  "execution_pass_rate": 0.6666666666666666,
+  "total_passed": 2,
+  "total_failed": 1,
+  "total_tests_passed": 18,
+  "total_tests_failed": 2,
+  "avg_execution_time": 2.466666666666667,
+  "results": [
+    {
+      "instance_id": "test-1",
+      "execution_pass": true,
+      "exit_code": 0,
+      "tests_passed": 5,
+      "tests_failed": 0,
+      "execution_time": 2.5,
+      "error": null,
+      "stdout": "All tests passed",
+      "stderr": "",
+      "repo": "",
+      "base_commit": ""
+    },
+    {
+      "instance_id": "test-2",
+      "execution_pass": false,
+      "exit_code": 1,
+      "tests_passed": 3,
+      "tests_failed": 2,
+      "execution_time": 3.1,
+      "error": null,
+      "stdout": "Some tests failed",
+      "stderr": "AssertionError",
+      "repo": "",
+      "base_commit": ""
+    },
+    {
+      "instance_id": "test-3",
+      "execution_pass": true,
+      "exit_code": 0,
+      "tests_passed": 10,
+      "tests_failed": 0,
+      "execution_time": 1.8,
+      "error": null,
+      "stdout": "OK",
+      "stderr": "",
+      "repo": "",
+      "base_commit": ""
+    }
+  ],
+  "metric_type": "execution"
+}

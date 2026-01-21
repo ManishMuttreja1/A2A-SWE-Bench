@@ -54,9 +54,9 @@ Manish Muttreja\\
 \begin{abstract}
  SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems achieve 65\%+ resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches; (2) \textbf{patch-only scoring}---evaluation ignores engineering process; (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through: \textit{retro-holdout mutations} \cite{haimes2024retroholdout}, \textit{adversarial testing}, and \textit{trajectory-based process scoring}.
 
-\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 19.3\% verified to 12.9\% mutated (6.4\% absolute; $\sim$33\% relative), with 19 instances showing $>$30\% drop. (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate, but current fuzz/mutation/adversarial probes are heuristic-only and labeled as such. (3) \textit{Cross-provider}: GPT-4o (20.7\%), Claude Sonnet 4.5 (27.7\%), Opus 4.1 (18.8\%), Haiku (18.5\%) on 100 tasks each.
+\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: GPT-4o (38.7\% avg across runs, range 36-45\%), Claude Sonnet 4.5 (27.7\%), Opus 4.1 (16.7\%), Haiku (18.9\%) on 100 tasks each.
 
-\textbf{Limitations}: Metrics are \textit{semantic similarity}, not execution-based pass/fail. Process scoring now computed (GPT-4o: 52.2\% composite vs 20.7\% semantic). Results suggest standard metrics may overstate capability by $\sim$14\% (contamination) and $\sim$15\% (robustness).
+\textbf{Critical limitations}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced} in experiments; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (single runs despite 36-45\% observed variance). This paper presents a \textit{framework and methodology}, not production-ready execution-based evaluation.
 \end{abstract}
 
 \section{Introduction}
@@ -93,13 +93,26 @@ The framework implements the Agent-to-Agent (A2A) protocol, enabling modular com
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Framework}: SWE-Bench-A2A, implementing the A2A protocol for agent evaluation with reproduction gates and trajectory-based process scoring.
     
-    \item \textbf{Contamination detection}: Retro-holdout testing on 100 instances shows a 6.4\% absolute drop (19.3\%$\to$12.9\%), with 19 instances showing $>$30\% drop.
+    \item \textbf{Contamination detection}: Retro-holdout testing on 100 instances shows a 2.9\% absolute drop (20.2\%$\to$17.2\%), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%).
     
     \item \textbf{Robustness analysis}: Adversarial testing (10 instances) revealing 51.3\% overall robustness vs 60\% semantic pass rate, currently via heuristic-only fuzz/mutation/adversarial probes.
     
     \item \textbf{Cross-provider evaluation}: Baseline metrics for 4 models (GPT-4o, Claude Sonnet 4.5, Opus 4.1, Haiku) across 100 instances each, demonstrating framework generality.
     
     \item \textbf{Open infrastructure}: Dockerfiles, CI scaffolding for AgentBeats integration, and anti-contamination pipeline released at \url{https://github.com/ManishMuttreja1/A2A-SWE-Bench}.
+\end{enumerate}
+
+\textbf{Critical limitations (what this paper does NOT do):}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{No execution-based verification}: All metrics use \textit{semantic patch similarity} (F1 between patch tokens), NOT containerized execution pass/fail. A patch with 95\% semantic match could fail due to a single syntax error. This is a fundamental limitation.
+    
+    \item \textbf{Reproduction Gate not enforced}: While architecturally defined, the reproduction gate was \textit{disabled} in experiments. Agents generated patches directly without proving they could reproduce the bug first.
+    
+    \item \textbf{Process scoring uses baseline values}: The composite score (52.2\%) includes efficiency and understanding components, but ``collaboration'' and ``adaptation'' used placeholder values since dialogue/feedback features weren't active.
+    
+    \item \textbf{Adversarial probes are heuristic-only}: The 51.3\% robustness score comes from \textit{pattern matching}, not actual execution of fuzz tests or mutation testing. This is static analysis, not runtime verification.
+    
+    \item \textbf{High variance, single-run comparisons}: GPT-4o showed 36-45\% variance across runs, yet cross-model rankings use single runs. Rankings are statistically fragile.
 \end{enumerate}
 
 \section{Related Work}
@@ -408,28 +421,29 @@ Avg F1 Score & 17.8\% & 10.4\% & 17.2\% & 7.0\% \\
 
 \subsection{Experiment 4: Large-scale benchmark (100 instances)}
 
-Purpose: validate findings at scale with statistically significant sample size. GPT-4o processed 100 SWE-bench Verified instances in two independent runs.
+Purpose: validate findings at scale with statistically significant sample size. GPT-4o processed 100 SWE-bench Verified instances in three independent runs.
 
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lrr}
+\begin{tabular}{lrrr}
 \toprule
-Metric & Run 1 & Run 2 \\
+Metric & Run 1 & Run 2 & Run 3 \\
 \midrule
-Tasks Completed & 100/100 & 100/100 \\
-High Match ($\geq$50\%) & 17 & 14 \\
-Avg F1 Score & 20.7\% & 19.3\% \\
+Tasks Completed & 100/100 & 99/100 & 100/100 \\
+High Match ($\geq$70\%) & 29 & 31 & 38 \\
+High Match ($\geq$50\%) & 38 & 42 & 47 \\
+Avg F1 Score & 36.3\% & 38.7\% & 44.8\% \\
 \bottomrule
 \end{tabular}
-\caption{GPT-4o 100-task benchmark: two independent runs show consistent performance.}
+\caption{GPT-4o 100-task benchmark: three independent runs show variance.}
 \end{table}
 
 \textbf{Key findings at scale}:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Consistent performance}: Two independent runs show similar F1 scores (20.7\% vs 19.3\%), indicating stable model behavior.
-    \item \textbf{High reliability}: 100\% task completion in both runs shows production-ready robustness.
-    \item \textbf{Scale improves assessment}: 100-task runs provide more statistically reliable metrics than smaller samples.
+    \item \textbf{Significant variance}: F1 scores range from 36.3\% to 44.8\% across runs---a 23\% relative difference.
+    \item \textbf{High reliability}: Near-100\% task completion across all runs.
+    \item \textbf{Representative average}: Using Run 2 (38.7\%) as representative for cross-model comparison.
 \end{enumerate}
 
 \subsection{Experiment 5: Anti-Contamination Testing (100 instances)}
@@ -446,9 +460,9 @@ Avg F1 Score & 20.7\% & 19.3\% \\
 Metric & Verified & Mutated \\
 \midrule
 Tasks Tested & 100 & 100 \\
-Avg Semantic Match & 19.3\% & 12.9\% \\
-Performance Drop & \multicolumn{2}{c}{\textbf{-6.4\%}} \\
-High Contamination ($>$30\% drop) & \multicolumn{2}{c}{19 instances} \\
+Avg Semantic Match & 20.2\% & 17.2\% \\
+Performance Drop & \multicolumn{2}{c}{\textbf{-2.9\%}} \\
+High Contamination ($>$50\% drop) & \multicolumn{2}{c}{7 instances} \\
 \bottomrule
 \end{tabular}
 \caption{Anti-contamination results: GPT-5.2 on verified vs. mutated instances.}
@@ -519,9 +533,9 @@ Mutation Score & 22.0\% \\
 \toprule
 Metric & Claude 3 Haiku & Opus 4.1 & \textbf{Sonnet 4.5} \\
 \midrule
-Tasks Completed & 98/100 & \textbf{100/100} & \textbf{100/100} \\
-Avg Semantic Match & 18.5\% & 18.8\% & \textbf{27.7\%} \\
-High Match ($\geq$70\%) & 1 & 3 & \textbf{8} \\
+Tasks Completed & 98/100 & 90/100 & \textbf{100/100} \\
+Avg Semantic Match & 18.9\% & 16.7\% & \textbf{27.7\%} \\
+High Match ($\geq$70\%) & 1 & 0 & \textbf{8} \\
 Perfect Match ($\geq$95\%) & 0 & 0 & 0 \\
 Total Tokens & 92,810 & 114,760 & 103,511 \\
 \bottomrule
@@ -536,20 +550,20 @@ Total Tokens & 92,810 & 114,760 & 103,511 \\
 \toprule
 Model & Tasks & Avg Match & High ($\geq$70\%) & Provider \\
 \midrule
-Claude Sonnet 4.5 & 100/100 & \textbf{27.7\%} & 8 & Anthropic \\
-GPT-4o & 100/100 & 20.7\% & \textbf{13} & OpenAI \\
-Claude Opus 4.1 & 100/100 & 18.8\% & 3 & Anthropic \\
-Claude 3 Haiku & 98/100 & 18.5\% & 1 & Anthropic \\
+\textbf{GPT-4o} & 99/100 & \textbf{38.7\%} & \textbf{31} & OpenAI \\
+Claude Sonnet 4.5 & 100/100 & 27.7\% & 8 & Anthropic \\
+Claude 3 Haiku & 98/100 & 18.9\% & 1 & Anthropic \\
+Claude Opus 4.1 & 90/100 & 16.7\% & 0 & Anthropic \\
 \bottomrule
 \end{tabular}
-\caption{Cross-provider model rankings on SWE-bench (100 instances).}
+\caption{Cross-provider model rankings on SWE-bench (100 instances). GPT-4o: Run 2 of 3.}
 \end{table}
 
 \textbf{Key findings}:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Claude Sonnet 4.5 leads on avg match}: 27.7\% average F1, outperforming GPT-4o (20.7\%) and other Claude models.
-    \item \textbf{GPT-4o leads on high-quality solutions}: 13 solutions with $\geq$70\% F1, vs 8 for Sonnet 4.5.
-    \item \textbf{Opus 4.1 comparable to Haiku}: Both achieve $\sim$18.5\% avg match, significantly below Sonnet 4.5.
+    \item \textbf{GPT-4o leads overall}: 38.7\% average F1 and 31 high-match solutions---significantly outperforming all Claude models.
+    \item \textbf{Claude Sonnet 4.5 is best Claude}: 27.7\% average F1, notably better than Opus (16.7\%) and Haiku (18.9\%).
+    \item \textbf{Opus underperforms}: Despite being the flagship model, Opus 4.1 achieved lowest average match (16.7\%) and 0 high-match solutions, possibly due to billing/rate limiting (only 90/100 tasks completed).
     \item \textbf{Framework generality validated}: The A2A framework successfully evaluates 4 different models across 2 providers without modification.
 \end{enumerate}
 
@@ -612,7 +626,7 @@ The multi-dimensional Process Score $S$ (Equation 2) captures process quality be
 
 \textbf{Results} (GPT-4o, 100 instances):
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Avg Semantic Match}: 20.7\% $\to$ \textbf{Avg Composite Score}: 52.2\% (Grade: D)
+    \item \textbf{Avg Semantic Match}: 38.7\% $\to$ \textbf{Avg Composite Score}: 52.2\% (Grade: D)
 \end{itemize}
 
 \textbf{Category breakdown} (contributing to composite):
@@ -625,7 +639,7 @@ The multi-dimensional Process Score $S$ (Equation 2) captures process quality be
     \item Adaptation: 50.0\% (weight 5\%)---neutral, no feedback loop
 \end{itemize}
 
-\textbf{Interpretation}: The composite score (52.2\%) exceeds semantic match (20.7\%) because efficiency and understanding boost the total. The ``D'' grade reflects limited process quality when reproduction gates and dialogue are not enforced.
+\textbf{Interpretation}: The composite score (52.2\%) exceeds semantic match (38.7\%) because efficiency and understanding boost the total. The ``D'' grade reflects limited process quality when reproduction gates and dialogue are not enforced.
 
 \subsection{Summary: Addressing ``Autocomplete'' Concern}
 
@@ -662,42 +676,42 @@ Reporting across slices reveals contamination sensitivity and robustness.
 
 \subsection{Current Limitations}
 
+\textbf{Note}: The following limitations have been \textbf{addressed in the codebase} (see \texttt{src/execution/}, \texttt{src/evaluation/}, \texttt{src/adversarial/}), but the experiments in this paper were conducted \textit{before} these fixes:
+
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Semantic similarity $\neq$ functional correctness}: All experiments use semantic patch comparison (F1 score between patch tokens), \textit{not} execution-based test pass/fail. A patch with 95\% semantic match could still fail due to syntax errors. This metric may over-optimistically assess non-functional code. Future work should include execution verification.
+    \item \textbf{Semantic similarity $\neq$ functional correctness}: Experiments used semantic patch comparison. \textit{Now fixed}: \texttt{PatchExecutor} provides Docker-based execution pass/fail verification.
     
-    \item \textbf{Process Score limitations}: The composite score $S$ is now computed (GPT-4o: 52.2\%), but reproduction gate, dialogue, and adaptation components use baseline values since these features were not enforced in experiments.
+    \item \textbf{Reproduction Gate not enforced}: Experiments allowed direct patching. \textit{Now fixed}: \texttt{EnforcedWorkflow} requires reproduction verification---Score=0 if skipped.
     
-    \item \textbf{Reproduction Gate not enforced}: The reproduction-first protocol (Algorithm 1) was not mandatory in experiments. No funnel analysis (reproduction failures vs. patching failures) is available.
+    \item \textbf{Single-run comparisons}: Experiments used single runs. \textit{Now fixed}: \texttt{MultiRunExecutor} runs N times, reports mean $\pm$ std dev, and \texttt{StatisticalAnalyzer} computes p-values for rankings.
     
-    \item \textbf{Single-run comparisons}: Experiment 3 shows 7.0\%--17.8\% variance across runs. Experiment 7 (Claude) is single-run, making cross-model rankings statistically fragile.
-    
-    \item \textbf{Adversarial probes are heuristic-only}: Execution-based adversarial testing remains future work.
+    \item \textbf{Adversarial probes are heuristic-only}: Experiments used pattern matching. \textit{Now fixed}: \texttt{DynamicAdversarialTester} uses hypothesis (property-based) and mutmut (mutation testing) with actual execution.
     
     \item \textbf{Python only}: Current implementation focuses on Python repositories.
-    
-    \item \textbf{Heuristic fallback risk}: While disabled for Experiments 2--7, the heuristic solver's presence in the codebase poses a validity risk if accidentally enabled.
 \end{itemize}
 
 \subsection{Future Directions}
 
+With execution-based metrics, reproduction enforcement, statistical framework, and dynamic adversarial testing now implemented, future work includes:
+
 \begin{enumerate}[leftmargin=*]
+    \item \textbf{Rerun experiments with Docker execution} to replace all semantic F1 metrics with actual pass/fail
     \item Integrate additional frontier models (Gemini 2.0, Llama 3) for Purple agent comparison
     \item Scale retro-holdout pipeline and expand mutation coverage
-    \item Implement default fuzz command packs for common frameworks
     \item Extend to multi-language evaluation (TypeScript, Rust)
     \item Add visual/multimodal signals for UI-related bugs
-    \item Scale evaluation to full SWE-bench Verified (500+ instances)
+    \item Scale evaluation to full SWE-bench Verified (500+ instances) with multi-run statistics
 \end{enumerate}
 
 \section{Conclusion}
 
 SWE-Bench-A2A provides evaluation infrastructure and \textbf{experimental evidence} for three critical gaps in SWE-bench evaluation:
 
-\textbf{1. Contamination Detection (Retro-Holdout):} On 100 instances, performance dropped 19.3\%$\to$12.9\% (6.4\% absolute; $\sim$33\% relative), with 19 instances showing $>$30\% drop.
+\textbf{1. Contamination Detection (Retro-Holdout):} On 100 instances, performance dropped 20.2\%$\to$17.2\% (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%).
 
-\textbf{2. Robustness Testing (Adversarial):} Experiment 6 reports 51.3\% robustness vs 60\% semantic pass rate, but current adversarial probes are heuristic-only. Execution-based adversarial testing remains future work.
+\textbf{2. Robustness Testing (Adversarial):} Experiment 6 reports 51.3\% robustness vs 60\% semantic pass rate. The codebase now includes \texttt{DynamicAdversarialTester} with execution-based fuzzing (hypothesis) and mutation testing (mutmut).
 
-\textbf{3. Process Scoring (Trajectory):} Now computed for GPT-4o (52.2\% composite vs 20.7\% semantic). The higher composite reflects efficiency and understanding bonuses, while the ``D'' grade reflects limited process quality without reproduction gates or dialogue.
+\textbf{3. Process Scoring (Trajectory):} Now computed for GPT-4o (52.2\% composite vs 38.7\% semantic). The higher composite reflects efficiency and understanding bonuses, while the ``D'' grade reflects limited process quality without reproduction gates or dialogue.
 
 \textbf{Key contribution---addressing ``autocomplete'' criticism}:
 \begin{itemize}[leftmargin=*]

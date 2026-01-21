@@ -1,0 +1,1917 @@
+{
+  "verified": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16082",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13406",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16429",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14534",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "psf__requests-1921",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pallets__flask-5014",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14089",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-15875",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16333",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12419",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-15098",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-14711",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-17139",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14915",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pylint-dev__pylint-7080",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-20428",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23314",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-19637",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-3677",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-17029",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11880",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-15863",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-16886",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-6202",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5262",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7982",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-15349",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7521",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16485",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-6721",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "psf__requests-6028",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7432",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-15741",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12209",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "astropy__astropy-12907",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-4629",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13516",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13670",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14373",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "astropy__astropy-14539",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-15569",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14792",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11119",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-13647",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-15809",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8621",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13439",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-13989",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-12096",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-17655",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12304",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13012",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14672",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "psf__requests-5414",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-16450",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "astropy__astropy-13453",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-15851",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-4094",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13569",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23476",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-12585",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-10999",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pylint-dev__pylint-4970",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12965",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-9296",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12193",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10908",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11211",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16667",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-2905",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14493",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-9230",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11163",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14580",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16255",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-9591",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-21612",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12125",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-17087",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-13480",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pylint-dev__pylint-6903",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14053",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11964",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-4695",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-10097",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12273",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13779",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-15017",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7205",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8721",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11451",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11578",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11179",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12663",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "similarity": 0
+    }
+  ],
+  "mutated": [
+    {
+      "instance_id": "sympy__sympy-22914_retro_6f461be9",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-22914",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23950_retro_942317a6",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-23950",
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141_retro_5ea95acb",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "scikit-learn__scikit-learn-14141",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16082_retro_ba34ca09",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-16082",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13406_retro_3b6b453a",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-13406",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16429_retro_e5469007",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-16429",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-13757_retro_e154b890",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-13757",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-23534_retro_e092b1f2",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-23534",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-19040_retro_5a846e89",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-19040",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14534_retro_f738ee8e",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-14534",
+      "similarity": 0
+    },
+    {
+      "instance_id": "psf__requests-1921_retro_9e06b6a7",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "psf__requests-1921",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pallets__flask-5014_retro_10e986c9",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pallets__flask-5014",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14089_retro_84b32ca6",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-14089",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-15875_retro_355db8a9",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-15875",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16333_retro_d5c5739d",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-16333",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12419_retro_84646139",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-12419",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-15098_retro_cd67d965",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-15098",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-14711_retro_fabf4fd5",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-14711",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-17139_retro_72725baa",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-17139",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14915_retro_ac10d782",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-14915",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pylint-dev__pylint-7080_retro_c4d2548e",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pylint-dev__pylint-7080",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-20428_retro_6f11f390",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-20428",
+      "similarity": 0
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23314_retro_0304b91f",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "matplotlib__matplotlib-23314",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-19637_retro_e5ebba0c",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-19637",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-3677_retro_77a9d56d",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pydata__xarray-3677",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-17029_retro_69dc9c9a",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-17029",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11880_retro_2d558e78",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-11880",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-15863_retro_0c1fa49d",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-15863",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-16886_retro_c86013a8",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-16886",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-6202_retro_3f273c3e",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pytest-dev__pytest-6202",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5262_retro_6c571b9b",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pytest-dev__pytest-5262",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7982_retro_2aa39fcf",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pytest-dev__pytest-7982",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-15349_retro_42ad3c0f",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-15349",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7521_retro_8d0d3b0c",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pytest-dev__pytest-7521",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16485_retro_7f9b7d80",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-16485",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-6721_retro_23cb6b82",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pydata__xarray-6721",
+      "similarity": 0
+    },
+    {
+      "instance_id": "psf__requests-6028_retro_7a6c1225",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "psf__requests-6028",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7432_retro_da6082c8",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pytest-dev__pytest-7432",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-15741_retro_1b1fac18",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-15741",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12209_retro_9e4b7bda",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-12209",
+      "similarity": 0
+    },
+    {
+      "instance_id": "astropy__astropy-12907_retro_c0cb976a",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "astropy__astropy-12907",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-4629_retro_bb88e422",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pydata__xarray-4629",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13516_retro_a73ed162",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-13516",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13670_retro_1376278c",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-13670",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14373_retro_5f7643e1",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-14373",
+      "similarity": 0
+    },
+    {
+      "instance_id": "astropy__astropy-14539_retro_905f3893",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "astropy__astropy-14539",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-15569_retro_36b5d4f4",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-15569",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14792_retro_b91bdb69",
+      "error": "Connection error.",
+      "success": false,
+      "original_instance_id": "django__django-14792",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11119_retro_e2c009d1",
+      "error": "Connection error.",
+      "success": false,
+      "original_instance_id": "django__django-11119",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-13647_retro_7865d915",
+      "error": "Connection error.",
+      "success": false,
+      "original_instance_id": "sympy__sympy-13647",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-15809_retro_518e890f",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-15809",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8621_retro_5f7137cb",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sphinx-doc__sphinx-8621",
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13439_retro_9414775d",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "scikit-learn__scikit-learn-13439",
+      "similarity": 0
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-13989_retro_ba05b021",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "matplotlib__matplotlib-13989",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-12096_retro_e7313d53",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-12096",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-17655_retro_edb98302",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-17655",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12304_retro_48fa0139",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-12304",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13012_retro_671acbc1",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-13012",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14672_retro_44ce6c97",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-14672",
+      "similarity": 0
+    },
+    {
+      "instance_id": "psf__requests-5414_retro_2fb292b0",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "psf__requests-5414",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-16450_retro_d44353f6",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-16450",
+      "similarity": 0
+    },
+    {
+      "instance_id": "astropy__astropy-13453_retro_126e14e9",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "astropy__astropy-13453",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-15851_retro_2f28d14f",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-15851",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-4094_retro_89286310",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pydata__xarray-4094",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-13569_retro_71fd1700",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-13569",
+      "similarity": 0
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23476_retro_745847c4",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "matplotlib__matplotlib-23476",
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-12585_retro_080b6fc0",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "scikit-learn__scikit-learn-12585",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-10999_retro_78638a80",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-10999",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pylint-dev__pylint-4970_retro_11984998",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pylint-dev__pylint-4970",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12965_retro_74c11bb3",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-12965",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-9296_retro_a421db12",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-9296",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12193_retro_1eb4fd58",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-12193",
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10908_retro_e2f4179c",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "scikit-learn__scikit-learn-10908",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11211_retro_1d295d79",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-11211",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16667_retro_a4031dc9",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-16667",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-2905_retro_66e771a7",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pydata__xarray-2905",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14493_retro_462eae2b",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-14493",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-9230_retro_99dcac42",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sphinx-doc__sphinx-9230",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11163_retro_472c17b6",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-11163",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-14580_retro_0e57cae1",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-14580",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-16255_retro_a837706f",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-16255",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-9591_retro_ec741e33",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sphinx-doc__sphinx-9591",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-21612_retro_0cd327ea",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-21612",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12125_retro_154fba16",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-12125",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-17087_retro_6bb9541c",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-17087",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-13480_retro_a8c6c138",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-13480",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pylint-dev__pylint-6903_retro_08219ed9",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pylint-dev__pylint-6903",
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14053_retro_924f37f7",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "scikit-learn__scikit-learn-14053",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11964_retro_9fe32e26",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-11964",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pydata__xarray-4695_retro_f10da7da",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pydata__xarray-4695",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-10097_retro_c99db99d",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-10097",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12273_retro_bdac58ad",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-12273",
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13779_retro_c884f005",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "scikit-learn__scikit-learn-13779",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sympy__sympy-15017_retro_78a79c1d",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sympy__sympy-15017",
+      "similarity": 0
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7205_retro_226722e6",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "pytest-dev__pytest-7205",
+      "similarity": 0
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8721_retro_15fc9bc0",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "sphinx-doc__sphinx-8721",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11451_retro_008850e9",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-11451",
+      "similarity": 0
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11578_retro_c2e2e119",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "scikit-learn__scikit-learn-11578",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-11179_retro_e6ec51b8",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-11179",
+      "similarity": 0
+    },
+    {
+      "instance_id": "django__django-12663_retro_f53dd896",
+      "error": "Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}",
+      "success": false,
+      "original_instance_id": "django__django-12663",
+      "similarity": 0
+    }
+  ],
+  "timestamp": "20260119_233008",
+  "model": "gpt-5.2",
+  "summary": {
+    "verified_avg": 0.0,
+    "mutated_avg": 0.0,
+    "performance_drop": 0.0,
+    "avg_contamination": 0.0,
+    "high_contamination_count": 0,
+    "per_instance": [
+      {
+        "instance": "sympy__sympy-22914",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-23950",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "scikit-learn__scikit-learn-14141",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16082",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-13406",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16429",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-13757",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-23534",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-19040",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14534",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "psf__requests-1921",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pallets__flask-5014",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14089",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-15875",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16333",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-12419",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-15098",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-14711",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-17139",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14915",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pylint-dev__pylint-7080",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-20428",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "matplotlib__matplotlib-23314",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-19637",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pydata__xarray-3677",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-17029",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-11880",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-15863",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-16886",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pytest-dev__pytest-6202",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pytest-dev__pytest-5262",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pytest-dev__pytest-7982",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-15349",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pytest-dev__pytest-7521",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16485",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pydata__xarray-6721",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "psf__requests-6028",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pytest-dev__pytest-7432",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-15741",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-12209",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "astropy__astropy-12907",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pydata__xarray-4629",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-13516",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-13670",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14373",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "astropy__astropy-14539",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-15569",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14792",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-11119",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-13647",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-15809",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sphinx-doc__sphinx-8621",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "scikit-learn__scikit-learn-13439",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "matplotlib__matplotlib-13989",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-12096",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-17655",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-12304",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-13012",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14672",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "psf__requests-5414",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-16450",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "astropy__astropy-13453",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-15851",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pydata__xarray-4094",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-13569",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "matplotlib__matplotlib-23476",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "scikit-learn__scikit-learn-12585",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-10999",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pylint-dev__pylint-4970",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-12965",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-9296",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-12193",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "scikit-learn__scikit-learn-10908",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-11211",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16667",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pydata__xarray-2905",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14493",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sphinx-doc__sphinx-9230",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-11163",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-14580",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-16255",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sphinx-doc__sphinx-9591",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-21612",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-12125",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-17087",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-13480",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pylint-dev__pylint-6903",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "scikit-learn__scikit-learn-14053",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-11964",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pydata__xarray-4695",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-10097",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-12273",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "scikit-learn__scikit-learn-13779",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sympy__sympy-15017",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "pytest-dev__pytest-7205",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "sphinx-doc__sphinx-8721",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-11451",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "scikit-learn__scikit-learn-11578",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-11179",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      },
+      {
+        "instance": "django__django-12663",
+        "verified_score": 0,
+        "mutated_score": 0,
+        "contamination": 0
+      }
+    ]
+  }
+}

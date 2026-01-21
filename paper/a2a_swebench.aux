@@ -1,63 +1,83 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \citation{haimes2024retroholdout}
 \citation{jimenez2024swebench}
 \citation{haimes2024retroholdout}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}}
 \citation{chen2021codex}
 \citation{austin2021mbpp}
 \citation{jimenez2024swebench}
 \citation{devbench2024}
 \citation{contamination2023}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Code Generation Benchmarks}{2}{subsection.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Repository-Level Evaluation}{2}{subsection.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Contamination and Memorization}{2}{subsection.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Process-Aware Evaluation}{2}{subsection.2.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Limitations of Current SWE-bench}{2}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Data Contamination}{2}{subsection.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Patch-Only Evaluation}{2}{subsection.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Static Test Overfitting}{2}{subsection.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}SWE-Bench-A2A Design}{2}{section.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}A2A Protocol Architecture}{2}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Code Generation Benchmarks}{2}{subsection.2.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Repository-Level Evaluation}{2}{subsection.2.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Contamination and Memorization}{2}{subsection.2.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Process-Aware Evaluation}{2}{subsection.2.4}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Limitations of Current SWE-bench}{2}{section.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Data Contamination}{2}{subsection.3.1}}
 \citation{haimes2024retroholdout}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Reproduction Gate}{3}{subsection.4.2}\protected@file@percent }
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Reproduction Gate Protocol}}{3}{algorithm.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Trajectory-Based Process Scoring}{3}{subsection.4.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Scoring dimensions and weights}}{3}{table.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Anti-Memorization Strategies}{3}{subsection.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1}Retro-Holdout Mutations}{3}{subsubsection.4.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.2}Fresh Issue Harvesting}{3}{subsubsection.4.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Dynamic Testing}{3}{subsection.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}Implementation}{4}{section.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}System Architecture}{4}{subsection.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Docker Images}{4}{subsection.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Experiments}{4}{section.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Setup}{4}{subsection.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Experiment 1: Integration smoke test (3 Django instances)}{4}{subsection.6.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Integration smoke test: confirms Docker + A2A pipeline; highlights solver fragility on diff formatting.}}{4}{table.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Experiment 2: GPT-4o benchmark (20 instances)}{4}{subsection.6.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces GPT-4o aggregate metrics on 20 SWE-bench Verified instances.}}{4}{table.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Experiment 3: GPT-4o variance analysis (10 instances)}{5}{subsection.6.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces GPT-4o variance across 4 runs on 10 identical tasks.}}{5}{table.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Experiment 4: Large-scale benchmark (100 instances)}{5}{subsection.6.5}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces GPT-4o 100-task benchmark: two independent runs show consistent performance.}}{5}{table.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Experiment 5: Anti-Contamination Framework (Methodology)}{5}{subsection.6.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Experiment 6: Adversarial Testing Framework (Methodology)}{6}{subsection.6.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.8}Experiment 7: Claude Model Family Benchmark (100 instances)}{6}{subsection.6.8}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Claude model family comparison (100 instances each). Sonnet 4.5 leads.}}{6}{table.6}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Cross-provider model rankings on SWE-bench (100 instances).}}{6}{table.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.9}Trajectory Analysis}{6}{subsection.6.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Impact of Novel Techniques}{6}{section.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Contamination Detection via Retro-Holdout}{7}{subsection.7.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Robustness via Adversarial Testing}{7}{subsection.7.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Process Quality via Trajectory Scoring}{7}{subsection.7.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8}Evaluation Slices}{7}{section.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}Limitations and Future Work}{7}{section.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Current Limitations}{7}{subsection.9.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Future Directions}{7}{subsection.9.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Patch-Only Evaluation}{3}{subsection.3.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Static Test Overfitting}{3}{subsection.3.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}SWE-Bench-A2A Design}{3}{section.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}A2A Protocol Architecture}{3}{subsection.4.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Reproduction Gate}{3}{subsection.4.2}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Reproduction Gate Protocol}}{3}{algorithm.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Trajectory-Based Process Scoring}{3}{subsection.4.3}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Scoring dimensions and weights}}{3}{table.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Anti-Memorization Strategies}{3}{subsection.4.4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1}Retro-Holdout Mutations}{3}{subsubsection.4.4.1}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.2}Fresh Issue Harvesting}{4}{subsubsection.4.4.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Dynamic Testing}{4}{subsection.4.5}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Implementation}{4}{section.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}System Architecture}{4}{subsection.5.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Docker Images}{4}{subsection.5.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Experiments}{4}{section.6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Setup}{4}{subsection.6.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Experiment 1: Integration smoke test (3 Django instances)}{5}{subsection.6.2}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Integration smoke test: confirms Docker + A2A pipeline; highlights solver fragility on diff formatting.}}{5}{table.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Experiment 2: GPT-4o benchmark (20 instances)}{5}{subsection.6.3}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces GPT-4o aggregate metrics on 20 SWE-bench Verified instances.}}{5}{table.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Experiment 3: GPT-4o variance analysis (10 instances)}{6}{subsection.6.4}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces GPT-4o variance across 4 runs on 10 identical tasks.}}{6}{table.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Experiment 4: Large-scale benchmark (100 instances)}{6}{subsection.6.5}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces GPT-4o 100-task benchmark: three independent runs show variance.}}{6}{table.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Experiment 5: Anti-Contamination Testing (100 instances)}{6}{subsection.6.6}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Anti-contamination results: GPT-5.2 on verified vs. mutated instances.}}{6}{table.6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Experiment 6: Adversarial Testing (10 instances)}{7}{subsection.6.7}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Adversarial testing results: robustness breakdown by test type.}}{7}{table.7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.8}Experiment 7: Claude Model Family Benchmark (100 instances)}{7}{subsection.6.8}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Claude model family comparison (100 instances each). Sonnet 4.5 leads.}}{7}{table.8}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Cross-provider model rankings on SWE-bench (100 instances). GPT-4o: Run 2 of 3.}}{7}{table.9}}
+\citation{haimes2024retroholdout}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.9}Trajectory Analysis}{8}{subsection.6.9}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Impact of Novel Techniques}{8}{section.7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Contamination Detection via Retro-Holdout}{8}{subsection.7.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Robustness via Adversarial Testing}{8}{subsection.7.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Process Quality via Trajectory Scoring}{8}{subsection.7.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Summary: Addressing ``Autocomplete'' Concern}{9}{subsection.7.4}}
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Standard metrics vs. adjusted metrics after contamination/robustness testing (adversarial probes are heuristic-only).}}{9}{table.10}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Evaluation Slices}{9}{section.8}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Limitations and Future Work}{9}{section.9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Current Limitations}{9}{subsection.9.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Future Directions}{9}{subsection.9.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{9}{section.10}}
 \bibstyle{plain}
 \bibcite{jimenez2024swebench}{1}
 \bibcite{chen2021codex}{2}
@@ -66,12 +86,10 @@
 \bibcite{contamination2023}{5}
 \bibcite{haimes2024retroholdout}{6}
 \bibcite{agentbeats}{7}
-\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{8}{section.10}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A}A2A Protocol Specification}{8}{appendix.A}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Agent Card Format}{8}{subsection.A.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Artifact Types}{8}{subsection.A.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B}Scoring Formula Details}{9}{appendix.B}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Correctness Score}{9}{subsection.B.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Process Score}{9}{subsection.B.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Efficiency Score}{9}{subsection.B.3}\protected@file@percent }
-\gdef \@abspage@last{9}
+\@writefile{toc}{\contentsline {section}{\numberline {A}A2A Protocol Specification}{10}{appendix.A}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Agent Card Format}{10}{subsection.A.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Artifact Types}{10}{subsection.A.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Scoring Formula Details}{11}{appendix.B}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Correctness Score}{11}{subsection.B.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Process Score}{11}{subsection.B.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Efficiency Score}{11}{subsection.B.3}}

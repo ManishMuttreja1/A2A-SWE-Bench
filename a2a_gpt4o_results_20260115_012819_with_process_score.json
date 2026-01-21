@@ -1,0 +1,4998 @@
+{
+  "timestamp": "20260115_012819",
+  "model": "gpt-4o",
+  "num_tasks": 100,
+  "stats": {
+    "tokens": 153842,
+    "cost": 1.2972200000000011,
+    "tasks": 99
+  },
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "expected_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.633645,
+      "patch": "--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -82,6 +82,8 @@ class PythonCodePrinter(CodePrinter):\n     _known_functions = {\n         'Abs': 'abs',\n+        'Min': 'min',\n+        'Max': 'max',\n         'sin': 'math.sin',\n         'cos': 'math.cos',\n         'tan': 'math.tan',",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.4,
+        "generated_files": [
+          "sympy/sets/contains.py"
+        ],
+        "expected_files": [
+          "sympy/sets/contains.py"
+        ],
+        "gen_additions": 12,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.94641,
+      "patch": "--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -170,7 +170,19 @@ class Contains(Boolean):\n \n     def as_set(self):\n-        raise NotImplementedError(\"Rewriting Contains as a Set is not implemented\")\n+        # If the argument is a Symbol, return the set if Contains is True,\n+        # EmptySet if Contains is False, otherwise ConditionSet.\n+        from sympy.sets.sets import EmptySet, ConditionSet\n+        from sympy.core.symbol import Symbol\n+        if self.lhs.is_Symbol:\n+     ",
+      "process_score": {
+        "total_score": 0.536,
+        "scores": {
+          "correctness": 0.4,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.76,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "D",
+        "semantic_match": 0.4,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "expected_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.224313,
+      "patch": "--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -74,6 +74,7 @@ def get_deps_info():\n     deps = [\n         (\"pip\", None),\n         (\"setuptools\", None),\n         (\"sklearn\", \"sklearn\"),\n         (\"numpy\", \"numpy\"),\n         (\"scipy\", \"scipy\"),\n         (\"Cython\", \"Cython\"),\n         (\"pandas\", \"pandas\"),\n         (\"matplotlib\", \"matplotlib\"),\n+        (\"joblib\", \"joblib\"),\n     ]\n \n     deps_info = {}\n@@ -109,6 +110,7 @@ def show_versions():\n     print(\"pandas: {}\"",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-16082",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "expected_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 2,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.898569,
+      "patch": "--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -491,7 +491,13 @@ class Combinable:\n         # If any input is a DecimalField, the output should be DecimalField.\n         if (\n             connector in (self.ADD, self.SUB, self.MUL, self.DIV)\n-            and (isinstance(lhs_output, DecimalField) or isinstance(rhs_output, DecimalField))\n+            or connector == self.MOD\n+        ) and (\n+            isinstance(lhs_output, DecimalField) or isinstance(rhs_output,",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-13406",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.08333333333333333,
+        "recall": 0.5,
+        "f1_score": 0.14285714285714285,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "django/dmodels/query.py"
+        ],
+        "expected_files": [
+          "django/dmodels/query.py"
+        ],
+        "gen_additions": 12,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.857712,
+      "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -210,6 +210,18 @@ class QuerySet:\n     @query.setter\n     def query(self, value):\n+        # Set the appropriate _iterable_class when assigning a pickled query\n+        from django.db.models.query import (\n+            ValuesIterable, ValuesListIterable, NamedValuesListIterable, FlatValuesListIterable\n+        )\n+        if getattr(value, \"values_select\", None):\n+            # values_list() sets values_select and values_select_ex",
+      "process_score": {
+        "total_score": 0.575,
+        "scores": {
+          "correctness": 0.5,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.8,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "C-",
+        "semantic_match": 0.5,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-16429",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/utils/timesince.py"
+        ],
+        "expected_files": [
+          "django/utils/timesince.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.617096,
+      "patch": "--- a/django/utils/timesince.py\n+++ b/django/utils/timesince.py\n@@ -93,7 +93,11 @@ def timesince(d, now=None, reversed=False, depth=2):\n     # Convert datetime.date to datetime.datetime for pivot calculation.\n     if isinstance(d, datetime.date) and not isinstance(d, datetime.datetime):\n-        pivot = datetime.datetime(d.year, d.month, d.day)\n+        if isinstance(now, datetime.datetime) and timezone.is_aware(now):\n+            pivot = datetime.datetime(d.year, d.month, d.day, tzinfo=now.tzin",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13757",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "gen_additions": 7,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 5.787938,
+      "patch": "--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -646,6 +646,13 @@ class Poly(Expr, PicklableWithSlots):\n     def __mul__(self, other):\n         \"\"\"Multiply a polynomial by another polynomial or expression. \"\"\"\n         if isinstance(other, Poly):\n             return self.mul(other)\n         else:\n             return self.mul(Poly(other, self.gens, domain=self.domain))\n+\n+    def __rmul__(self, other):\n+        \"\"\"Multiply when Poly is on the right and expression is on the left.\"",
+      "process_score": {
+        "total_score": 0.35,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-23534",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/core/symbol.py"
+        ],
+        "expected_files": [
+          "sympy/core/symbol.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 1,
+        "gen_deletions": 3,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.068293,
+      "patch": "--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -269,7 +269,13 @@ def symbols(names, **args):\n     if isinstance(names, (tuple, list)):\n         result = [symbols(n, **args) for n in names]\n-        if all(isinstance(res, (tuple, list)) for res in result):\n-            return tuple(result)\n-        else:\n-            return tuple(result)\n+        # If all results are tuples/lists, return as tuple of tuples/lists\n+        if all(isinstance(res, (tuple, list)) for res in result):\n+       ",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-19040",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/factortools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/factortools.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.591521,
+      "patch": "--- a/sympy/polys/factortools.py\n+++ b/sympy/polys/factortools.py\n@@ -1150,7 +1150,7 @@ def _factor_multivariate(f, *gens, **args):\n     if not result:\n         return [(f, 1)]\n \n-    return [(K.from_expr(fac), exp) for fac, exp in result]\n+    return [(fac, exp) for fac, exp in result]\n \n def _factor_list(f, gens, **args):\n     \"\"\"Helper for factor_list and factor\"\"\"",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-14534",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.14285714285714285,
+        "recall": 0.5,
+        "f1_score": 0.22222222222222224,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "django/forms/widgets.py"
+        ],
+        "expected_files": [
+          "django/forms/boundfield.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.294091,
+      "patch": "--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -889,7 +889,11 @@ class BoundWidget:\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        # Use the id from the widget's attrs if available, otherwise fallback to previous behavior.\n+        attrs = self.data.get('attrs', {})\n+        id_ = attrs.get('id')\n+        if id_ is not None:\n+            return id_\n+        return 'id_%s_%s' % (self.data['name'], self.data['index'])",
+      "process_score": {
+        "total_score": 0.48,
+        "scores": {
+          "correctness": 0.5,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.25,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.5,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "psf__requests-1921",
+      "repo": "psf/requests",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "requests/models.py"
+        ],
+        "expected_files": [
+          "requests/sessions.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 5.313632,
+      "patch": "--- a/requests/models.py\n+++ b/requests/models.py\n@@ -307,7 +307,13 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):\n         # Merge headers set on this session\n         if session:\n-            merged_headers = merge_setting(request.headers, session.headers)\n+            # Remove headers with value None from session.headers before merging\n+            session_headers = {k: v for k, v in session.headers.items() if v is not None}\n+            merged_headers = merge_setting(requ",
+      "process_score": {
+        "total_score": 0.25,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pallets__flask-5014",
+      "repo": "pallets/flask",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.5,
+        "recall": 0.3333333333333333,
+        "f1_score": 0.4,
+        "fuzzy_recall": 0.6,
+        "generated_files": [
+          "src/flask/blueprints.py"
+        ],
+        "expected_files": [
+          "src/flask/blueprints.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 3,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 435.87998,
+      "patch": "--- a/src/flask/blueprints.py\n+++ b/src/flask/blueprints.py\n@@ -44,6 +44,9 @@ class Blueprint:\n     def __init__(self, name, import_name, static_folder=None, static_url_path=None, template_folder=None, url_prefix=None, subdomain=None, url_defaults=None):\n+        if not name:\n+            raise ValueError(\"Blueprint name must not be empty\")\n         self.name = name\n         self.import_name = import_name\n         self.static_folder = static_folder\n         self.static_url_path = static_url_path",
+      "process_score": {
+        "total_score": 0.5489999999999999,
+        "scores": {
+          "correctness": 0.6,
+          "process": 0.7,
+          "efficiency": 0.3,
+          "collaboration": 0.3,
+          "understanding": 0.84,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "D",
+        "semantic_match": 0.6,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-14089",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.6666666666666666,
+        "recall": 0.6666666666666666,
+        "f1_score": 0.6666666666666666,
+        "fuzzy_recall": 0.9333333333333332,
+        "generated_files": [
+          "django/utils/datastructures.py"
+        ],
+        "expected_files": [
+          "django/utils/datastructures.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 3,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.141226,
+      "patch": "--- a/django/utils/datastructures.py\n+++ b/django/utils/datastructures.py\n@@ -181,6 +181,9 @@ class OrderedSet(MutableSet):\n         return iter(self._data)\n \n+    def __reversed__(self):\n+        return reversed(self._data)\n+\n     def __contains__(self, item):\n         return item in self._data",
+      "process_score": {
+        "total_score": 0.7839999999999999,
+        "scores": {
+          "correctness": 0.933,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.973,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B",
+        "semantic_match": 0.9333333333333332,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-15875",
+      "repo": "sympy/sympy",
+      "success": false,
+      "error": "Error code: 429 - {'error': {'message': 'Rate limit reached for gpt-4.1 in organization org-1CQc5JeyUJBt4cCmYl1prKWG on tokens per min (TPM): Limit 30000, Used 30000, Requested 439. Please try again in 878ms. Visit https://platform.openai.com/account/rate-limits to learn more.', 'type': 'tokens', 'param': None, 'code': 'rate_limit_exceeded'}}",
+      "process_score": {
+        "total_score": 0.27999999999999997,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-16333",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.125,
+        "recall": 0.5,
+        "f1_score": 0.2,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "django/contriauth/forms.py"
+        ],
+        "expected_files": [
+          "django/contriauth/forms.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 2,
+        "gen_deletions": 2,
+        "exp_deletions": 0
+      },
+      "elapsed": 5.406327,
+      "patch": "--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -180,7 +180,13 @@ class UserCreationForm(forms.ModelForm):\n         if commit:\n-            user.save()\n-        return user\n+            user.save()\n+            self.save_m2m()\n+        else:\n+            # If commit=False, add a method to allow manual m2m saving later\n+            self._save_m2m = self.save_m2m\n+        return user",
+      "process_score": {
+        "total_score": 0.545,
+        "scores": {
+          "correctness": 0.5,
+          "process": 0.5,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.8,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "D",
+        "semantic_match": 0.5,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-12419",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1_score": 0.5,
+        "fuzzy_recall": 0.9,
+        "generated_files": [
+          "django/conf/global_settings.py"
+        ],
+        "expected_files": [
+          "django/conf/global_settings.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.475287,
+      "patch": "--- a/django/conf/global_settings.py\n+++ b/django/conf/global_settings.py\n@@ -1052,7 +1052,8 @@\n # Referrer-Policy header. See:\n # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy\n-SECURE_REFERRER_POLICY = None\n+SECURE_REFERRER_POLICY = \"same-origin\"",
+      "process_score": {
+        "total_score": 0.771,
+        "scores": {
+          "correctness": 0.9,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.96,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B",
+        "semantic_match": 0.9,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-15098",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/utils/translation/trans_real.py"
+        ],
+        "expected_files": [
+          "django/utils/translation/trans_real.py"
+        ],
+        "gen_additions": 12,
+        "exp_additions": 1,
+        "gen_deletions": 13,
+        "exp_deletions": 1
+      },
+      "elapsed": 6.55658,
+      "patch": "--- a/django/utils/translation/trans_real.py\n+++ b/django/utils/translation/trans_real.py\n@@ -1117,14 +1117,32 @@ def get_language_from_path(path):\n-    \"\"\"\n-    Return the language code if there is a valid language code found\n-    in `path`. None otherwise.\n-    \"\"\"\n-    regex = _lazy_re_compile(r\"^/([a-z]{2,3}(?:-[a-zA-Z0-9]+)*)/\")\n-    match = regex.match(path)\n-    if not match:\n-        return None\n-    lang_code = match.group(1)\n-    if lang_code in _supported:\n-        return lang_code\n- ",
+      "process_score": {
+        "total_score": 0.35,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-14711",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.13333333333333333,
+        "recall": 1.0,
+        "f1_score": 0.23529411764705882,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sympy/physics/vector/vector.py"
+        ],
+        "expected_files": [
+          "sympy/physics/vector/vector.py"
+        ],
+        "gen_additions": 8,
+        "exp_additions": 2,
+        "gen_deletions": 7,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.869394,
+      "patch": "--- a/sympy/physics/vector/vector.py\n+++ b/sympy/physics/vector/vector.py\n@@ -58,7 +58,11 @@ class Vector(Basic):\n     def __add__(self, other):\n         \"\"\"The add operator for Vector. \"\"\"\n-        #if other == 0: return self\n-        other = _check_vector(other)\n-        return Vector(self.args + other.args)\n+        if other == 0:\n+            return self\n+        other = _check_vector(other)\n+        return Vector(self.args + other.args)\n \n     def __radd__(self, other):\n-        return self",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-17139",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.14285714285714285,
+        "recall": 0.5,
+        "f1_score": 0.22222222222222224,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "sympy/simplify/fu.py"
+        ],
+        "expected_files": [
+          "sympy/simplify/fu.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 2,
+        "gen_deletions": 2,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.993607,
+      "patch": "--- a/sympy/simplify/fu.py\n+++ b/sympy/simplify/fu.py\n@@ -501,7 +501,11 @@\n     def _f(rv):\n-        if (rv.exp < 0) == True:\n-            return rv\n+        try:\n+            if (rv.exp < 0) == True:\n+                return rv\n+        except TypeError:\n+            # rv.exp may be complex, in which case comparison is invalid\n+            return rv\n         if not rv.exp.is_integer:\n             return rv\n         if rv.exp > max:",
+      "process_score": {
+        "total_score": 0.575,
+        "scores": {
+          "correctness": 0.5,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.8,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "C-",
+        "semantic_match": 0.5,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-14915",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/forms/models.py"
+        ],
+        "expected_files": [
+          "django/forms/models.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 3,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.434612,
+      "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -119,6 +119,9 @@ class ModelChoiceIteratorValue:\n     def __eq__(self, other):\n         if isinstance(other, ModelChoiceIteratorValue):\n             return self.value == other.value\n         return self.value == other\n \n+    def __hash__(self):\n+        return hash(self.value)\n+\n     def __str__(self):\n         return str(self.value)",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pylint-dev__pylint-7080",
+      "repo": "pylint-dev/pylint",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "pylint/lint/run.py"
+        ],
+        "expected_files": [
+          "pylint/lint/expand_modules.py"
+        ],
+        "gen_additions": 27,
+        "exp_additions": 1,
+        "gen_deletions": 10,
+        "exp_deletions": 0
+      },
+      "elapsed": 10.224518,
+      "patch": "--- a/pylint/lint/run.py\n+++ b/pylint/lint/run.py\n@@ -110,7 +110,13 @@ def _expand_files(files_or_dirs: list[str], recursive: bool) -> list[str]:\n     expanded_files = []\n     for path in files_or_dirs:\n         if os.path.isdir(path):\n-            if recursive:\n-                for root, _, files in os.walk(path):\n-                    for file in files:\n-                        expanded_files.append(os.path.join(root, file))\n-            else:\n-                for file in os.listdir(path):\n-   ",
+      "process_score": {
+        "total_score": 0.25,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-20428",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/polys/polytools.py"
+        ],
+        "expected_files": [
+          "sympy/polys/domains/expressiondomain.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.015455,
+      "patch": "--- a/sympy/polys/polytools.py\n+++ b/sympy/polys/polytools.py\n@@ -651,7 +651,13 @@ class Poly(Basic):\n         if not isinstance(rep, DMP):\n             rep = DMP.from_list(rep, dom, lev)\n \n-        obj.rep = rep\n+        # Strip leading zeros from DMP representation to avoid \"zero poly\" bugs\n+        if rep.is_zero:\n+            # Ensure zero polys have empty list representation\n+            rep = DMP([], dom, lev)\n+        obj.rep = rep\n+\n         obj.domain = dom\n         obj.level = lev\n    ",
+      "process_score": {
+        "total_score": 0.27999999999999997,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23314",
+      "repo": "matplotlib/matplotlib",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.16666666666666666,
+        "recall": 1.0,
+        "f1_score": 0.2857142857142857,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "limpl_toolkits/mplot3d/axes3d.py"
+        ],
+        "expected_files": [
+          "limpl_toolkits/mplot3d/axes3d.py"
+        ],
+        "gen_additions": 10,
+        "exp_additions": 2,
+        "gen_deletions": 2,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.499798,
+      "patch": "--- a/lib/mpl_toolkits/mplot3d/axes3d.py\n+++ b/lib/mpl_toolkits/mplot3d/axes3d.py\n@@ -316,6 +316,10 @@ class Axes3D(Axes):\n     def draw(self, renderer):\n         # draw the background patch\n-        if not self.get_visible():\n-            return\n+        if not self.get_visible():\n+            return\n+\n+        # Hide the patch and all children if not visible\n+        if not self.get_visible():\n+            self.patch.set_visible(False)\n+            for child in self.get_children():\n+          ",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-19637",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/core/sympify.py"
+        ],
+        "expected_files": [
+          "sympy/core/sympify.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 3,
+        "gen_deletions": 4,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.841121,
+      "patch": "--- a/sympy/core/sympify.py\n+++ b/sympy/core/sympify.py\n@@ -1121,7 +1121,9 @@ def kernS(s):\n-    for kern in ['in', 'not', 'and', 'or', 'is']:\n-        if kern in s:\n-            s = s.replace(kern, kern + '_')\n-    return sympify(s)\n+    for kern in ['in', 'not', 'and', 'or', 'is']:\n+        if kern in s:\n+            s = s.replace(kern, kern + '_')\n+    return sympify(s)\n+kerS = kernS\n",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pydata__xarray-3677",
+      "repo": "pydata/xarray",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "xarray/core/dataset.py"
+        ],
+        "expected_files": [
+          "xarray/core/dataset.py"
+        ],
+        "gen_additions": 13,
+        "exp_additions": 1,
+        "gen_deletions": 7,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.498969,
+      "patch": "--- a/xarray/core/dataset.py\n+++ b/xarray/core/dataset.py\n@@ -3586,7 +3586,11 @@ class Dataset(Mapping, AttrAccessMixin, ImplementsArrayReduce):\n     def merge(\n         self,\n         other: \"Dataset | DataArray | Mapping[Any, Any]\",\n         compat: str = \"broadcast_equals\",\n         join: str = \"outer\",\n         overwrite_vars: Any = None,\n         fill_value: Any = dtypes.NA,\n     ) -> \"Dataset\":\n-        return merge.dataset_merge_method(\n-            [self, other],\n-            compat=comp",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-17029",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/apps/registry.py"
+        ],
+        "expected_files": [
+          "django/apps/registry.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.800527,
+      "patch": "--- a/django/apps/registry.py\n+++ b/django/apps/registry.py\n@@ -273,6 +273,8 @@ class Apps:\n     def clear_cache(self):\n         \"\"\"Clear all internal caches, for methods that alter the app registry.\"\"\"\n         self.get_models.cache_clear()\n+        self.get_swappable_settings_name.cache_clear()\n \n     @lru_cache(maxsize=None)\n     def get_models(self, include_auto_created=False, include_swapped=False):",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-11880",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/forms/fields.py"
+        ],
+        "expected_files": [
+          "django/forms/fields.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 1,
+        "gen_deletions": 4,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.993328,
+      "patch": "--- a/django/forms/fields.py\n+++ b/django/forms/fields.py\n@@ -197,7 +197,10 @@ class Field:\n     def __deepcopy__(self, memo):\n-        result = copy.copy(self)\n-        memo[id(self)] = result\n-        result.widget = copy.deepcopy(self.widget, memo)\n-        return result\n+        result = copy.copy(self)\n+        memo[id(self)] = result\n+        result.widget = copy.deepcopy(self.widget, memo)\n+        result.error_messages = copy.deepcopy(self.error_messages, memo)\n+        return result",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-15863",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.8,
+        "generated_files": [
+          "django/template/defaultfilters.py"
+        ],
+        "expected_files": [
+          "django/template/defaultfilters.py"
+        ],
+        "gen_additions": 14,
+        "exp_additions": 1,
+        "gen_deletions": 15,
+        "exp_deletions": 1
+      },
+      "elapsed": 5.353925,
+      "patch": "--- a/django/template/defaultfilters.py\n+++ b/django/template/defaultfilters.py\n@@ -670,13 +670,22 @@ def floatformat(text, arg=-1):\n     try:\n-        input_val = float(text)\n-        d = Decimal(str(input_val))\n+        if isinstance(text, Decimal):\n+            d = text\n+        else:\n+            input_val = float(text)\n+            d = Decimal(str(input_val))\n     except (ValueError, TypeError, InvalidOperation):\n         return \"\"\n \n     try:\n         precision = int(arg)\n     except (Valu",
+      "process_score": {
+        "total_score": 0.702,
+        "scores": {
+          "correctness": 0.8,
+          "process": 0.7,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.92,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B-",
+        "semantic_match": 0.8,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-16886",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/crypto/crypto.py"
+        ],
+        "expected_files": [
+          "sympy/crypto/crypto.py"
+        ],
+        "gen_additions": 8,
+        "exp_additions": 1,
+        "gen_deletions": 8,
+        "exp_deletions": 1
+      },
+      "elapsed": 15.059872,
+      "patch": "--- a/sympy/crypto/crypto.py\n+++ b/sympy/crypto/crypto.py\n@@ -104,7 +104,7 @@ _morse_dict = {\n     \".-\": \"A\", \"-...\": \"B\", \"-.-.\": \"C\", \"-..\": \"D\", \".\": \"E\",\n     \"..-.\": \"F\", \"--.\": \"G\", \"....\": \"H\", \"..\": \"I\", \".---\": \"J\",\n     \"-.-\": \"K\", \".-..\": \"L\", \"--\": \"M\", \"-.\": \"N\", \"---\": \"O\",\n-    \".--.\": \"P\", \"--.-\": \"Q\", \".-.\": \"R\", \"...\": \"S\", \"-\": \"T\", \"..-\": \"U\",\n-    \"...-\": \"V\", \".--\": \"W\", \"-..-\": \"X\", \"-.--\": \"Y\", \"--..\": \"Z\",\n-    \"----\": \"1\", \"..---\": \"2\", \"...--\": \"3\", \"....-\": \"4\", \"....",
+      "process_score": {
+        "total_score": 0.32,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 0.6,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pytest-dev__pytest-6202",
+      "repo": "pytest-dev/pytest",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.5,
+        "recall": 0.3333333333333333,
+        "f1_score": 0.4,
+        "fuzzy_recall": 0.3333333333333333,
+        "generated_files": [
+          "src/_pytest/python.py"
+        ],
+        "expected_files": [
+          "src/_pytest/python.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 2
+      },
+      "elapsed": 1.723773,
+      "patch": "--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -289,7 +289,7 @@ class PyCollectorMixin(Node):\n         # see https://github.com/pytest-dev/pytest/issues/3317\n         s = \".\".join(parts)\n         if not stopatmodule:\n-            return s.replace(\".[\", \"[\")\n+            return s\n         return s\n \n     def _getobj(self):",
+      "process_score": {
+        "total_score": 0.51,
+        "scores": {
+          "correctness": 0.333,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.733,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "D",
+        "semantic_match": 0.3333333333333333,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5262",
+      "repo": "pytest-dev/pytest",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.2,
+        "generated_files": [
+          "src/_pytest/capture.py"
+        ],
+        "expected_files": [
+          "src/_pytest/capture.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 4,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.665709,
+      "patch": "--- a/src/_pytest/capture.py\n+++ b/src/_pytest/capture.py\n@@ -448,7 +448,10 @@ class EncodedFile(object):\n     @property\n     def mode(self):\n-        return self.buffer.mode\n+        # Return the mode of the underlying buffer, but without 'b' (binary),\n+        # since EncodedFile expects to work with str, not bytes.\n+        return self.buffer.mode.replace('b', '')",
+      "process_score": {
+        "total_score": 0.45799999999999996,
+        "scores": {
+          "correctness": 0.2,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.68,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.2,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7982",
+      "repo": "pytest-dev/pytest",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "_pytest/main.py"
+        ],
+        "expected_files": [
+          "src/_pytest/pathlib.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.491441,
+      "patch": "--- a/_pytest/main.py\n+++ b/_pytest/main.py\n@@ -701,7 +701,7 @@ class Session(nodes.FSCollector):\n         # We want to ignore symlinks if they are not directories.\n         # But for directories, we want to follow them (as before 6.1.0).\n         if not path.is_dir():\n-            stat = path.stat(follow_symlinks=False)\n+            stat = path.stat()\n             if stat and stat.st_nlink == 0:\n                 return None\n         return super()._collectfile(path)",
+      "process_score": {
+        "total_score": 0.27999999999999997,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-15349",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/algebras/quaternion.py"
+        ],
+        "expected_files": [
+          "sympy/algebras/quaternion.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 1,
+        "gen_deletions": 3,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.187952,
+      "patch": "--- a/sympy/algebras/quaternion.py\n+++ b/sympy/algebras/quaternion.py\n@@ -489,10 +489,10 @@ class Quaternion(AtomicExpr):\n         # https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#Quaternion-derived_rotation_matrix\n         return Matrix([\n-            [1 - 2*(y**2 + z**2),     2*(x*y - z*w),     2*(x*z + y*w)],\n-            [    2*(x*y + z*w), 1 - 2*(x**2 + z**2),     2*(y*z - x*w)],\n-            [    2*(x*z - y*w),     2*(y*z + x*w), 1 - 2*(x**2 + y**2)]\n+            [1 - 2*(y*",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7521",
+      "repo": "pytest-dev/pytest",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "src/_pytest/capture.py"
+        ],
+        "expected_files": [
+          "src/_pytest/capture.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 3,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.461969,
+      "patch": "--- a/src/_pytest/capture.py\n+++ b/src/_pytest/capture.py\n@@ -534,7 +534,13 @@ class EncodedFile:\n     def read(self, size=-1):\n-        data = self.buffer.read(size)\n-        return data.decode(self.encoding, self.errors)\n+        data = self.buffer.read(size)\n+        # Do not translate newlines, preserve as-is\n+        return data.decode(self.encoding, self.errors)\n \n     def readline(self, size=-1):\n-        data = self.buffer.readline(size)\n-        return data.decode(self.encoding, self.er",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-16485",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/template/defaultfilters.py"
+        ],
+        "expected_files": [
+          "django/template/defaultfilters.py"
+        ],
+        "gen_additions": 10,
+        "exp_additions": 1,
+        "gen_deletions": 8,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.499427,
+      "patch": "--- a/django/template/defaultfilters.py\n+++ b/django/template/defaultfilters.py\n@@ -857,7 +857,11 @@ def floatformat(text, arg=-1):\n     try:\n         d = Decimal(str(text))\n     except Exception:\n         return text\n-    prec = int(arg)\n-    if prec < 0:\n-        prec = 1\n-    exp = Decimal(\"1\").scaleb(-prec)\n-    try:\n-        d = d.quantize(exp, rounding=ROUND_HALF_UP)\n-    except InvalidOperation:\n-        return text\n+    prec = int(arg)\n+    if prec < 0:\n+        prec = 1\n+    # Ensure at",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pydata__xarray-6721",
+      "repo": "pydata/xarray",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.047619047619047616,
+        "recall": 0.5,
+        "f1_score": 0.08695652173913042,
+        "fuzzy_recall": 0.9,
+        "generated_files": [
+          "xarray/core/common.py"
+        ],
+        "expected_files": [
+          "xarray/core/common.py"
+        ],
+        "gen_additions": 12,
+        "exp_additions": 1,
+        "gen_deletions": 9,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.841014,
+      "patch": "--- a/xarray/core/common.py\n+++ b/xarray/core/common.py\n@@ -1812,10 +1812,18 @@\n def get_chunksizes(variables):\n     \"\"\"Get chunk sizes for a collection of variables.\"\"\"\n     chunks: dict[Any, tuple[int, ...]] = {}\n-    for v in variables:\n-        if hasattr(v.data, \"chunks\"):\n-            for dim, c in v.chunksizes.items():\n-                if dim in chunks and c != chunks[dim]:\n-                    raise ValueError(\"inconsistent chunksizes for dimension %r\" % dim)\n-                chunks[dim]",
+      "process_score": {
+        "total_score": 0.771,
+        "scores": {
+          "correctness": 0.9,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.96,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B",
+        "semantic_match": 0.9,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "psf__requests-6028",
+      "repo": "psf/requests",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "requests/utils.py"
+        ],
+        "expected_files": [
+          "requests/utils.py"
+        ],
+        "gen_additions": 7,
+        "exp_additions": 4,
+        "gen_deletions": 3,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.301194,
+      "patch": "--- a/requests/utils.py\n+++ b/requests/utils.py\n@@ -914,7 +914,11 @@ def prepend_scheme_if_needed(url, new_scheme):\n     # Don't prepend scheme to network-path references (see RFC 3986 Section 4.2).\n     if url.startswith('//'):\n         return f'{new_scheme}:{url}'\n-    if not urlparse(url).scheme:\n-        return f'{new_scheme}://{url}'\n-    return url\n+    parsed = urlparse(url)\n+    # Only prepend scheme if missing and url does not start with userinfo (user:pass@host)\n+    if not parsed.sche",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7432",
+      "repo": "pytest-dev/pytest",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "src/_pytest/skipping.py"
+        ],
+        "expected_files": [
+          "src/_pytest/skipping.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 2,
+        "gen_deletions": 4,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.718544,
+      "patch": "--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -235,7 +235,13 @@ def pytest_runtest_makereport(item, call):\n     # If --runxfail is given, xfail is not enforced, but we still want to\n     # show the xfail reason in the report.\n-    if hasattr(item, \"_evalxfail\") and item._evalxfail and item.config.getoption(\"runxfail\"):\n-        rep.wasxfail = item._evalxfail\n-        rep.outcome = \"failed\" if rep.failed else rep.outcome\n-        return rep\n+    if hasattr(item, \"_evalxfail\") and",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-15741",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/utils/formats.py"
+        ],
+        "expected_files": [
+          "django/utils/formats.py"
+        ],
+        "gen_additions": 9,
+        "exp_additions": 1,
+        "gen_deletions": 4,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.946691,
+      "patch": "--- a/django/utils/formats.py\n+++ b/django/utils/formats.py\n@@ -1,6 +1,8 @@\n import importlib\n import threading\n import warnings\n+from django.utils.functional import lazy, Promise\n+\n \n __all__ = [\n     \"get_format\",\n@@ -49,7 +51,11 @@\n     \"\"\"\n-    if isinstance(format_type, str):\n-        format_type = format_type.upper()\n-    else:\n-        raise TypeError(\"format_type must be str (got %s)\" % type(format_type).__name__)\n+    # Accept lazy objects for format_type.\n+    if isinstance(format_type",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-12209",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/base.py"
+        ],
+        "expected_files": [
+          "django/dmodels/base.py"
+        ],
+        "gen_additions": 8,
+        "exp_additions": 1,
+        "gen_deletions": 4,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.849122,
+      "patch": "--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -753,7 +753,11 @@\n         meta = self._meta\n         pk_val = self.pk\n         pk_set = pk_val is not None\n-        if (\n-            not pk_set and self._state.adding and meta.pk.default and meta.pk.default is not NOT_PROVIDED\n-        ):\n-            force_insert = True\n+        if (\n+            not pk_set\n+            and self._state.adding\n+            and meta.pk.default\n+            and meta.pk.default is not NOT_PROVIDED\n+",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-12907",
+      "repo": "astropy/astropy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "astropy/modeling/separable.py"
+        ],
+        "expected_files": [
+          "astropy/modeling/separable.py"
+        ],
+        "gen_additions": 22,
+        "exp_additions": 1,
+        "gen_deletions": 12,
+        "exp_deletions": 1
+      },
+      "elapsed": 6.035591,
+      "patch": "--- a/astropy/modeling/separable.py\n+++ b/astropy/modeling/separable.py\n@@ -124,10 +124,27 @@\n     if not isinstance(model, CompoundModel):\n         return _separability_matrix_single(model)\n \n-    if model.op == '&':\n-        matrices = [_separability_matrix(m) for m in model.traverse_postorder()]\n-        return block_diag(*matrices)\n-    elif model.op == '|':\n-        # In series, the outputs of one model are the inputs to the next\n-        # so the separability matrix is the product of the m",
+      "process_score": {
+        "total_score": 0.35,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pydata__xarray-4629",
+      "repo": "pydata/xarray",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "xarray/core/merge.py"
+        ],
+        "expected_files": [
+          "xarray/core/merge.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.779104,
+      "patch": "--- a/xarray/core/merge.py\n+++ b/xarray/core/merge.py\n@@ -501,7 +501,9 @@ def _choose_attrs(\n     elif combine_attrs == \"override\":\n-        return variable_attrs[0]\n+        return dict(variable_attrs[0])\n     elif combine_attrs == \"drop\":\n         return {}\n     elif combine_attrs == \"no_conflicts\":\n         return _check_no_conflicts(variable_attrs)",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-13516",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/core/management/base.py"
+        ],
+        "expected_files": [
+          "django/core/management/base.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 4,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.399813,
+      "patch": "--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -53,6 +53,13 @@ class OutputWrapper:\n     def __init__(self, out, style_func=None, ending='\\n'):\n         self._out = out\n         self.style_func = style_func\n         self.ending = ending\n \n     def write(self, msg, style_func=None, ending=None):\n         if ending is None:\n             ending = self.ending\n         if style_func is None and self.style_func is not None:\n             style_func = self.style_func\n      ",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-13670",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.2,
+        "generated_files": [
+          "django/utils/dateformat.py"
+        ],
+        "expected_files": [
+          "django/utils/dateformat.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 2
+      },
+      "elapsed": 2.002975,
+      "patch": "--- a/django/utils/dateformat.py\n+++ b/django/utils/dateformat.py\n@@ -120,7 +120,9 @@ class DateFormat:\n     def y(self):\n         \"Year, 2 digits.\"\n-        return str(self.data.year)[-2:]\n+        return f\"{self.data.year % 100:02d}\"",
+      "process_score": {
+        "total_score": 0.45799999999999996,
+        "scores": {
+          "correctness": 0.2,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.68,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.2,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-14373",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.2,
+        "generated_files": [
+          "django/utils/dateformat.py"
+        ],
+        "expected_files": [
+          "django/utils/dateformat.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 2
+      },
+      "elapsed": 1.369895,
+      "patch": "--- a/django/utils/dateformat.py\n+++ b/django/utils/dateformat.py\n@@ -93,7 +93,9 @@ class DateFormat:\n     def Y(self):\n         \"Year, 4 digits\"\n-        return str(self.data.year)\n+        return f\"{self.data.year:04d}\"",
+      "process_score": {
+        "total_score": 0.45799999999999996,
+        "scores": {
+          "correctness": 0.2,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.68,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.2,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-14539",
+      "repo": "astropy/astropy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "astropy/io/fits/diff.py"
+        ],
+        "expected_files": [
+          "astropy/io/fits/diff.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.593717,
+      "patch": "--- a/astropy/io/fits/diff.py\n+++ b/astropy/io/fits/diff.py\n@@ -1449,7 +1449,8 @@ class TableDataDiff(_BaseDiff):\n                 arrb.dtype, np.floating\n             ):\n                 diffs = where_not_allclose(arra, arrb, rtol=self.rtol, atol=self.atol)\n-            elif \"P\" in col.format:\n+            elif \"P\" in col.format or \"Q\" in col.format:\n                 diffs = (\n                     [\n                         idx",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-15569",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1_score": 0.6666666666666666,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/dmodels/query_utils.py"
+        ],
+        "expected_files": [
+          "django/dmodels/query_utils.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.861066,
+      "patch": "--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -212,6 +212,8 @@\n     def _unregister_lookup(cls, lookup):\n         \"\"\"\n         For use in tests only. Unregister a lookup. Do not use in production.\n         \"\"\"\n         if hasattr(cls, \"get_lookup\"):\n             cls._lookups.pop(lookup.lookup_name, None)\n+            # Clear the lookup cache to ensure unregistration takes effect.\n+            cls._clear_cached_lookups()",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-14792",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.02040816326530612,
+        "recall": 0.16666666666666666,
+        "f1_score": 0.03636363636363636,
+        "fuzzy_recall": 0.16666666666666666,
+        "generated_files": [
+          "django/utils/timezone.py"
+        ],
+        "expected_files": [
+          "django/utils/timezone.py"
+        ],
+        "gen_additions": 39,
+        "exp_additions": 4,
+        "gen_deletions": 10,
+        "exp_deletions": 2
+      },
+      "elapsed": 8.139609,
+      "patch": "--- a/django/utils/timezone.py\n+++ b/django/utils/timezone.py\n@@ -282,10 +282,25 @@ def _get_timezone_name(tz):\n-    \"\"\"\n-    Return the name of a given timezone object.\n-    \"\"\"\n-    # Handle fixed offset timezones.\n-    if isinstance(tz, datetime.timezone):\n-        return tz.tzname(None)\n-    # Handle pytz and zoneinfo timezones.\n-    name = getattr(tz, 'zone', None)\n-    if name is not None:\n-        return name\n-    # Fallback.\n-    return tz.tzname(None)\n+    \"\"\"\n+    Return the name of a ",
+      "process_score": {
+        "total_score": 0.415,
+        "scores": {
+          "correctness": 0.167,
+          "process": 0.5,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.667,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.16666666666666666,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-11119",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/template/engine.py"
+        ],
+        "expected_files": [
+          "django/template/engine.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.464229,
+      "patch": "--- a/django/template/engine.py\n+++ b/django/template/engine.py\n@@ -237,7 +237,11 @@ class Engine:\n     def render_to_string(self, template_name, context=None, request=None):\n         \"\"\"\n         Render the template specified by template_name with the given context.\n         \"\"\"\n-        context = make_context(context, request)\n+        context = make_context(context, request, autoescape=self.autoescape)\n         return self.get_template(template_name).render(context)",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13647",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/matrices/common.py"
+        ],
+        "expected_files": [
+          "sympy/matrices/common.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 1,
+        "gen_deletions": 4,
+        "exp_deletions": 1
+      },
+      "elapsed": 5.131254,
+      "patch": "--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -86,7 +86,9 @@\n     def col_insert(self, pos, other):\n         \"\"\"Insert one or more columns at the given column position.\"\"\"\n-        return self._eval_col_insert(pos, other)\n+        # Ensure pos is an integer index, not a slice or sequence\n+        pos = int(pos)\n+        return self._eval_col_insert(pos, other)\n \n     def _eval_col_insert(self, pos, other):\n         from sympy.matrices import Matrix\n         other = Matrix(othe",
+      "process_score": {
+        "total_score": 0.35,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-15809",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.4,
+        "generated_files": [
+          "sympy/functions/elementary/miscellaneous.py"
+        ],
+        "expected_files": [
+          "sympy/functions/elementary/miscellaneous.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 0,
+        "gen_deletions": 3,
+        "exp_deletions": 2
+      },
+      "elapsed": 2.802064,
+      "patch": "--- a/sympy/functions/elementary/miscellaneous.py\n+++ b/sympy/functions/elementary/miscellaneous.py\n@@ -105,10 +105,16 @@ class Min(Function, EvalfMixin):\n     @classmethod\n     def eval(cls, *args):\n-        if len(args) == 0:\n-            raise ValueError(\"The Min function must have arguments.\")\n+        from sympy import S\n+        if len(args) == 0:\n+            return S.Infinity\n         if len(args) == 1:\n             return args[0]\n         ...\n \n class Max(Function, EvalfMixin):\n     @cl",
+      "process_score": {
+        "total_score": 0.536,
+        "scores": {
+          "correctness": 0.4,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.76,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "D",
+        "semantic_match": 0.4,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8621",
+      "repo": "sphinx-doc/sphinx",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sphinx/roles.py"
+        ],
+        "expected_files": [
+          "sphinx/builders/html/transforms.py"
+        ],
+        "gen_additions": 22,
+        "exp_additions": 1,
+        "gen_deletions": 11,
+        "exp_deletions": 1
+      },
+      "elapsed": 8.601124,
+      "patch": "--- a/sphinx/roles.py\n+++ b/sphinx/roles.py\n@@ -334,11 +334,29 @@ def kbd_role(typ: str, rawtext: str, text: str, lineno: int,\n     # split at -, +, ^, but not if they are meant as the key itself\n-    keys = re.split(r'([+^-])', text)\n-    node = nodes.inline(rawtext, '', classes=['kbd'])\n-    pending = []\n-    for key in keys:\n-        if key in '+-^':\n-            if pending:\n-                node += nodes.inline('', ''.join(pending), classes=['kbd'])\n-                pending = []\n-           ",
+      "process_score": {
+        "total_score": 0.25,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13439",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 0.6,
+        "f1_score": 0.7499999999999999,
+        "fuzzy_recall": 0.6,
+        "generated_files": [
+          "sklearn/pipeline.py"
+        ],
+        "expected_files": [
+          "sklearn/pipeline.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 5,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.132721,
+      "patch": "--- a/sklearn/pipeline.py\n+++ b/sklearn/pipeline.py\n@@ -893,6 +893,9 @@ class Pipeline(_BaseComposition):\n     def __getitem__(self, ind):\n         return self.steps[ind]\n \n+    def __len__(self):\n+        return len(self.steps)\n+\n     @property\n     def _estimator_type(self):\n         if not self._final_estimator:",
+      "process_score": {
+        "total_score": 0.654,
+        "scores": {
+          "correctness": 0.6,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.84,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "C+",
+        "semantic_match": 0.6,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-13989",
+      "repo": "matplotlib/matplotlib",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "limatplotliaxes/_axes.py"
+        ],
+        "expected_files": [
+          "limatplotliaxes/_axes.py"
+        ],
+        "gen_additions": 8,
+        "exp_additions": 1,
+        "gen_deletions": 7,
+        "exp_deletions": 1
+      },
+      "elapsed": 5.611744,
+      "patch": "--- a/lib/matplotlib/axes/_axes.py\n+++ b/lib/matplotlib/axes/_axes.py\n@@ -2412,7 +2412,11 @@ def hist(\n         # We need to do this before calling np.histogram, to handle the\n         # density=True case correctly with a user-supplied range.\n         if range is not None:\n-            xmin, xmax = range\n-            if not np.isfinite(xmin) or not np.isfinite(xmax):\n-                raise ValueError(\"range values must be finite\")\n-            if xmin >= xmax:\n-                raise ValueError(\"",
+      "process_score": {
+        "total_score": 0.35,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-12096",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/core/function.py"
+        ],
+        "expected_files": [
+          "sympy/core/function.py"
+        ],
+        "gen_additions": 11,
+        "exp_additions": 1,
+        "gen_deletions": 6,
+        "exp_deletions": 1
+      },
+      "elapsed": 5.793621,
+      "patch": "--- a/sympy/core/function.py\n+++ b/sympy/core/function.py\n@@ -497,10 +497,18 @@ class Function(AtomicExpr):\n     def _eval_evalf(self, prec):\n         # If the function has an implementation, try to evaluate it numerically\n         if hasattr(self, '_imp_') and self._imp_ is not None:\n-            try:\n-                val = self._imp_(*[a.evalf(prec) for a in self.args])\n-                if val is not None:\n-                    return val\n-            except Exception:\n-                pass\n+  ",
+      "process_score": {
+        "total_score": 0.35,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-17655",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.14285714285714285,
+        "recall": 0.25,
+        "f1_score": 0.18181818181818182,
+        "fuzzy_recall": 0.65,
+        "generated_files": [
+          "sympy/geometry/point.py"
+        ],
+        "expected_files": [
+          "sympy/geometry/point.py"
+        ],
+        "gen_additions": 7,
+        "exp_additions": 4,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.817674,
+      "patch": "--- a/sympy/geometry/point.py\n+++ b/sympy/geometry/point.py\n@@ -242,6 +242,14 @@ class Point(GeometryEntity):\n         return Point(*coords, evaluate=False)\n \n+    def __rmul__(self, other):\n+        # Support scalar * Point\n+        try:\n+            return self.__mul__(other)\n+        except Exception:\n+            return NotImplemented\n+\n+\n     def __mul__(self, other):\n         \"\"\"Multiplication by a scalar.\"\"\"\n         if isinstance(other, (int, float, Integer, Rational, Float, Number)):\n  ",
+      "process_score": {
+        "total_score": 0.6735,
+        "scores": {
+          "correctness": 0.65,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.86,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "C+",
+        "semantic_match": 0.65,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-12304",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.8,
+        "generated_files": [
+          "django/dmodels/enums.py"
+        ],
+        "expected_files": [
+          "django/dmodels/enums.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.991004,
+      "patch": "--- a/django/db/models/enums.py\n+++ b/django/db/models/enums.py\n@@ -13,6 +13,8 @@\n class ChoicesMeta(enum.EnumMeta):\n     def __new__(metacls, cls, bases, classdict):\n         enum_class = super().__new__(metacls, cls, bases, classdict)\n+        # Prevent Django templates from calling Choices classes.\n+        enum_class.do_not_call_in_templates = True\n         return enum_class",
+      "process_score": {
+        "total_score": 0.732,
+        "scores": {
+          "correctness": 0.8,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.92,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B-",
+        "semantic_match": 0.8,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-13012",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "expected_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 3,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.48027,
+      "patch": "--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -863,6 +863,9 @@\n     def get_source_expressions(self):\n         return [self.expression]\n+\n+    def get_group_by_cols(self, alias=None):\n+        return self.expression.get_group_by_cols(alias=alias)\n \n     def as_sql(self, compiler, connection):\n         return self.expression.as_sql(compiler, connection)",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-14672",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.09090909090909091,
+        "recall": 0.5,
+        "f1_score": 0.15384615384615385,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "django/dmodels/fields/related.py"
+        ],
+        "expected_files": [
+          "django/dmodels/fields/reverse_related.py"
+        ],
+        "gen_additions": 7,
+        "exp_additions": 1,
+        "gen_deletions": 4,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.163139,
+      "patch": "--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -16,6 +16,7 @@\n from django.db.models.fields.mixins import FieldCacheMixin\n from django.db.models.fields.reverse_related import (\n     ForeignObjectRel, ManyToOneRel, OneToOneRel,\n )\n+from django.utils.hashable import make_hashable\n from django.utils.inspect import func_accepts_kwargs\n from django.utils.translation import gettext_lazy as _\n \n@@ -1927,7 +1928,11 @@ class ManyToManyRel(ForeignObjectRel):\n     @pro",
+      "process_score": {
+        "total_score": 0.48,
+        "scores": {
+          "correctness": 0.5,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.25,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.5,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "psf__requests-5414",
+      "repo": "psf/requests",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "requests/models.py"
+        ],
+        "expected_files": [
+          "requests/models.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.679448,
+      "patch": "--- a/requests/models.py\n+++ b/requests/models.py\n@@ -397,7 +397,13 @@ class PreparedRequest(RequestEncodingMixin, object):\n         # RFC 3986 Section 3.2.2: Host\n         try:\n-            netloc_enc = netloc.encode(\"idna\").decode(\"utf-8\")\n+            try:\n+                netloc_enc = netloc.encode(\"idna\").decode(\"utf-8\")\n+            except UnicodeError as e:\n+                raise InvalidURL(\"URL has an invalid label.\") from e\n         except AttributeError:\n             netloc_enc = netlo",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-16450",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/simplify/simplify.py"
+        ],
+        "expected_files": [
+          "sympy/simplify/simplify.py"
+        ],
+        "gen_additions": 8,
+        "exp_additions": 1,
+        "gen_deletions": 5,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.656947,
+      "patch": "--- a/sympy/simplify/simplify.py\n+++ b/sympy/simplify/simplify.py\n@@ -403,7 +403,18 @@ def posify(expr, symbols=None):\n     def posify_symbol(s):\n         if s in mapping:\n             return mapping[s]\n-        d = s.assumptions0.copy()\n-        if d.get('positive', None) is not True:\n-            d['positive'] = True\n-        mapping[s] = Dummy('_%s' % s.name, **d)\n-        return mapping[s]\n+        d = s.assumptions0.copy()\n+        # Only set positive=True if not already True\n+        if d.",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "astropy__astropy-13453",
+      "repo": "astropy/astropy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "astropy/io/ascii/html.py"
+        ],
+        "expected_files": [
+          "astropy/io/ascii/html.py"
+        ],
+        "gen_additions": 15,
+        "exp_additions": 2,
+        "gen_deletions": 2,
+        "exp_deletions": 0
+      },
+      "elapsed": 5.144577,
+      "patch": "--- a/astropy/io/ascii/html.py\n+++ b/astropy/io/ascii/html.py\n@@ -339,7 +339,19 @@ class HTML(BaseReader):\n         # Write the table rows\n         for row in table:\n             out.write(\"   <tr>\\n\")\n-            for col in table.colnames:\n-                out.write(f\"    <td>{row[col]}</td>\\n\")\n+            for col in table.colnames:\n+                val = row[col]\n+                # Apply formatting if specified\n+                fmt = self.outputter.formats.get(col)\n+                if fmt i",
+      "process_score": {
+        "total_score": 0.35,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-15851",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dbackends/postgresql/client.py"
+        ],
+        "expected_files": [
+          "django/dbackends/postgresql/client.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 1,
+        "gen_deletions": 5,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.967632,
+      "patch": "--- a/django/db/backends/postgresql/client.py\n+++ b/django/db/backends/postgresql/client.py\n@@ -19,10 +19,13 @@ class DatabaseClient(BaseDatabaseClient):\n     def settings_to_cmd_args_env(self, settings_dict, parameters):\n         args = [\"psql\"]\n         dbname = settings_dict.get(\"NAME\") or \"\"\n-        if dbname:\n-            args += [dbname]\n-        if parameters:\n-            args += parameters\n-        return args, None\n+        if parameters:\n+            args += parameters\n+        if db",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pydata__xarray-4094",
+      "repo": "pydata/xarray",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "xarray/core/dataarray.py"
+        ],
+        "expected_files": [
+          "xarray/core/dataarray.py"
+        ],
+        "gen_additions": 7,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.690762,
+      "patch": "--- a/xarray/core/dataarray.py\n+++ b/xarray/core/dataarray.py\n@@ -2450,7 +2450,13 @@ class DataArray(...):\n         # reconstruct the original variables\n         variables = {}\n         for name in variable_names:\n-            var = self.sel({dim: name}).squeeze(dim)\n+            var = self.sel({dim: name})\n+            # If the stacked dim is the only dimension, squeeze will remove all dims,\n+            # so only squeeze if there are more than one dimension\n+            if dim in var.dims and ",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-13569",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/sql/compiler.py"
+        ],
+        "expected_files": [
+          "django/dmodels/functions/math.py"
+        ],
+        "gen_additions": 9,
+        "exp_additions": 3,
+        "gen_deletions": 5,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.31267,
+      "patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -187,10 +187,19 @@ class SQLCompiler(BaseSQLCompiler):\n     def get_group_by(self, select, order_by):\n         \"\"\"\n         Return a list of expressions for the GROUP BY clause.\n         \"\"\"\n         expressions = []\n         for expr in select:\n             expressions.extend(expr.get_group_by_cols())\n-        for expr, (sql, params, is_ref) in order_by:\n-            if expr.contains_aggregate:\n-                con",
+      "process_score": {
+        "total_score": 0.27999999999999997,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23476",
+      "repo": "matplotlib/matplotlib",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "limatplotlifigure.py"
+        ],
+        "expected_files": [
+          "limatplotlifigure.py"
+        ],
+        "gen_additions": 14,
+        "exp_additions": 3,
+        "gen_deletions": 7,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.936762,
+      "patch": "--- a/lib/matplotlib/figure.py\n+++ b/lib/matplotlib/figure.py\n@@ -2908,10 +2908,18 @@ class Figure:\n     def __setstate__(self, state):\n         # Called when unpickling a figure.\n         from matplotlib import pyplot as plt\n         self.__dict__.update(state)\n-        # After unpickling, reattach a canvas if necessary.\n-        if self.canvas is None:\n-            from matplotlib.backends.backend_agg import FigureCanvasAgg\n-            FigureCanvasAgg(self)\n-        else:\n-            # If th",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-12585",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sklearn/base.py"
+        ],
+        "expected_files": [
+          "sklearn/base.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.238873,
+      "patch": "--- a/sklearn/base.py\n+++ b/sklearn/base.py\n@@ -48,7 +48,8 @@ def clone(estimator, safe=True):\n     elif estimator is None:\n         return None\n-    elif not hasattr(estimator, 'get_params'):\n+    elif not hasattr(estimator, 'get_params') or isinstance(estimator, type):\n         if safe:\n             raise TypeError(\n                 \"Cannot clone object '%s' (type %s): \"\n                 \"it does not seem to be a scikit-learn estimator as \"\n                 \"it does not implement a 'get_params",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-10999",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.21428571428571427,
+        "recall": 0.42857142857142855,
+        "f1_score": 0.2857142857142857,
+        "fuzzy_recall": 0.7714285714285715,
+        "generated_files": [
+          "django/utils/dateparse.py"
+        ],
+        "expected_files": [
+          "django/utils/dateparse.py"
+        ],
+        "gen_additions": 7,
+        "exp_additions": 4,
+        "gen_deletions": 7,
+        "exp_deletions": 3
+      },
+      "elapsed": 2.856536,
+      "patch": "--- a/django/utils/dateparse.py\n+++ b/django/utils/dateparse.py\n@@ -104,7 +104,8 @@\n standard_duration_re = re.compile(\n-    r'^'\n-    r'(?:(?P<days>-?\\d+) (days?, )?)?'\n-    r'((?:(?P<hours>-?\\d+):)(?=\\d+:\\d+))?'\n-    r'(?:(?P<minutes>-?\\d+):)?'\n-    r'(?P<seconds>-?\\d+)'\n-    r'(?:\\.(?P<microseconds>\\d{1,6})\\d{0,6})?'\n-    r'$'\n+    r'^'\n+    r'(?:(?P<days>-?\\d+) (days?, )?)?'\n+    r'((?:(?P<hours>-?\\d+):)(?=-?\\d+:-?\\d+))?'\n+    r'(?:(?P<minutes>-?\\d+):)?'\n+    r'(?P<seconds>-?\\d+)'\n+    r'(?:",
+      "process_score": {
+        "total_score": 0.7208571428571429,
+        "scores": {
+          "correctness": 0.771,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.909,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B-",
+        "semantic_match": 0.7714285714285715,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pylint-dev__pylint-4970",
+      "repo": "pylint-dev/pylint",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.2,
+        "recall": 0.5,
+        "f1_score": 0.28571428571428575,
+        "fuzzy_recall": 0.9,
+        "generated_files": [
+          "pylint/checkers/similar.py"
+        ],
+        "expected_files": [
+          "pylint/checkers/similar.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.653272,
+      "patch": "--- a/pylint/checkers/similar.py\n+++ b/pylint/checkers/similar.py\n@@ -276,6 +276,9 @@ class SimilarityChecker(BaseChecker):\n         \"\"\"check for similarities\"\"\"\n         min_lines = self.config.min_similarity_lines\n         if min_lines < 2:\n-            return\n+            # If set to 0, disable the check entirely.\n+            if min_lines == 0:\n+                return\n+            min_lines = 2\n         # ... rest of the method ...",
+      "process_score": {
+        "total_score": 0.771,
+        "scores": {
+          "correctness": 0.9,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.96,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B",
+        "semantic_match": 0.9,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-12965",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/sql/compiler.py"
+        ],
+        "expected_files": [
+          "django/dmodels/sql/compiler.py"
+        ],
+        "gen_additions": 8,
+        "exp_additions": 2,
+        "gen_deletions": 2,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.207518,
+      "patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -1356,7 +1356,13 @@ class SQLDeleteCompiler(SQLCompiler):\n         # Fast-path when deleting from a single table with no joins and no\n         # where-clause.\n-        if self.query.can_fast_delete:\n-            return super().execute_sql(result_type)\n+        if self.query.can_fast_delete:\n+            # Only use fast delete when deleting all rows from the base table (no where, no limits, no joins).\n+            if",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-9296",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1_score": 0.5,
+        "fuzzy_recall": 0.8999999999999999,
+        "generated_files": [
+          "django/core/paginator.py"
+        ],
+        "expected_files": [
+          "django/core/paginator.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 4,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.068246,
+      "patch": "--- a/django/core/paginator.py\n+++ b/django/core/paginator.py\n@@ -120,6 +120,10 @@ class Paginator:\n         return self.page_range\n \n+    def __iter__(self):\n+        for page_num in self.page_range:\n+            yield self.page(page_num)\n+\n     def __len__(self):\n         return self.num_pages",
+      "process_score": {
+        "total_score": 0.7709999999999999,
+        "scores": {
+          "correctness": 0.9,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.96,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B",
+        "semantic_match": 0.8999999999999999,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-12193",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.16666666666666666,
+        "recall": 0.25,
+        "f1_score": 0.2,
+        "fuzzy_recall": 0.25,
+        "generated_files": [
+          "django/forms/widgets.py"
+        ],
+        "expected_files": [
+          "django/forms/widgets.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 1,
+        "gen_deletions": 3,
+        "exp_deletions": 3
+      },
+      "elapsed": 2.724165,
+      "patch": "--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -524,7 +524,9 @@ class CheckboxInput(Input):\n     def get_context(self, name, value, attrs):\n         if self.check_test is not None:\n             value = self.check_test(value)\n-        if value:\n-            attrs = attrs or {}\n-            attrs['checked'] = True\n+        attrs = attrs.copy() if attrs else {}\n+        if value:\n+            attrs['checked'] = True\n         context = super().get_context(name, value, attrs)\n        ",
+      "process_score": {
+        "total_score": 0.4775,
+        "scores": {
+          "correctness": 0.25,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.7,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.25,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10908",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.16666666666666666,
+        "recall": 0.6666666666666666,
+        "f1_score": 0.26666666666666666,
+        "fuzzy_recall": 0.6666666666666666,
+        "generated_files": [
+          "sklearn/feature_extraction/text.py"
+        ],
+        "expected_files": [
+          "sklearn/feature_extraction/text.py"
+        ],
+        "gen_additions": 8,
+        "exp_additions": 3,
+        "gen_deletions": 4,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.412891,
+      "patch": "--- a/sklearn/feature_extraction/text.py\n+++ b/sklearn/feature_extraction/text.py\n@@ -1349,10 +1349,18 @@ class CountVectorizer(_VectorizerMixin, BaseEstimator):\n \n     def get_feature_names(self):\n         \"\"\"Array mapping from feature integer indices to feature name\"\"\"\n-        if not hasattr(self, 'vocabulary_'):\n-            raise NotFittedError(\"CountVectorizer - Vocabulary wasn't fitted.\")\n-        return [t for t, i in sorted(self.vocabulary_.items(),\n-                                    ",
+      "process_score": {
+        "total_score": 0.6799999999999999,
+        "scores": {
+          "correctness": 0.667,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.867,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "C+",
+        "semantic_match": 0.6666666666666666,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-11211",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/contricontenttypes/fields.py"
+        ],
+        "expected_files": [
+          "django/dmodels/fields/__init__.py"
+        ],
+        "gen_additions": 16,
+        "exp_additions": 4,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 6.782565,
+      "patch": "--- a/django/contrib/contenttypes/fields.py\n+++ b/django/contrib/contenttypes/fields.py\n@@ -646,7 +646,18 @@ class GenericForeignKey:\n     def get_prefetch_queryset(self, instances, queryset=None):\n         # instances: list of model instances on which this GFK is accessed\n         # queryset: base queryset for the related objects\n-        return None\n+        # Collect the content_type ids and object_ids for all instances.\n+        from collections import defaultdict\n+        ct_map = defaultdi",
+      "process_score": {
+        "total_score": 0.25,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-16667",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/forms/widgets.py"
+        ],
+        "expected_files": [
+          "django/forms/widgets.py"
+        ],
+        "gen_additions": 7,
+        "exp_additions": 2,
+        "gen_deletions": 7,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.154446,
+      "patch": "--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -1157,7 +1157,11 @@ class SelectDateWidget(Widget):\n         y = data.get(year_field)\n         m = data.get(month_field)\n         d = data.get(day_field)\n-        if y and m and d:\n-            try:\n-                date_value = datetime.date(int(y), int(m), int(d))\n-            except ValueError:\n-                return \"%s-%s-%s\" % (y, m, d)\n-            else:\n-                return date_value\n+        if y and m and d:\n+         ",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pydata__xarray-2905",
+      "repo": "pydata/xarray",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.08333333333333333,
+        "recall": 0.3333333333333333,
+        "f1_score": 0.13333333333333333,
+        "fuzzy_recall": 0.6,
+        "generated_files": [
+          "xarray/core/variable.py"
+        ],
+        "expected_files": [
+          "xarray/core/variable.py"
+        ],
+        "gen_additions": 10,
+        "exp_additions": 2,
+        "gen_deletions": 2,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.383068,
+      "patch": "--- a/xarray/core/variable.py\n+++ b/xarray/core/variable.py\n@@ -171,8 +171,14 @@ def as_compatible_data(data):\n     # don't allow pandas or xarray objects as values for a Variable\n-    if hasattr(data, \"values\"):\n-        data = data.values\n+    import pandas as pd\n+    # Only unwrap .values for known array-like types, not arbitrary objects with a .values attribute\n+    if (\n+        hasattr(data, \"values\")\n+        and (\n+            isinstance(data, (pd.Series, pd.Index, pd.DataFrame))\n+      ",
+      "process_score": {
+        "total_score": 0.654,
+        "scores": {
+          "correctness": 0.6,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.84,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "C+",
+        "semantic_match": 0.6,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-14493",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/contristaticfiles/storage.py"
+        ],
+        "expected_files": [
+          "django/contristaticfiles/storage.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 2,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.658615,
+      "patch": "--- a/django/contrib/staticfiles/storage.py\n+++ b/django/contrib/staticfiles/storage.py\n@@ -245,10 +245,14 @@ class ManifestStaticFilesStorage(StaticFilesStorage):\n         for i in range(self.max_post_process_passes):\n             # ...\n             substitutions = False\n             # ... main loop that may set substitutions = True ...\n             if not substitutions:\n                 break\n-        if substitutions:\n-            self.save_manifest()\n+        # substitutions is only set if t",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-9230",
+      "repo": "sphinx-doc/sphinx",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sphinx/domains/python/field.py"
+        ],
+        "expected_files": [
+          "sphinx/util/docfields.py"
+        ],
+        "gen_additions": 35,
+        "exp_additions": 1,
+        "gen_deletions": 3,
+        "exp_deletions": 1
+      },
+      "elapsed": 12.422344,
+      "patch": "--- a/sphinx/domains/python/field.py\n+++ b/sphinx/domains/python/field.py\n@@ -186,7 +186,11 @@ class PyTypedField(GroupedField):\n         # parse the type field and create cross-references\n         if typ:\n-            type_nodes = self.make_xref_type(typ, env)\n+            # Fix: handle dict(str, str) and similar types with parentheses\n+            if re.match(r'^\\w+\\([^\\)]+\\)$', typ):\n+                # Convert dict(str, str) -> dict(str, str)\n+                type_nodes = self.make_xref_type(",
+      "process_score": {
+        "total_score": 0.25,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-11163",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/forms/models.py"
+        ],
+        "expected_files": [
+          "django/forms/models.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.729585,
+      "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -90,7 +90,9 @@ def model_to_dict(instance, fields=None, exclude=None):\n     for f in opts.concrete_fields + opts.many_to_many:\n-        if fields and f.name not in fields:\n+        if fields is not None and f.name not in fields:\n             continue\n         if exclude and f.name in exclude:\n             continue",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-14580",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1_score": 0.4,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/dmigrations/serializer.py"
+        ],
+        "expected_files": [
+          "django/dmigrations/serializer.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 4,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.787811,
+      "patch": "--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -273,7 +273,7 @@\n class TypeSerializer(BaseSerializer):\n     def serialize(self):\n-        special_cases = [\n-            (models.Model, \"models.Model\", []),\n-            (type(None), 'type(None)', []),\n-        ]\n+        special_cases = [\n+            (models.Model, \"models.Model\", ['from django.db import models']),\n+            (type(None), 'type(None)', []),\n+        ]\n         for case, string, imports in s",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-16255",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.125,
+        "recall": 0.5,
+        "f1_score": 0.2,
+        "fuzzy_recall": 0.9,
+        "generated_files": [
+          "django/contrisitemaps/__init__.py"
+        ],
+        "expected_files": [
+          "django/contrisitemaps/__init__.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 4,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.916247,
+      "patch": "--- a/django/contrib/sitemaps/__init__.py\n+++ b/django/contrib/sitemaps/__init__.py\n@@ -168,8 +168,10 @@ class Sitemap:\n     def get_latest_lastmod(self):\n         if not hasattr(self, \"lastmod\"):\n             return None\n         if callable(self.lastmod):\n-            try:\n-                return max([self.lastmod(item) for item in self.items()])\n-            except TypeError:\n-                return None\n+            try:\n+                return max((self.lastmod(item) for item in self.items(",
+      "process_score": {
+        "total_score": 0.771,
+        "scores": {
+          "correctness": 0.9,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.96,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B",
+        "semantic_match": 0.9,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-9591",
+      "repo": "sphinx-doc/sphinx",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.26666666666666666,
+        "generated_files": [
+          "sphinx/domains/python/__init__.py"
+        ],
+        "expected_files": [
+          "sphinx/domains/python.py"
+        ],
+        "gen_additions": 11,
+        "exp_additions": 2,
+        "gen_deletions": 3,
+        "exp_deletions": 1
+      },
+      "elapsed": 11.224466,
+      "patch": "--- a/sphinx/domains/python/__init__.py\n+++ b/sphinx/domains/python/__init__.py\n@@ -1697,8 +1697,19 @@ class PyPropertylike(_PyObject):\n         if self.objtype == 'property':\n             if getattr(obj, 'fget', None) is not None:\n                 sig = inspect.signature(obj.fget)\n-                if sig.return_annotation is not inspect.Signature.empty:\n-                    return_annotation = format_annotation(sig.return_annotation)\n-                    signode += addnodes.desc_annotation(f\": ",
+      "process_score": {
+        "total_score": 0.35666666666666663,
+        "scores": {
+          "correctness": 0.267,
+          "process": 0.3,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.133,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.26666666666666666,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-21612",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.15384615384615385,
+        "recall": 1.0,
+        "f1_score": 0.2666666666666667,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sympy/printing/tests/test_str.py",
+          "sympy/printing/str.py"
+        ],
+        "expected_files": [
+          "sympy/printing/str.py"
+        ],
+        "gen_additions": 8,
+        "exp_additions": 1,
+        "gen_deletions": 5,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.884221,
+      "patch": "--- a/sympy/printing/str.py\n+++ b/sympy/printing/str.py\n@@ -333,7 +333,9 @@\n                     b.append(apow(item))\n                 else:\n-                    if (len(item.args[0].args) != 1 and\n-                            isinstance(item.base, Mul)):\n-                        # To avoid situations like #14160\n-                        pow_paren.append(item)\n-                    b.append(item.base)\n+                    if (len(item.args[0].args) != 1 and\n+                            isinstance",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-12125",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.8,
+        "generated_files": [
+          "django/dmigrations/serializer.py"
+        ],
+        "expected_files": [
+          "django/dmigrations/serializer.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 1,
+        "gen_deletions": 5,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.232807,
+      "patch": "--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -263,10 +263,18 @@ class TypeSerializer(BaseSerializer):\n         # Special-case some built-in types.\n         if value is type(None):\n             return \"type(None)\", set()\n-        module = value.__module__\n-        name = value.__name__\n-        if module == \"builtins\":\n-            return name, set()\n-        return \"%s.%s\" % (module, name), {\"import %s\" % module}\n+        module = value.__module__\n+       ",
+      "process_score": {
+        "total_score": 0.732,
+        "scores": {
+          "correctness": 0.8,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.92,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B-",
+        "semantic_match": 0.8,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-17087",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/dmigrations/serializer.py"
+        ],
+        "expected_files": [
+          "django/dmigrations/serializer.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.422399,
+      "patch": "--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -168,7 +168,8 @@ class FunctionTypeSerializer(BaseSerializer):\n         ):\n             klass = self.value.__self__\n             module = klass.__module__\n-            return \"%s.%s.%s\" % (module, klass.__name__, self.value.__name__), {\n+            return \"%s.%s.%s\" % (module, klass.__qualname__, self.value.__name__), {\n                 \"import %s\" % module\n             }\n         # Further error checking",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13480",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sympy/functions/elementary/hyperbolic.py"
+        ],
+        "expected_files": [
+          "sympy/functions/elementary/hyperbolic.py"
+        ],
+        "gen_additions": 1,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.913662,
+      "patch": "--- a/sympy/functions/elementary/hyperbolic.py\n+++ b/sympy/functions/elementary/hyperbolic.py\n@@ -587,7 +587,7 @@ class coth(HyperbolicFunction):\n         if arg.func is log:\n             t = arg.args[0]\n             cothm = t.func(-t.args[0])\n-            if cotm is S.ComplexInfinity:\n+            if cothm is S.ComplexInfinity:\n                 return S.Zero\n             return cothm\n         if arg.is_zero:",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pylint-dev__pylint-6903",
+      "repo": "pylint-dev/pylint",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "pylint/lint/run.py"
+        ],
+        "expected_files": [
+          "pylint/lint/run.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 6,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 1.504198,
+      "patch": "--- a/pylint/lint/run.py\n+++ b/pylint/lint/run.py\n@@ -58,7 +58,9 @@\n         if shares_path.is_file():\n             with open(shares_path, \"rb\") as f:\n                 shares = int(f.read())\n-            return int(shares / 1024)\n+            # Ensure at least 1 CPU is returned\n+            return max(1, int(shares / 1024))\n     except Exception:\n         pass\n     return os.cpu_count() or 1",
+      "process_score": {
+        "total_score": 0.38,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.6,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14053",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sklearn/tree/_export.py"
+        ],
+        "expected_files": [
+          "sklearn/tree/export.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 1.470325,
+      "patch": "--- a/sklearn/tree/_export.py\n+++ b/sklearn/tree/_export.py\n@@ -889,7 +889,11 @@ def export_text(decision_tree, feature_names=None, max_depth=10,\n         if feature_names is not None:\n-            name = feature_names[feature]\n+            # feature can be -2 for leaves, but we only use feature_names for splits\n+            if 0 <= feature < len(feature_names):\n+                name = feature_names[feature]\n+            else:\n+                name = \"feature_{}\".format(feature)\n         else:\n ",
+      "process_score": {
+        "total_score": 0.27999999999999997,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-11964",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/fields/__init__.py"
+        ],
+        "expected_files": [
+          "django/dmodels/enums.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 6,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.54796,
+      "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -244,7 +244,13 @@ class Field(RegisterLookupMixin):\n         if value is None or value == '':\n             return None\n         if self.choices is not None:\n-            return self.choices.__class__(value)\n+            # If choices is an Enum subclass, return the raw value, not the Enum instance.\n+            choices_class = getattr(self.choices, 'field', None)\n+            if hasattr(self.choices, '__class__",
+      "process_score": {
+        "total_score": 0.27999999999999997,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pydata__xarray-4695",
+      "repo": "pydata/xarray",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "xarray/core/dataset.py"
+        ],
+        "expected_files": [
+          "xarray/core/dataarray.py"
+        ],
+        "gen_additions": 11,
+        "exp_additions": 1,
+        "gen_deletions": 5,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.748656,
+      "patch": "--- a/xarray/core/dataset.py\n+++ b/xarray/core/dataset.py\n@@ -1607,10 +1607,18 @@ class Dataset(Mapping, AttrAccessMixin, ImplementsArrayReduce):\n     def sel(\n         self, indexers=None, method=None, tolerance=None, drop=False, **indexers_kwargs\n     ):\n-        indexers = either_dict_or_kwargs(indexers, indexers_kwargs, 'sel')\n-        pos_indexers, new_indexes = remap_label_indexers(\n-            self, indexers=indexers, method=method, tolerance=tolerance)\n-        result = self.isel(indexe",
+      "process_score": {
+        "total_score": 0.27999999999999997,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-10097",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.9,
+        "generated_files": [
+          "django/core/validators.py"
+        ],
+        "expected_files": [
+          "django/core/validators.py"
+        ],
+        "gen_additions": 14,
+        "exp_additions": 1,
+        "gen_deletions": 8,
+        "exp_deletions": 1
+      },
+      "elapsed": 9.175387,
+      "patch": "--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -74,7 +74,13 @@ class URLValidator(RegexValidator):\n-    ul = '\\u00a1-\\uffff'  # Unicode letters range (must not be a raw string).\n-    # IP patterns and host patterns omitted for brevity\n-    regex = re.compile(\n-        r'^(?:[a-z0-9\\.\\-\\+]*)://'  # scheme is validated separately\n-        r'(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?'  # user:pass authentication\n-        r'(?:' + host_re + r')'  # host\n-        r'(?::\\d{2,5})?'  # port\n-   ",
+      "process_score": {
+        "total_score": 0.741,
+        "scores": {
+          "correctness": 0.9,
+          "process": 0.7,
+          "efficiency": 0.8,
+          "collaboration": 0.3,
+          "understanding": 0.96,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B-",
+        "semantic_match": 0.9,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-12273",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.26666666666666666,
+        "generated_files": [
+          "django/dmodels/base.py"
+        ],
+        "expected_files": [
+          "django/dmodels/base.py"
+        ],
+        "gen_additions": 7,
+        "exp_additions": 3,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.873143,
+      "patch": "--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -808,6 +808,17 @@ class Model(metaclass=ModelBase):\n     def save(self, force_insert=False, force_update=False, using=None,\n              update_fields=None):\n         # ... existing code ...\n+        # If pk is set to None, also reset all parent link fields to None.\n+        if self._meta.pk.attname in self.__dict__ and self.__dict__[self._meta.pk.attname] is None:\n+            for parent_link in self._meta.get_parent_list():\n+   ",
+      "process_score": {
+        "total_score": 0.484,
+        "scores": {
+          "correctness": 0.267,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.707,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.26666666666666666,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13779",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.05555555555555555,
+        "recall": 0.5,
+        "f1_score": 0.09999999999999999,
+        "fuzzy_recall": 0.9,
+        "generated_files": [
+          "sklearn/ensemble/_voting.py"
+        ],
+        "expected_files": [
+          "sklearn/ensemble/voting.py"
+        ],
+        "gen_additions": 10,
+        "exp_additions": 2,
+        "gen_deletions": 8,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.351909,
+      "patch": "--- a/sklearn/ensemble/_voting.py\n+++ b/sklearn/ensemble/_voting.py\n@@ -340,7 +340,10 @@ class _BaseVoting(BaseEstimator, MetaEstimatorMixin, ClassifierMixin, RegressorMixin, TransformerMixin):\n         # check if sample_weight is supported by underlying estimators\n         if sample_weight is not None:\n-            for name, est in self.estimators_:\n-                if hasattr(est, \"fit\"):\n-                    fit_params = _get_fit_params(est, \"sample_weight\")\n-                    if not fit_pa",
+      "process_score": {
+        "total_score": 0.68,
+        "scores": {
+          "correctness": 0.9,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.45,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "C+",
+        "semantic_match": 0.9,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-15017",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sympy/tensor/array/ndim_array.py"
+        ],
+        "expected_files": [
+          "sympy/tensor/array/dense_ndim_array.py"
+        ],
+        "gen_additions": 4,
+        "exp_additions": 1,
+        "gen_deletions": 3,
+        "exp_deletions": 1
+      },
+      "elapsed": 2.027098,
+      "patch": "--- a/sympy/tensor/array/ndim_array.py\n+++ b/sympy/tensor/array/ndim_array.py\n@@ -206,7 +206,11 @@\n     def __len__(self):\n-        if self.shape == ():\n-            return 0\n-        return self.shape[0]\n+        if self.shape == ():\n+            # Rank-0 array (scalar) has one element\n+            return 1\n+        return self.shape[0]",
+      "process_score": {
+        "total_score": 0.27999999999999997,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7205",
+      "repo": "pytest-dev/pytest",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.3333333333333333,
+        "recall": 0.6666666666666666,
+        "f1_score": 0.4444444444444444,
+        "fuzzy_recall": 0.9333333333333332,
+        "generated_files": [
+          "src/_pytest/setuponly.py"
+        ],
+        "expected_files": [
+          "src/_pytest/setuponly.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.348293,
+      "patch": "--- a/src/_pytest/setuponly.py\n+++ b/src/_pytest/setuponly.py\n@@ -1,6 +1,7 @@\n import pytest\n from _pytest.fixtures import FixtureDef\n from _pytest.config import hookimpl\n+from _pytest._io.saferepr import saferepr\n \n \n def pytest_addoption(parser):\n@@ -66,7 +67,10 @@ def _show_fixture_action(fixturedef, msg):\n     if hasattr(fixturedef, \"cached_param\"):\n-        tw.write(\"[{}]\".format(fixturedef.cached_param))\n+        # Use saferepr to avoid BytesWarning and for better display of non-str params",
+      "process_score": {
+        "total_score": 0.7839999999999999,
+        "scores": {
+          "correctness": 0.933,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.973,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B",
+        "semantic_match": 0.9333333333333332,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8721",
+      "repo": "sphinx-doc/sphinx",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.16666666666666666,
+        "recall": 0.3333333333333333,
+        "f1_score": 0.2222222222222222,
+        "fuzzy_recall": 0.3333333333333333,
+        "generated_files": [
+          "sphinx/ext/viewcode.py"
+        ],
+        "expected_files": [
+          "sphinx/ext/viewcode.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 3,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 4.524892,
+      "patch": "--- a/sphinx/ext/viewcode.py\n+++ b/sphinx/ext/viewcode.py\n@@ -44,7 +44,10 @@ def setup(app: Sphinx) -> dict[str, Any]:\n     app.add_config_value('viewcode_import', False, 'env')\n     app.add_config_value('viewcode_enable_epub', False, 'env')\n \n-    app.connect('builder-inited', lambda app: _setup_viewcode(app))\n+    def _maybe_setup_viewcode(app):\n+        if app.builder.format == 'epub' and not app.config.viewcode_enable_epub:\n+            return\n+        _setup_viewcode(app)\n+    app.connect('",
+      "process_score": {
+        "total_score": 0.51,
+        "scores": {
+          "correctness": 0.333,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.733,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "D",
+        "semantic_match": 0.3333333333333333,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-11451",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1_score": 0.8,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "django/contriauth/backends.py"
+        ],
+        "expected_files": [
+          "django/contriauth/backends.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 2,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 2.084605,
+      "patch": "--- a/django/contrib/auth/backends.py\n+++ b/django/contrib/auth/backends.py\n@@ -19,6 +19,9 @@ class ModelBackend(BaseBackend):\n     def authenticate(self, request, username=None, password=None, **kwargs):\n         if username is None:\n             username = kwargs.get(UserModel.USERNAME_FIELD)\n+        # Shortcut if credentials are missing to avoid unnecessary DB queries and hashing.\n+        if username is None or password is None:\n+            return\n         try:\n             user = UserMode",
+      "process_score": {
+        "total_score": 0.8099999999999999,
+        "scores": {
+          "correctness": 1.0,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 1.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B+",
+        "semantic_match": 1.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11578",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.3333333333333333,
+        "recall": 0.5,
+        "f1_score": 0.4,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "sklearn/linear_model/logistic.py"
+        ],
+        "expected_files": [
+          "sklearn/linear_model/logistic.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 4.835269,
+      "patch": "--- a/sklearn/linear_model/logistic.py\n+++ b/sklearn/linear_model/logistic.py\n@@ -919,7 +919,8 @@ def _log_reg_scoring_path(X, y, train, test, pos_class=None,\n     # For each C, fit a model and compute the score\n     for coef_, intercept_ in zip(coefs, intercepts):\n-        log_reg = LogisticRegression(fit_intercept=fit_intercept)\n+        log_reg = LogisticRegression(fit_intercept=fit_intercept,\n+                                     multi_class=multi_class)\n         log_reg.coef_ = coef_[:, :-1",
+      "process_score": {
+        "total_score": 0.575,
+        "scores": {
+          "correctness": 0.5,
+          "process": 0.5,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.8,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "C-",
+        "semantic_match": 0.5,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-11179",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.8,
+        "generated_files": [
+          "django/dmodels/deletion.py"
+        ],
+        "expected_files": [
+          "django/dmodels/deletion.py"
+        ],
+        "gen_additions": 3,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.134828,
+      "patch": "--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -277,6 +277,9 @@ class Collector:\n         if not objs:\n             return\n         if self.can_fast_delete(objs[0]):\n             # Fast delete does not send signals and does not call delete()\n             query = objs[0]._base_manager.filter(pk__in=[obj.pk for obj in objs])\n             query._raw_delete(using=self.using)\n+            for obj in objs:\n+                setattr(obj, obj._meta.pk.attname, None)\n+           ",
+      "process_score": {
+        "total_score": 0.732,
+        "scores": {
+          "correctness": 0.8,
+          "process": 0.7,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.92,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "B-",
+        "semantic_match": 0.8,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    },
+    {
+      "instance_id": "django__django-12663",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/fields/__init__.py"
+        ],
+        "expected_files": [
+          "django/dmodels/sql/query.py"
+        ],
+        "gen_additions": 5,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 1
+      },
+      "elapsed": 3.608942,
+      "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -13,6 +13,7 @@\n import copy\n import datetime\n import decimal\n+from django.utils.functional import SimpleLazyObject\n import functools\n import operator\n import warnings\n@@ -965,7 +966,11 @@\n     def get_prep_value(self, value):\n         if value is None:\n             return None\n-        return int(value)\n+        # Unwrap SimpleLazyObject if present\n+        if isinstance(value, SimpleLazyObject):\n+            ",
+      "process_score": {
+        "total_score": 0.27999999999999997,
+        "scores": {
+          "correctness": 0.0,
+          "process": 0.3,
+          "efficiency": 1.0,
+          "collaboration": 0.3,
+          "understanding": 0.0,
+          "adaptation": 0.5
+        },
+        "weights": {
+          "correctness": 0.35,
+          "process": 0.2,
+          "efficiency": 0.15,
+          "collaboration": 0.15,
+          "understanding": 0.1,
+          "adaptation": 0.05
+        },
+        "grade": "F",
+        "semantic_match": 0.0,
+        "notes": {
+          "reproduction_gate": "not_enforced",
+          "dialogue": "not_used",
+          "review_loop": "not_used"
+        }
+      }
+    }
+  ],
+  "process_score_computed": true,
+  "avg_composite_score": 0.5215406445406449,
+  "composite_grade": "D"
+}

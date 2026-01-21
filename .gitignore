@@ -91,4 +91,4 @@ dump.rdb
 
 # Jupyter
 .ipynb_checkpoints/
-*.ipynb
+*.ipynbdata/repo_cache/
