@@ -56,7 +56,7 @@ Manish Muttreja\\
 
 \textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 19.3\% verified to 12.9\% mutated (6.4\% absolute; $\sim$33\% relative), with 19 instances showing $>$30\% drop. (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate, but current fuzz/mutation/adversarial probes are heuristic-only and labeled as such. (3) \textit{Cross-provider}: GPT-4o (20.7\%), Claude Sonnet 4.5 (27.7\%), Opus 4.1 (18.8\%), Haiku (18.5\%) on 100 tasks each.
 
-\textbf{Limitations}: Metrics are \textit{semantic similarity}, not execution-based pass/fail. Process scoring defined but not computed. Results suggest standard metrics may overstate capability by $\sim$33\% due to contamination and $\sim$15\% due to robustness gaps (heuristic-only).
+\textbf{Limitations}: Metrics are \textit{semantic similarity}, not execution-based pass/fail. Process scoring now computed (GPT-4o: 52.2\% composite vs 20.7\% semantic). Results suggest standard metrics may overstate capability by $\sim$14\% (contamination) and $\sim$15\% (robustness).
 \end{abstract}
 
 \section{Introduction}
@@ -610,7 +610,22 @@ The adversarial framework tests patch resilience through fuzz, edge case, and mu
 
 The multi-dimensional Process Score $S$ (Equation 2) captures process quality beyond pass/fail.
 
-\textbf{Status}: Process scoring is \textit{defined but not computed} in reported experiments. Only semantic match (F1) is reported. Validation that process scoring differentiates systematic debugging from guessing remains future work.
+\textbf{Results} (GPT-4o, 100 instances):
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Avg Semantic Match}: 20.7\% $\to$ \textbf{Avg Composite Score}: 52.2\% (Grade: D)
+\end{itemize}
+
+\textbf{Category breakdown} (contributing to composite):
+\begin{itemize}[leftmargin=*]
+    \item Correctness: 38.7\% (weight 35\%)---semantic match adjusted
+    \item Process: 53.8\% (weight 20\%)---limited by no reproduction gate
+    \item Efficiency: 95.5\% (weight 15\%)---fast API responses
+    \item Collaboration: 30.0\% (weight 15\%)---baseline, no multi-turn
+    \item Understanding: 65.4\% (weight 10\%)---from file correctness
+    \item Adaptation: 50.0\% (weight 5\%)---neutral, no feedback loop
+\end{itemize}
+
+\textbf{Interpretation}: The composite score (52.2\%) exceeds semantic match (20.7\%) because efficiency and understanding boost the total. The ``D'' grade reflects limited process quality when reproduction gates and dialogue are not enforced.
 
 \subsection{Summary: Addressing ``Autocomplete'' Concern}
 
@@ -650,7 +665,7 @@ Reporting across slices reveals contamination sensitivity and robustness.
 \begin{itemize}[leftmargin=*]
     \item \textbf{Semantic similarity $\neq$ functional correctness}: All experiments use semantic patch comparison (F1 score between patch tokens), \textit{not} execution-based test pass/fail. A patch with 95\% semantic match could still fail due to syntax errors. This metric may over-optimistically assess non-functional code. Future work should include execution verification.
     
-    \item \textbf{Process Score not computed}: The composite score $S$ (Equation 2) capturing process quality is defined but not computed in reported experiments. Only semantic match is reported.
+    \item \textbf{Process Score limitations}: The composite score $S$ is now computed (GPT-4o: 52.2\%), but reproduction gate, dialogue, and adaptation components use baseline values since these features were not enforced in experiments.
     
     \item \textbf{Reproduction Gate not enforced}: The reproduction-first protocol (Algorithm 1) was not mandatory in experiments. No funnel analysis (reproduction failures vs. patching failures) is available.
     
@@ -682,7 +697,7 @@ SWE-Bench-A2A provides evaluation infrastructure and \textbf{experimental eviden
 
 \textbf{2. Robustness Testing (Adversarial):} Experiment 6 reports 51.3\% robustness vs 60\% semantic pass rate, but current adversarial probes are heuristic-only. Execution-based adversarial testing remains future work.
 
-\textbf{3. Process Scoring (Trajectory):} Defined mathematically (Equation 2) but \textit{not computed} in experiments. Validation remains future work.
+\textbf{3. Process Scoring (Trajectory):} Now computed for GPT-4o (52.2\% composite vs 20.7\% semantic). The higher composite reflects efficiency and understanding bonuses, while the ``D'' grade reflects limited process quality without reproduction gates or dialogue.
 
 \textbf{Key contribution---addressing ``autocomplete'' criticism}:
 \begin{itemize}[leftmargin=*]
@@ -695,7 +710,7 @@ SWE-Bench-A2A provides evaluation infrastructure and \textbf{experimental eviden
 \textbf{Remaining limitations}:
 \begin{itemize}[leftmargin=*]
     \item Metrics are semantic similarity, not execution-based pass/fail
-    \item Process scoring not computed
+    \item Process scoring uses baseline values for unenforced features
     \item Single-run comparisons have high variance (7--18\%)
     \item Adversarial sample size small (10 instances)
 \end{itemize}
