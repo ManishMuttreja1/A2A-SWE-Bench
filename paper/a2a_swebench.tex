@@ -54,7 +54,7 @@ Manish Muttreja\\
 \begin{abstract}
  SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems achieve 65\%+ resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches; (2) \textbf{patch-only scoring}---evaluation ignores engineering process; (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through: \textit{retro-holdout mutations} \cite{haimes2024retroholdout}, \textit{adversarial testing}, and \textit{trajectory-based process scoring}.
 
-\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: GPT-4o (38.7\% avg across runs, range 36-45\%), Claude Sonnet 4.5 (27.7\%), Opus 4.1 (16.7\%), Haiku (18.9\%) on 100 tasks each.
+\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: GPT-4o (39.9\% avg across 3 runs, range 36-45\%), Claude Sonnet 4.5 (27.7\%), Opus 4.1 (15.0\%), Haiku (18.5\%) on 100 tasks each.
 
 \textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (single runs despite 36-45\% observed variance).
 
@@ -536,7 +536,7 @@ Mutation Score & 22.0\% \\
 Metric & Claude 3 Haiku & Opus 4.1 & \textbf{Sonnet 4.5} \\
 \midrule
 Tasks Completed & 98/100 & 90/100 & \textbf{100/100} \\
-Avg Semantic Match & 18.9\% & 16.7\% & \textbf{27.7\%} \\
+Avg Semantic Match & 18.5\% & 15.0\% & \textbf{27.7\%} \\
 High Match ($\geq$70\%) & 1 & 0 & \textbf{8} \\
 Perfect Match ($\geq$95\%) & 0 & 0 & 0 \\
 Total Tokens & 92,810 & 114,760 & 103,511 \\
@@ -554,8 +554,8 @@ Model & Tasks & Avg Match & High ($\geq$70\%) & Provider \\
 \midrule
 \textbf{GPT-4o} & 99/100 & \textbf{38.7\%} & \textbf{31} & OpenAI \\
 Claude Sonnet 4.5 & 100/100 & 27.7\% & 8 & Anthropic \\
-Claude 3 Haiku & 98/100 & 18.9\% & 1 & Anthropic \\
-Claude Opus 4.1 & 90/100 & 16.7\% & 0 & Anthropic \\
+Claude 3 Haiku & 98/100 & 18.5\% & 1 & Anthropic \\
+Claude Opus 4.1 & 90/100 & 15.0\% & 0 & Anthropic \\
 \bottomrule
 \end{tabular}
 \caption{Cross-provider model rankings on SWE-bench (100 instances). GPT-4o: Run 2 of 3.}
@@ -563,9 +563,9 @@ Claude Opus 4.1 & 90/100 & 16.7\% & 0 & Anthropic \\
 
 \textbf{Key findings}:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{GPT-4o leads overall}: 38.7\% average F1 and 31 high-match solutions---significantly outperforming all Claude models.
-    \item \textbf{Claude Sonnet 4.5 is best Claude}: 27.7\% average F1, notably better than Opus (16.7\%) and Haiku (18.9\%).
-    \item \textbf{Opus underperforms}: Despite being the flagship model, Opus 4.1 achieved lowest average match (16.7\%) and 0 high-match solutions, possibly due to billing/rate limiting (only 90/100 tasks completed).
+    \item \textbf{GPT-4o leads overall}: 39.9\% average F1 (across 3 runs, range 36-45\%) and 31 high-match solutions---significantly outperforming all Claude models.
+    \item \textbf{Claude Sonnet 4.5 is best Claude}: 27.7\% average F1, notably better than Opus (15.0\%) and Haiku (18.5\%).
+    \item \textbf{Opus underperforms}: Despite being the flagship model, Opus 4.1 achieved lowest average match (15.0\%) and 0 high-match solutions, possibly due to billing/rate limiting (only 90/100 tasks completed).
     \item \textbf{Framework generality validated}: The A2A framework successfully evaluates 4 different models across 2 providers without modification.
 \end{enumerate}
 
