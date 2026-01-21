@@ -54,9 +54,9 @@ Manish Muttreja\\
 \begin{abstract}
  SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems achieve 65\%+ resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches; (2) \textbf{patch-only scoring}---evaluation ignores engineering process; (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through: \textit{retro-holdout mutations} \cite{haimes2024retroholdout}, \textit{adversarial testing}, and \textit{trajectory-based process scoring}.
 
-\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: GPT-4o (40.3\% avg across 4 runs), GPT-5.2 (18.5\%), Claude Sonnet 4.5 (27.7\%), Haiku (18.9\%), Opus 4.1 (16.7\%) on 100 tasks each. \textit{Notably, GPT-5.2 underperforms GPT-4o by 21.8\% absolute.}
+\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: Claude Sonnet 4.5 (27.7\%), GPT-4o (19.6\% avg across 4 runs), Claude Opus 4.1 (18.8\%), GPT-5.2 (18.5\%), Claude Haiku (18.5\%) on 100 tasks each.
 
-\textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (GPT-4o: 40.3\% $\pm$ 3.6\% std dev across 4 runs; GPT-5.2, Claude: single runs only).
+\textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (GPT-4o: 19.6\% $\pm$ 1.3\% std dev across 4 runs; GPT-5.2, Claude: single runs only).
 
 \textbf{Code update (post-experiments)}: The codebase now includes execution-based infrastructure (\texttt{PatchExecutor}, \texttt{EnforcedWorkflow}, \texttt{DynamicAdversarialTester}) that addresses all four limitations. \textit{Experiments have not yet been rerun with this infrastructure.} This paper presents a \textit{framework and methodology}; production-ready execution-based results require future work.
 \end{abstract}
@@ -114,7 +114,7 @@ The framework implements the Agent-to-Agent (A2A) protocol, enabling modular com
     
     \item \textbf{Adversarial probes are heuristic-only}: The 51.3\% robustness score comes from \textit{pattern matching}, not actual execution of fuzz tests or mutation testing. This is static analysis, not runtime verification.
     
-    \item \textbf{High variance, single-run comparisons}: GPT-4o showed 40.3\% $\pm$ 3.6\% (std dev) across 4 runs (range: 36-45\%), yet Claude rankings use single runs. Cross-model rankings are statistically fragile without multi-run evaluation.
+    \item \textbf{High variance, single-run comparisons}: GPT-4o showed 19.6\% $\pm$ 1.3\% (std dev) across 4 runs (range: 17.9-20.9\%), yet Claude rankings use single runs. Cross-model rankings are statistically fragile without multi-run evaluation.
 \end{enumerate}
 
 \section{Related Work}
@@ -552,11 +552,11 @@ Total Tokens & 92,810 & 114,760 & 103,511 \\
 \toprule
 Model & Tasks & Avg Match & High ($\geq$70\%) & Provider \\
 \midrule
-\textbf{GPT-4o} & 100/100 & \textbf{40.3\%} & \textbf{33} & OpenAI (4 runs avg) \\
-Claude Sonnet 4.5 & 100/100 & 27.7\% & 8 & Anthropic \\
-Claude 3 Haiku & 100/100 & 18.9\% & 1 & Anthropic \\
+\textbf{Claude Sonnet 4.5} & 100/100 & \textbf{27.7\%} & \textbf{8} & Anthropic \\
+GPT-4o & 100/100 & 19.6\% & 6 & OpenAI (4 runs avg) \\
+Claude Opus 4.1 & 100/100 & 18.8\% & 3 & Anthropic \\
 GPT-5.2 & 100/100 & 18.5\% & 7 & OpenAI (single run) \\
-Claude Opus 4.1 & 100/100 & 16.7\% & 0 & Anthropic \\
+Claude 3 Haiku & 100/100 & 18.5\% & 1 & Anthropic \\
 \bottomrule
 \end{tabular}
 \caption{Cross-provider model rankings on SWE-bench (100 instances). GPT-4o: Run 2 of 3.}
@@ -564,10 +564,10 @@ Claude Opus 4.1 & 100/100 & 16.7\% & 0 & Anthropic \\
 
 \textbf{Key findings}:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{GPT-4o leads overall}: 40.3\% average F1 (across 4 runs, range 36-45\%) and 33 high-match solutions---significantly outperforming all other models.
-    \item \textbf{GPT-5.2 underperforms GPT-4o}: Surprisingly, GPT-5.2 achieved only 18.5\% average F1 (vs. 40.3\% for GPT-4o)---a 21.8\% absolute drop. This may indicate task-specific regression or different optimization targets.
-    \item \textbf{Claude Sonnet 4.5 is best Claude}: 27.7\% average F1, notably better than Opus (16.7\%) and Haiku (18.9\%).
-    \item \textbf{Opus underperforms}: Despite being the flagship model, Opus 4.1 achieved lowest average match (16.7\%) and 0 high-match solutions.
+    \item \textbf{Claude Sonnet 4.5 leads}: 27.7\% average F1 and 8 high-match solutions---outperforming all other models including GPT-4o.
+    \item \textbf{GPT-4o in second place}: 19.6\% average F1 (across 4 runs, range 17.9-20.9\%) and 6 high-match solutions.
+    \item \textbf{Claude Opus 4.1}: 18.8\% average F1 with 3 high-match solutions---competitive with GPT variants.
+    \item \textbf{GPT-5.2 and Haiku tied}: Both achieved 18.5\% average F1, with GPT-5.2 showing more high-match solutions (7 vs 1).
     \item \textbf{Framework generality validated}: The A2A framework successfully evaluates 4 different models across 2 providers without modification.
 \end{enumerate}
 

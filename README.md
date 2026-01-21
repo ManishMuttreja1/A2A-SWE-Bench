@@ -48,13 +48,13 @@ python test_gpt4o_a2a_full.py --tasks 10
 
 | Model | Avg Semantic Match | High Match (≥70%) | Provider |
 |-------|-------------------|-------------------|----------|
-| **GPT-4o** | **40.3%** | **33** | OpenAI (4 runs avg) |
-| Claude Sonnet 4.5 | 27.7% | 8 | Anthropic |
-| Claude 3 Haiku | 18.9% | 1 | Anthropic |
+| **Claude Sonnet 4.5** | **27.7%** | **8** | Anthropic |
+| GPT-4o | 19.6% | 6 | OpenAI (4 runs avg) |
+| Claude Opus 4.1 | 18.8% | 3 | Anthropic |
 | GPT-5.2 | 18.5% | 7 | OpenAI (single run) |
-| Claude Opus 4.1 | 16.7% | 0 | Anthropic |
+| Claude 3 Haiku | 18.5% | 1 | Anthropic |
 
-*Note: GPT-4o shows variance across runs (36-45%); GPT-5.2 and Claude results are single runs. Surprisingly, GPT-5.2 underperforms GPT-4o by 21.8% absolute.*
+*Note: GPT-4o shows variance across runs (17.9-20.9%); GPT-5.2 and Claude results are single runs. Claude Sonnet 4.5 leads all models.*
 
 ## Anti-Contamination Testing
 
