@@ -108,7 +108,10 @@ class EnforcedWorkflow:
             strict_mode=strict_mode,
             allow_mock_verification=allow_mock
         )
-        self.patch_executor = PatchExecutor()
+        # Configure patch executor based on allow_mock setting
+        from .patch_executor import ExecutionConfig
+        exec_config = ExecutionConfig(use_docker=not allow_mock)
+        self.patch_executor = PatchExecutor(exec_config)
         
         # Track workflow state per task
         self.task_state: Dict[str, Dict[str, Any]] = {}

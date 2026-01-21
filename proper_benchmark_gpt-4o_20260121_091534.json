@@ -1,0 +1,126 @@
+{
+  "timestamp": "20260121_091534",
+  "config": {
+    "model": "gpt-4o",
+    "num_tasks": 5,
+    "num_runs": 1,
+    "enforce_reproduction": false,
+    "use_execution_metrics": true,
+    "run_adversarial": false,
+    "use_docker": false,
+    "random_seed": 42,
+    "allow_heuristics": false
+  },
+  "statistics": {
+    "mean_pass_rate": 0.0,
+    "std_dev": 0,
+    "run_pass_rates": [
+      0.0
+    ],
+    "num_runs": 1,
+    "num_tasks": 5
+  },
+  "methodology": {
+    "metric_type": "execution",
+    "reproduction_enforced": false,
+    "adversarial_enabled": false,
+    "heuristics_allowed": false,
+    "docker_enabled": false,
+    "task_selection": "random_seed_42",
+    "avg_patch_size": 1200.8
+  },
+  "runs": [
+    [
+      {
+        "instance_id": "django__django-14672",
+        "repo": "django/django",
+        "run": 1,
+        "success": true,
+        "execution_pass": false,
+        "reproduction_verified": false,
+        "final_score": 0.0,
+        "score_breakdown": {
+          "reproduction": 0.0,
+          "execution": 0.0,
+          "total": 0.0
+        },
+        "tests_passed": 0,
+        "tests_failed": 0,
+        "workflow_phase": "complete",
+        "metric_type": "execution"
+      },
+      {
+        "instance_id": "sphinx-doc__sphinx-10449",
+        "repo": "sphinx-doc/sphinx",
+        "run": 1,
+        "success": true,
+        "execution_pass": false,
+        "reproduction_verified": false,
+        "final_score": 0.0,
+        "score_breakdown": {
+          "reproduction": 0.0,
+          "execution": 0.0,
+          "total": 0.0
+        },
+        "tests_passed": 0,
+        "tests_failed": 0,
+        "workflow_phase": "complete",
+        "metric_type": "execution"
+      },
+      {
+        "instance_id": "django__django-11299",
+        "repo": "django/django",
+        "run": 1,
+        "success": true,
+        "execution_pass": false,
+        "reproduction_verified": false,
+        "final_score": 0.0,
+        "score_breakdown": {
+          "reproduction": 0.0,
+          "execution": 0.0,
+          "total": 0.0
+        },
+        "tests_passed": 0,
+        "tests_failed": 0,
+        "workflow_phase": "complete",
+        "metric_type": "execution"
+      },
+      {
+        "instance_id": "django__django-14493",
+        "repo": "django/django",
+        "run": 1,
+        "success": true,
+        "execution_pass": false,
+        "reproduction_verified": false,
+        "final_score": 0.0,
+        "score_breakdown": {
+          "reproduction": 0.0,
+          "execution": 0.0,
+          "total": 0.0
+        },
+        "tests_passed": 0,
+        "tests_failed": 0,
+        "workflow_phase": "complete",
+        "metric_type": "execution"
+      },
+      {
+        "instance_id": "django__django-11551",
+        "repo": "django/django",
+        "run": 1,
+        "success": true,
+        "execution_pass": false,
+        "reproduction_verified": false,
+        "final_score": 0.0,
+        "score_breakdown": {
+          "reproduction": 0.0,
+          "execution": 0.0,
+          "total": 0.0
+        },
+        "tests_passed": 0,
+        "tests_failed": 0,
+        "workflow_phase": "complete",
+        "metric_type": "execution"
+      }
+    ]
+  ]
+}

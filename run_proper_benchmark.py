@@ -49,9 +49,8 @@ from openai import AsyncOpenAI
 
 # Import the PROPER infrastructure
 from src.execution.patch_executor import PatchExecutor, ExecutionConfig
-from src.execution.enforced_workflow import EnforcedWorkflow, WorkflowConfig
+from src.execution.enforced_workflow import EnforcedWorkflow, EnforcedWorkflowResult
 from src.adversarial.dynamic_tester import DynamicAdversarialTester
-from src.evaluation.multi_run import MultiRunExecutor
 from src.evaluation.statistical_analysis import StatisticalAnalyzer
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -270,11 +269,10 @@ async def run_proper_benchmark(config: BenchmarkConfig):
         timeout=300
     ))
     
-    workflow = EnforcedWorkflow(WorkflowConfig(
-        require_reproduction=config.enforce_reproduction,
-        require_explanation=False,
-        timeout=300
-    ))
+    workflow = EnforcedWorkflow(
+        strict_mode=config.enforce_reproduction,
+        allow_mock=not config.use_docker
+    )
     
     adversarial_tester = DynamicAdversarialTester(
         use_docker=config.use_docker,
@@ -307,7 +305,8 @@ async def run_proper_benchmark(config: BenchmarkConfig):
             }
             
             try:
-                # Step 1: Generate reproduction script
+                # Step 1: Generate reproduction script (if enforced)
+                reproduction_script = None
                 if config.enforce_reproduction:
                     repro_result = await agent.generate_reproduction_script(
                         problem, repo, test_patch
@@ -315,32 +314,20 @@ async def run_proper_benchmark(config: BenchmarkConfig):
                     
                     if not repro_result.get("success"):
                         result["success"] = False
-                        result["error"] = "reproduction_failed"
+                        result["error"] = "reproduction_generation_failed"
                         result["execution_pass"] = False
-                        print(f"  ❌ Reproduction failed")
+                        print(f"  ❌ Reproduction script generation failed")
                         run_results.append(result)
                         continue
                     
-                    # Verify reproduction via workflow
-                    workflow_result = await workflow.verify_reproduction(
-                        instance, repro_result.get("reproduction_script", "")
-                    )
-                    
-                    if not workflow_result.reproduction_verified:
-                        result["success"] = False
-                        result["error"] = "reproduction_not_verified"
-                        result["execution_pass"] = False
-                        print(f"  ❌ Reproduction not verified")
-                        run_results.append(result)
-                        continue
-                    
-                    print(f"  ✓ Reproduction verified")
-                    repro_output = workflow_result.reproduction_output
-                else:
-                    repro_output = "Reproduction gate bypassed"
+                    reproduction_script = repro_result.get("reproduction_script", "")
+                    print(f"  ✓ Reproduction script generated")
                 
                 # Step 2: Generate patch
-                patch_result = await agent.generate_patch(problem, repo, repro_output)
+                patch_result = await agent.generate_patch(
+                    problem, repo, 
+                    reproduction_script or "No reproduction script"
+                )
                 
                 if not patch_result.get("success"):
                     result["success"] = False
@@ -352,19 +339,27 @@ async def run_proper_benchmark(config: BenchmarkConfig):
                 
                 generated_patch = patch_result.get("patch", "")
                 
-                # Step 3: Execute patch (NOT semantic comparison!)
+                # Step 3: Evaluate via EnforcedWorkflow (handles reproduction + execution)
                 if config.use_execution_metrics:
-                    exec_result = await executor.execute_patch(instance, generated_patch)
+                    workflow_result = await workflow.evaluate_agent_submission(
+                        instance=instance,
+                        reproduction_script=reproduction_script,
+                        patch=generated_patch
+                    )
                     
                     result["success"] = True
-                    result["execution_pass"] = exec_result.get("execution_pass", False)
-                    result["tests_passed"] = exec_result.get("tests_passed", 0)
-                    result["tests_failed"] = exec_result.get("tests_failed", 0)
-                    result["execution_time"] = exec_result.get("execution_time", 0)
+                    result["execution_pass"] = workflow_result.execution_pass
+                    result["reproduction_verified"] = workflow_result.reproduction_verified
+                    result["final_score"] = workflow_result.final_score
+                    result["score_breakdown"] = workflow_result.score_breakdown
+                    result["tests_passed"] = workflow_result.tests_passed
+                    result["tests_failed"] = workflow_result.tests_failed
+                    result["workflow_phase"] = workflow_result.workflow_phase_reached.value
                     result["metric_type"] = "execution"
                     
-                    status = "✅" if result["execution_pass"] else "❌"
-                    print(f"  {status} Execution: {result['tests_passed']} passed, {result['tests_failed']} failed")
+                    repro_status = "✓" if workflow_result.reproduction_verified else "✗"
+                    exec_status = "✅" if workflow_result.execution_pass else "❌"
+                    print(f"  Repro: {repro_status} | {exec_status} Exec | Tests: {workflow_result.tests_passed}✓ {workflow_result.tests_failed}✗ | Score: {workflow_result.final_score:.0%}")
                 else:
                     # Fallback to semantic (NOT RECOMMENDED)
                     from src.scoring.semantic_patch import compute_patch_metrics
@@ -374,17 +369,20 @@ async def run_proper_benchmark(config: BenchmarkConfig):
                     result["metric_type"] = "semantic"
                     print(f"  ⚠️ Semantic: {result['semantic_match']*100:.0f}%")
                 
-                # Step 4: Adversarial testing (optional)
+                # Step 4: Adversarial testing (optional, only if execution passed)
                 if config.run_adversarial and adversarial_tester and result.get("execution_pass"):
-                    adv_result = await adversarial_tester.run_adversarial_suite(
-                        instance, generated_patch
-                    )
-                    result["adversarial"] = {
-                        "fuzz_pass_rate": adv_result.fuzz_result.pass_rate if adv_result.fuzz_result else None,
-                        "mutation_pass_rate": adv_result.mutation_result.pass_rate if adv_result.mutation_result else None,
-                        "overall_robustness": adv_result.overall_robustness
-                    }
-                    print(f"  🔬 Adversarial robustness: {adv_result.overall_robustness*100:.0f}%")
+                    try:
+                        adv_result = await adversarial_tester.run_adversarial_suite(
+                            instance, generated_patch
+                        )
+                        result["adversarial"] = {
+                            "fuzz_pass_rate": adv_result.fuzz_result.pass_rate if adv_result.fuzz_result else None,
+                            "mutation_pass_rate": adv_result.mutation_result.pass_rate if adv_result.mutation_result else None,
+                            "overall_robustness": adv_result.overall_robustness
+                        }
+                        print(f"  🔬 Adversarial robustness: {adv_result.overall_robustness*100:.0f}%")
+                    except Exception as adv_e:
+                        print(f"  ⚠️ Adversarial testing skipped: {adv_e}")
                 
             except Exception as e:
                 result["success"] = False

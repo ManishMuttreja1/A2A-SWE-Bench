@@ -1,0 +1,63 @@
+{
+  "timestamp": "20260121_091304",
+  "config": {
+    "model": "gpt-4o",
+    "num_tasks": 3,
+    "num_runs": 1,
+    "enforce_reproduction": true,
+    "use_execution_metrics": true,
+    "run_adversarial": false,
+    "use_docker": false,
+    "random_seed": 42,
+    "allow_heuristics": false
+  },
+  "statistics": {
+    "mean_pass_rate": 0.0,
+    "std_dev": 0,
+    "run_pass_rates": [
+      0.0
+    ],
+    "num_runs": 1,
+    "num_tasks": 3
+  },
+  "methodology": {
+    "metric_type": "execution",
+    "reproduction_enforced": true,
+    "adversarial_enabled": false,
+    "heuristics_allowed": false,
+    "docker_enabled": false,
+    "task_selection": "random_seed_42",
+    "avg_patch_size": 991.6666666666666
+  },
+  "runs": [
+    [
+      {
+        "instance_id": "django__django-14672",
+        "repo": "django/django",
+        "run": 1,
+        "success": false,
+        "execution_pass": false,
+        "reproduction_verified": false,
+        "error": "'EnforcedWorkflowResult' object has no attribute 'reproduction_score'"
+      },
+      {
+        "instance_id": "sphinx-doc__sphinx-10449",
+        "repo": "sphinx-doc/sphinx",
+        "run": 1,
+        "success": false,
+        "execution_pass": false,
+        "reproduction_verified": false,
+        "error": "'EnforcedWorkflowResult' object has no attribute 'reproduction_score'"
+      },
+      {
+        "instance_id": "django__django-11299",
+        "repo": "django/django",
+        "run": 1,
+        "success": false,
+        "execution_pass": false,
+        "reproduction_verified": false,
+        "error": "'EnforcedWorkflowResult' object has no attribute 'reproduction_score'"
+      }
+    ]
+  ]
+}
