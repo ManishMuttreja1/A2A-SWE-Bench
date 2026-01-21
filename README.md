@@ -49,7 +49,7 @@ python test_gpt4o_a2a_full.py --tasks 10
 | Model | Avg Semantic Match | High Match (≥70%) | Provider |
 |-------|-------------------|-------------------|----------|
 | **Claude Sonnet 4.5** | **27.7%** | **8** | Anthropic |
-| GPT-4o | 19.6% | 6 | OpenAI (4 runs avg) |
+| GPT-4o | 19.6% | 10 | OpenAI (4 runs avg) |
 | Claude Opus 4.1 | 18.8% | 3 | Anthropic |
 | GPT-5.2 | 18.5% | 7 | OpenAI (single run) |
 | Claude 3 Haiku | 18.5% | 1 | Anthropic |
