@@ -54,7 +54,7 @@ Manish Muttreja\\
 \begin{abstract}
  SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems achieve 65\%+ resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches; (2) \textbf{patch-only scoring}---evaluation ignores engineering process; (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through: \textit{retro-holdout mutations} \cite{haimes2024retroholdout}, \textit{adversarial testing}, and \textit{trajectory-based process scoring}.
 
-\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: GPT-4o (40.3\% avg across 4 runs, range 36-45\%), Claude Sonnet 4.5 (27.7\%), Haiku (18.9\%), Opus 4.1 (16.7\%) on 100 tasks each.
+\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: GPT-4o (40.3\% avg across 4 runs), GPT-5.2 (18.5\%), Claude Sonnet 4.5 (27.7\%), Haiku (18.9\%), Opus 4.1 (16.7\%) on 100 tasks each. \textit{Notably, GPT-5.2 underperforms GPT-4o by 21.8\% absolute.}
 
 \textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (GPT-4o: 40.3\% $\pm$ 3.6\% std dev across 4 runs; Claude: single runs only).
 
@@ -555,6 +555,7 @@ Model & Tasks & Avg Match & High ($\geq$70\%) & Provider \\
 \textbf{GPT-4o} & 100/100 & \textbf{40.3\%} & \textbf{33} & OpenAI (4 runs avg) \\
 Claude Sonnet 4.5 & 100/100 & 27.7\% & 8 & Anthropic \\
 Claude 3 Haiku & 100/100 & 18.9\% & 1 & Anthropic \\
+GPT-5.2 & 100/100 & 18.5\% & 7 & OpenAI \\
 Claude Opus 4.1 & 100/100 & 16.7\% & 0 & Anthropic \\
 \bottomrule
 \end{tabular}
@@ -563,9 +564,10 @@ Claude Opus 4.1 & 100/100 & 16.7\% & 0 & Anthropic \\
 
 \textbf{Key findings}:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{GPT-4o leads overall}: 40.3\% average F1 (across 4 runs, range 36-45\%) and 33 high-match solutions---significantly outperforming all Claude models.
+    \item \textbf{GPT-4o leads overall}: 40.3\% average F1 (across 4 runs, range 36-45\%) and 33 high-match solutions---significantly outperforming all other models.
+    \item \textbf{GPT-5.2 underperforms GPT-4o}: Surprisingly, GPT-5.2 achieved only 18.5\% average F1 (vs. 40.3\% for GPT-4o)---a 21.8\% absolute drop. This may indicate task-specific regression or different optimization targets.
     \item \textbf{Claude Sonnet 4.5 is best Claude}: 27.7\% average F1, notably better than Opus (16.7\%) and Haiku (18.9\%).
-    \item \textbf{Opus underperforms}: Despite being the flagship model, Opus 4.1 achieved lowest average match (16.7\%) and 0 high-match solutions. Initial API failures (10/100) were recovered via retry.
+    \item \textbf{Opus underperforms}: Despite being the flagship model, Opus 4.1 achieved lowest average match (16.7\%) and 0 high-match solutions.
     \item \textbf{Framework generality validated}: The A2A framework successfully evaluates 4 different models across 2 providers without modification.
 \end{enumerate}
 

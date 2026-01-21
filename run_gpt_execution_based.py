@@ -109,8 +109,7 @@ Generate a minimal unified diff patch to fix this issue. Output ONLY the patch c
                     {"role": "system", "content": "You are an expert bug fixer. Generate minimal, focused patches in unified diff format."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.1,
-                max_tokens=2048
+                temperature=0.1
             )
             
             patch = response.choices[0].message.content.strip()
