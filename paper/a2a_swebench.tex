@@ -56,7 +56,9 @@ Manish Muttreja\\
 
 \textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: GPT-4o (38.7\% avg across runs, range 36-45\%), Claude Sonnet 4.5 (27.7\%), Opus 4.1 (16.7\%), Haiku (18.9\%) on 100 tasks each.
 
-\textbf{Critical limitations}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced} in experiments; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (single runs despite 36-45\% observed variance). This paper presents a \textit{framework and methodology}, not production-ready execution-based evaluation.
+\textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (single runs despite 36-45\% observed variance).
+
+\textbf{Code update (post-experiments)}: The codebase now includes execution-based infrastructure (\texttt{PatchExecutor}, \texttt{EnforcedWorkflow}, \texttt{DynamicAdversarialTester}) that addresses all four limitations. \textit{Experiments have not yet been rerun with this infrastructure.} This paper presents a \textit{framework and methodology}; production-ready execution-based results require future work.
 \end{abstract}
 
 \section{Introduction}

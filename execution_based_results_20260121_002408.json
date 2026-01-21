@@ -1,0 +1,65 @@
+{
+  "experiment": "execution_based",
+  "timestamp": "2026-01-21T00:24:08.479629",
+  "config": {
+    "num_tasks": 3,
+    "num_runs": 1,
+    "use_mock": true,
+    "reproduction_gate": "ENFORCED",
+    "metrics": "execution_pass_fail",
+    "adversarial": "dynamic_testing"
+  },
+  "aggregate": {
+    "reproduction_rate": 1.0,
+    "execution_pass_rate": 0.0,
+    "avg_robustness": 0.4753333333333334,
+    "avg_final_score": 0.0
+  },
+  "per_instance": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "reproduction_attempted": true,
+      "reproduction_verified": true,
+      "reproduction_error": null,
+      "execution_passed": false,
+      "execution_error": null,
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "adversarial_robustness": 0.394,
+      "fuzz_pass_rate": 0.38,
+      "mutation_survival_rate": 0.4,
+      "final_score": 0.0,
+      "grade": "F"
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "reproduction_attempted": true,
+      "reproduction_verified": true,
+      "reproduction_error": null,
+      "execution_passed": false,
+      "execution_error": null,
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "adversarial_robustness": 0.632,
+      "fuzz_pass_rate": 0.74,
+      "mutation_survival_rate": 0.5,
+      "final_score": 0.0,
+      "grade": "F"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "reproduction_attempted": true,
+      "reproduction_verified": true,
+      "reproduction_error": null,
+      "execution_passed": false,
+      "execution_error": null,
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "adversarial_robustness": 0.4,
+      "fuzz_pass_rate": 0.4,
+      "mutation_survival_rate": 0.4,
+      "final_score": 0.0,
+      "grade": "F"
+    }
+  ]
+}
