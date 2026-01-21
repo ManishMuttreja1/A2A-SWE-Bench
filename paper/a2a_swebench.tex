@@ -54,7 +54,7 @@ Manish Muttreja\\
 \begin{abstract}
  SWE-bench has emerged as the de facto standard for evaluating language model agents on real-world software engineering tasks. While recent systems achieve 65\%+ resolution on SWE-bench Verified, the benchmark suffers from three critical limitations: (1) \textbf{data contamination}---models may have memorized repositories and patches; (2) \textbf{patch-only scoring}---evaluation ignores engineering process; (3) \textbf{static test dependence}---fixed test suites can be overfit. I present \textbf{SWE-Bench-A2A}, an evaluation framework that quantifies these gaps through: \textit{retro-holdout mutations} \cite{haimes2024retroholdout}, \textit{adversarial testing}, and \textit{trajectory-based process scoring}.
 
-\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: Claude Sonnet 4.5 (27.7\%), GPT-4o (19.6\% avg across 4 runs), Claude Opus 4.1 (18.8\%), GPT-5.2 (18.5\%), Claude Haiku (18.5\%) on 100 tasks each.
+\textbf{Key results}: (1) \textit{Contamination}: Retro-holdout testing on 100 instances shows a drop from 20.2\% verified to 17.2\% mutated (2.9\% absolute; $\sim$14\% relative), with 7 instances showing $>$50\% drop including \texttt{sklearn-14141} (100\%$\to$0\%). (2) \textit{Robustness}: Adversarial testing reports 51.3\% overall robustness vs 60\% semantic pass rate. (3) \textit{Cross-provider}: On \textbf{fair comparison} (same 22 tasks), GPT-5.2 (26.5\%) outperforms GPT-4o (19.8\%). Overall results vary by task difficulty (see limitations).
 
 \textbf{Critical limitations of reported experiments}: (1) All metrics use \textit{semantic patch similarity}, NOT execution-based pass/fail---a patch with high F1 could fail to compile; (2) Reproduction gate was \textit{not enforced}; (3) Adversarial probes are \textit{heuristic-only} (pattern matching, not execution); (4) Cross-model rankings are statistically fragile (GPT-4o: 19.6\% $\pm$ 1.3\% std dev across 4 runs; GPT-5.2, Claude: single runs only).
 
@@ -115,6 +115,8 @@ The framework implements the Agent-to-Agent (A2A) protocol, enabling modular com
     \item \textbf{Adversarial probes are heuristic-only}: The 51.3\% robustness score comes from \textit{pattern matching}, not actual execution of fuzz tests or mutation testing. This is static analysis, not runtime verification.
     
     \item \textbf{High variance, single-run comparisons}: GPT-4o showed 19.6\% $\pm$ 1.3\% (std dev) across 4 runs (range: 17.9-20.9\%), yet Claude rankings use single runs. Cross-model rankings are statistically fragile without multi-run evaluation.
+    
+    \item \textbf{CRITICAL: Non-uniform task selection}: GPT-4o was tested on the 100 \textit{easiest} tasks (sorted by patch size, avg 477 chars), while GPT-5.2 was tested on a \textit{random} sample (avg 1538 chars---3.2$\times$ harder). \textbf{On the 22 overlapping tasks, GPT-5.2 (26.5\%) outperforms GPT-4o (19.8\%).} Cross-model rankings in Table 4 are confounded by task difficulty.
 \end{enumerate}
 
 \section{Related Work}
@@ -564,10 +566,11 @@ Claude 3 Haiku & 100/100 & 18.5\% & 1 & Anthropic \\
 
 \textbf{Key findings}:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Claude Sonnet 4.5 leads}: 27.7\% average F1 and 8 high-match solutions---outperforming all other models including GPT-4o.
-    \item \textbf{GPT-4o in second place}: 19.6\% average F1 (across 4 runs, range 17.9-20.9\%) and 10 high-match solutions (avg).
-    \item \textbf{Claude Opus 4.1}: 18.8\% average F1 with 3 high-match solutions---competitive with GPT variants.
-    \item \textbf{GPT-5.2 and Haiku tied}: Both achieved 18.5\% average F1, with GPT-5.2 showing more high-match solutions (7 vs 1).
+    \item \textbf{CAVEAT}: Rankings below are confounded by non-uniform task selection. GPT-4o was tested on easier tasks (477 char avg patch) vs GPT-5.2 (1538 char avg). \textbf{On 22 common tasks: GPT-5.2 (26.5\%) $>$ GPT-4o (19.8\%)}.
+    \item \textbf{Claude Sonnet 4.5}: 27.7\% average F1 on random sample---highest among Claude models.
+    \item \textbf{GPT-4o}: 19.6\% average F1 (across 4 runs) on \textit{easy} task subset.
+    \item \textbf{GPT-5.2}: 18.5\% overall but 26.5\% on common tasks---likely underestimated due to harder task mix.
+    \item \textbf{Claude Opus/Haiku}: 18.8\% and 18.5\% respectively on random samples.
     \item \textbf{Framework generality validated}: The A2A framework successfully evaluates 4 different models across 2 providers without modification.
 \end{enumerate}
 
