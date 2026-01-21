@@ -1,0 +1,138 @@
+{
+  "timestamp": "20260121_010319",
+  "model": "gpt-4o",
+  "num_tasks": 5,
+  "metric": "semantic_patch_f1",
+  "reproduction_gate_enforced": false,
+  "heuristics_allowed": false,
+  "stats": {
+    "tokens": 6227,
+    "cost": 0.052575,
+    "tasks": 5
+  },
+  "results": [
+    {
+      "instance_id": "sympy__sympy-22914",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.2857142857142857,
+        "recall": 1.0,
+        "f1_score": 0.4444444444444445,
+        "fuzzy_recall": 1.0,
+        "generated_files": [
+          "sympy/printing/tests/test_pycode.py",
+          "sympy/printing/pycode.py"
+        ],
+        "expected_files": [
+          "sympy/printing/pycode.py"
+        ],
+        "gen_additions": 6,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 6.768737,
+      "patch": "--- a/sympy/printing/pycode.py\n+++ b/sympy/printing/pycode.py\n@@ -1,6 +1,6 @@\n \"\"\"\n Python code printer\n \n \"\"\"\n@@ -34,10 +34,12 @@ class PythonCodePrinter(AbstractPythonCodePrinter):\n     printmethod = \"_pythoncode\"\n \n     _known_functions = {\n         'Abs': 'abs',\n+        'Min': 'min',\n+        'Max': 'max',\n     }\n \n     _default_settings = dict(\n         AbstractPythonCodePrinter._default_settings,\n         fully_qualified_modules=False,\n--- a/sympy/printing/tests/test_pycode.py\n+++ b/sympy"
+    },
+    {
+      "instance_id": "sympy__sympy-23950",
+      "repo": "sympy/sympy",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.05,
+        "recall": 0.5,
+        "f1_score": 0.09090909090909091,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "sympy/sets/tests/test_contains.py",
+          "sympy/sets/contains.py"
+        ],
+        "expected_files": [
+          "sympy/sets/contains.py"
+        ],
+        "gen_additions": 13,
+        "exp_additions": 1,
+        "gen_deletions": 7,
+        "exp_deletions": 1
+      },
+      "elapsed": 6.060075,
+      "patch": "--- a/sympy/sets/contains.py\n+++ b/sympy/sets/contains.py\n@@ -1,6 +1,7 @@\n from sympy.core.basic import Basic\n from sympy.core.sympify import _sympify\n from sympy.logic.boolalg import BooleanFunction\n+from sympy.sets.sets import EmptySet\n \n \n class Contains(BooleanFunction):\n@@ -55,10 +56,18 @@ class Contains(BooleanFunction):\n         return self.args[0]\n \n     def as_set(self):\n-        raise NotImplementedError(\"Contains is a BooleanFunction whose value \"\n-            \"depends on an arg's con"
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14141",
+      "repo": "scikit-learn/scikit-learn",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "expected_files": [
+          "sklearn/utils/_show_versions.py"
+        ],
+        "gen_additions": 2,
+        "exp_additions": 1,
+        "gen_deletions": 0,
+        "exp_deletions": 0
+      },
+      "elapsed": 3.398583,
+      "patch": "--- a/sklearn/utils/_show_versions.py\n+++ b/sklearn/utils/_show_versions.py\n@@ -1,6 +1,7 @@\n \"\"\"Utility methods to print system info for debugging\"\"\"\n \n import platform\n+import joblib\n \n from ..externals._packaging.version import parse as parse_version\n \n@@ -44,6 +45,7 @@ def _get_deps_info():\n         \"Cython\": cython_version,\n         \"pandas\": pandas_version,\n         \"matplotlib\": matplotlib_version,\n+        \"joblib\": joblib.__version__,\n     }\n \n     return deps_info"
+    },
+    {
+      "instance_id": "django__django-16082",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "fuzzy_recall": 0.0,
+        "generated_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "expected_files": [
+          "django/dmodels/expressions.py"
+        ],
+        "gen_additions": 22,
+        "exp_additions": 1,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 11.364452,
+      "patch": "--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -1,6 +1,7 @@\n import copy\n import datetime\n import functools\n+import operator\n import inspect\n import itertools\n import math\n@@ -563,6 +564,7 @@ class Combinable:\n     SUB = \"-\"\n     MUL = \"*\"\n     DIV = \"/\"\n+    MOD = \"%%\"\n     POW = \"^\"\n     # Bitwise operators.\n     BITAND = \"&\"\n@@ -713,6 +715,7 @@ class CombinedExpression(SQLiteNumericMixin, Expression):\n     allowed_default = False\n \n     def __init__(self, lhs, "
+    },
+    {
+      "instance_id": "django__django-13406",
+      "repo": "django/django",
+      "success": true,
+      "comparison": {
+        "files_correct": 1.0,
+        "precision": 0.03571428571428571,
+        "recall": 0.5,
+        "f1_score": 0.06666666666666667,
+        "fuzzy_recall": 0.5,
+        "generated_files": [
+          "tests/queryset_pickle/tests.py",
+          "django/dmodels/query.py"
+        ],
+        "expected_files": [
+          "django/dmodels/query.py"
+        ],
+        "gen_additions": 27,
+        "exp_additions": 2,
+        "gen_deletions": 1,
+        "exp_deletions": 0
+      },
+      "elapsed": 11.962076,
+      "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1,6 +1,7 @@\n import copy\n import operator\n import warnings\n+from functools import partial\n \n from django.conf import settings\n from django.core import exceptions\n@@ -210,8 +211,18 @@ class QuerySet:\n \n     @query.setter\n     def query(self, value):\n+        # When a Query is assigned (e.g. after unpickling qs.query), ensure the\n+        # iterable class matches the query's selected values. Otherwise, a\n+        # values()/values"
+    }
+  ]
+}
