@@ -1,0 +1,179 @@
+{
+  "model": "test-model",
+  "num_runs": 3,
+  "timestamp": "2026-01-20T23:35:13.986073",
+  "mean_pass_rate": 0.30509332980272463,
+  "std_dev_pass_rate": 0.06457252291382859,
+  "min_pass_rate": 0.24755408333502676,
+  "max_pass_rate": 0.37493042255204356,
+  "confidence_interval_95": [
+    0.2305314028296202,
+    0.37965525677582906
+  ],
+  "variance": 0.004169610715456918,
+  "coefficient_of_variation": 0.21164842560006675,
+  "runs": [
+    {
+      "run_id": 0,
+      "timestamp": "2026-01-20T23:35:13.985450",
+      "seed": 42,
+      "pass_rate": 0.29279548352110357,
+      "total_tasks": 10,
+      "tasks_passed": 2,
+      "tasks_failed": 8,
+      "avg_execution_time": 2.100117273476477,
+      "task_results": [
+        {
+          "task_id": "task-0",
+          "passed": true
+        },
+        {
+          "task_id": "task-1",
+          "passed": true
+        },
+        {
+          "task_id": "task-2",
+          "passed": false
+        },
+        {
+          "task_id": "task-3",
+          "passed": false
+        },
+        {
+          "task_id": "task-4",
+          "passed": false
+        },
+        {
+          "task_id": "task-5",
+          "passed": false
+        },
+        {
+          "task_id": "task-6",
+          "passed": false
+        },
+        {
+          "task_id": "task-7",
+          "passed": false
+        },
+        {
+          "task_id": "task-8",
+          "passed": false
+        },
+        {
+          "task_id": "task-9",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "run_id": 1,
+      "timestamp": "2026-01-20T23:35:13.985667",
+      "seed": 43,
+      "pass_rate": 0.37493042255204356,
+      "total_tasks": 10,
+      "tasks_passed": 3,
+      "tasks_failed": 7,
+      "avg_execution_time": 1.575732885581444,
+      "task_results": [
+        {
+          "task_id": "task-0",
+          "passed": true
+        },
+        {
+          "task_id": "task-1",
+          "passed": true
+        },
+        {
+          "task_id": "task-2",
+          "passed": true
+        },
+        {
+          "task_id": "task-3",
+          "passed": false
+        },
+        {
+          "task_id": "task-4",
+          "passed": false
+        },
+        {
+          "task_id": "task-5",
+          "passed": false
+        },
+        {
+          "task_id": "task-6",
+          "passed": false
+        },
+        {
+          "task_id": "task-7",
+          "passed": false
+        },
+        {
+          "task_id": "task-8",
+          "passed": false
+        },
+        {
+          "task_id": "task-9",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "run_id": 2,
+      "timestamp": "2026-01-20T23:35:13.985853",
+      "seed": 44,
+      "pass_rate": 0.24755408333502676,
+      "total_tasks": 10,
+      "tasks_passed": 2,
+      "tasks_failed": 8,
+      "avg_execution_time": 4.448146465917093,
+      "task_results": [
+        {
+          "task_id": "task-0",
+          "passed": true
+        },
+        {
+          "task_id": "task-1",
+          "passed": true
+        },
+        {
+          "task_id": "task-2",
+          "passed": false
+        },
+        {
+          "task_id": "task-3",
+          "passed": false
+        },
+        {
+          "task_id": "task-4",
+          "passed": false
+        },
+        {
+          "task_id": "task-5",
+          "passed": false
+        },
+        {
+          "task_id": "task-6",
+          "passed": false
+        },
+        {
+          "task_id": "task-7",
+          "passed": false
+        },
+        {
+          "task_id": "task-8",
+          "passed": false
+        },
+        {
+          "task_id": "task-9",
+          "passed": false
+        }
+      ]
+    }
+  ],
+  "statistical_validity": {
+    "sufficient_runs": true,
+    "low_variance": false,
+    "reliable_mean": true,
+    "recommendation": "STATISTICALLY VALID: Results are stable enough for model comparisons"
+  }
+}
