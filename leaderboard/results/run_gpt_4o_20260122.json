@@ -1,0 +1,12 @@
+{
+  "participants": {
+    "agent": "019bbec8-5656-7792-b572-21fcf6cc36fb"
+  },
+  "id": "019bbec8-5656-7792-b572-21fcf6cc36fb",
+  "score": 0.0,
+  "accuracy": 0.0,
+  "timestamp": "2026-01-22T01:29:05Z",
+  "model": "gpt-4o",
+  "tasks_completed": 10,
+  "status": "completed"
+}

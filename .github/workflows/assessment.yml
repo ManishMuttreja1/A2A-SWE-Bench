@@ -139,6 +139,11 @@ jobs:
         path: leaderboard/results/
         if-no-files-found: warn
         
+    - name: Convert results to AgentBeats format
+      if: always()
+      run: |
+        python3 submit_to_agentbeats.py || echo "Conversion script not found or failed"
+        
     - name: Commit results to repo
       if: always()
       run: |
@@ -147,3 +152,11 @@ jobs:
         git add leaderboard/results/
         git diff --staged --quiet || git commit -m "Add assessment results from run #${{ github.run_id }}"
         git push || echo "Push failed or nothing to push"
+        
+    - name: Submit to AgentBeats (if API key available)
+      if: always() && env.AGENTBEATS_API_KEY != ''
+      env:
+        AGENTBEATS_API_KEY: ${{ secrets.AGENTBEATS_API_KEY }}
+      run: |
+        echo "AgentBeats API key found. Results should be automatically picked up via webhook."
+        echo "If manual submission is needed, use: agentbeats submit-results --results-path leaderboard/results/"
