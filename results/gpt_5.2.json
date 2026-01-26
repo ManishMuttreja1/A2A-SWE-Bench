@@ -1,10 +1,11 @@
 {
-  "id": "019bbec8-5656-7792-b572-21fcf6cc36fb",
+  "id": "019bbec8-5656-7792-b572-21fcf6cc36fb-gpt-5.2",
   "score": 21.0,
   "accuracy": 21.0,
   "participants": {
     "agent": "019bbec8-5656-7792-b572-21fcf6cc36fb"
   },
   "model": "gpt-5.2",
-  "tasks_completed": 100
+  "tasks_completed": 100,
+  "agent_id": "019bbec8-5656-7792-b572-21fcf6cc36fb"
 }
