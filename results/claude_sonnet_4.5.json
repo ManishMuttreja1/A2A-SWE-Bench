@@ -1,0 +1,10 @@
+{
+  "id": "019bbec8-5656-7792-b572-21fcf6cc36fb",
+  "score": 29.0,
+  "accuracy": 29.0,
+  "participants": {
+    "agent": "019bbec8-5656-7792-b572-21fcf6cc36fb"
+  },
+  "model": "claude-sonnet-4.5",
+  "tasks_completed": 100
+}
